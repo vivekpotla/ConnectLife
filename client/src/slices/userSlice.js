@@ -1,23 +1,51 @@
-import {  createSlice } from '@reduxjs/toolkit'
-export const userSlice = createSlice({
-    name: 'user',
-    initialState:[],
-    reducers: {
-        login: (state, action) => { 
-            
-            if(state.length) state.pop()  
-            state.push(action.payload)
-        },
-        logout:(state,action)=>{
+import {createSlice} from '@reduxjs/toolkit';
 
-            state.pop()
-            
-        }
+
+let userSlice=createSlice({
+  name:'user',
+  initialState:{
+    userObj:{},
+    userType:null,
+    isLoggedIn:false,
+   
+  },
+  reducers:{
+    login:(state,action)=>{
+
+        state.isLoggedIn=true;
+        state.userType=action.payload.userType;
+        state.userObj=action.payload;
+        //api call to get cart
     },
+    logout:(state)=>{
+      state.isLoggedIn=false;
+      state.userObj=null;
+      state.userType=null;
+      localStorage.clear();
+      return state;
+  }
+  },
+
 })
 
-//create action creator functions
-export const { login,logout } = userSlice.actions
-
+//export action creators
+export const {login, logout}=userSlice.actions;
 //export reducer
 export default userSlice.reducer
+
+
+
+//How to use 
+
+
+//import { login } from '../slices/userSlice'
+//import { useDispatch } from 'react-redux'
+
+//in function
+//  const dispatch = useDispatch()
+//let actionObj = login(user)
+//dispatch(actionObj)
+
+
+//import {  useSelector } from 'react-redux'
+//let isLoggedIn = useSelector(state => state.user.isLoggedIn)
