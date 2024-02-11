@@ -35,17 +35,3 @@ export default userSlice.reducer
 
 
 
-//How to use 
-
-
-//import { login } from '../slices/userSlice'
-//import { useDispatch } from 'react-redux'
-
-//in function
-//  const dispatch = useDispatch()
-//let actionObj = login(user)
-//dispatch(actionObj)
-
-
-//import {  useSelector } from 'react-redux'
-//let isLoggedIn = useSelector(state => state.user.isLoggedIn)
