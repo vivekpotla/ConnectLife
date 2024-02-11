@@ -1,0 +1,13 @@
+This is the way to use state in App
+
+//import { login } from '../slices/userSlice'
+//import { useDispatch } from 'react-redux'
+
+//in function
+//  const dispatch = useDispatch()
+//let actionObj = login(user)
+//dispatch(actionObj)
+
+
+//import {  useSelector } from 'react-redux'
+//let isLoggedIn = useSelector(state => state.user.isLoggedIn)
