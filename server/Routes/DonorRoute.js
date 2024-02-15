@@ -5,7 +5,7 @@ import {
   getDonorAppointments,
   bookAppointment,
   searchBloodDonationCamps
-} from '../Controllers/DonorController';
+} from '../Controllers/DonorController.js';
 
 const donorrouter = express.Router();
 

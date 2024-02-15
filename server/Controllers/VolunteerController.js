@@ -1,5 +1,5 @@
-import Volunteer from '../Models/Volunteer';
-import Camp from '../Models/Camp';
+import Volunteer from '../Models/Volunteer.js';
+import Camp from '../Models/Camp.js';
 
 export const registerVolunteer = async (req, res) => {
   try {

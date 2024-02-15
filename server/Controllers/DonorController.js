@@ -1,7 +1,7 @@
-import Donor from '../Models/Donor';
-import Appointment from '../Models/Appointment';
-import Camp from '../models/Camp';
-import Slot from '../Models/Slot';
+import Donor from '../Models/Donor.js';
+import Appointment from '../Models/Appointment.js';
+import Camp from '../Models/Camp.js';
+import Slot from '../Models/Slot.js';
 
 export const registerDonor = async (req, res) => {
   try {

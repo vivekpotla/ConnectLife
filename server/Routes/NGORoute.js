@@ -1,5 +1,5 @@
 import express from 'express';
-import { createBloodDonationCamp } from '../Controllers/NGOController';
+import { createBloodDonationCamp } from '../Controllers/NGOController.js';
 
 const ngoroute = express.Router();
 

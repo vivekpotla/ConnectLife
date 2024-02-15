@@ -1,5 +1,5 @@
-import Slot from '../Models/Slot';
-import Camp from '../models/Camp';
+import Slot from '../Models/Slot.js';
+import Camp from '../Models/Camp.js';
 
 export const createBloodDonationCamp = async (req, res) => {
   try {

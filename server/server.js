@@ -3,10 +3,13 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from 'dotenv';
 import path from 'path';
-// import donorrouter from "./Routes/DonorRoute";
-// import volunteerroute from "./Routes/VolunteerRoute";
-// import ngoroute from "./Routes/NGORoute";
-
+import donorrouter from "./routes/DonorRoute.js";
+import ngoroute from "./routes/NGORoute.js";
+import volunteerroute from "./routes/VolunteerRoute.js";
+import swaggerUi from 'swagger-ui-express';
+import { createRequire } from "module";
+const require = createRequire(import.meta.url);
+const swaggerDoc = require("./swagger_output.json");
 
 dotenv.config();
 const App = express();
@@ -16,9 +19,9 @@ mongoose.connect(process.env.CONNECTION_URL)
 
 App.use(cors());
 App.use(express.json());
-// App.use("/api/donor", donorrouter);
-// App.use("/api/ngo", ngoroute);
-// App.use("/api/volunteer", volunteerroute);
+App.use("/api/donor", donorrouter);
+App.use("/api/ngo", ngoroute);
+App.use("/api/volunteer", volunteerroute);
 
 
 // ------------deployment------------
@@ -35,5 +38,6 @@ if (process.env.NODE_ENV === 'production') {
 // ------------deployment--------------
 
 const PORT = process.env.PORT;
+App.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 App.listen(PORT || 5000, () => console.log(`server listening on port ${PORT}`));
 

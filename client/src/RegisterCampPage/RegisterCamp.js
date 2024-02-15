@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export const RegisterCamp = () => {
+export const RegisterCamp = ({addData}) => {
     const [campName, setCampName] = useState('');
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
@@ -24,6 +24,7 @@ export const RegisterCamp = () => {
             donorsPerHour
         };
         console.log(formData);
+        addData(formData);
         // Reset form fields after submission
         setCampName('');
         setDescription('');
