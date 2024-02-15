@@ -47,7 +47,7 @@ const MapComponent = () => {
 
     const handleMapClick = (e) => {
         setSelectedLocation(e.latlng);
-        console.log(e.latlng);
+        console.log("hi");
     };
 
     const sendLocation = async () => {
@@ -59,6 +59,7 @@ const MapComponent = () => {
             alert('Error sending location. Please try again.');
         }
     };
+    
 
 
     return (
@@ -69,8 +70,9 @@ const MapComponent = () => {
             )}
             {userLocation && <MapContainer center={mapCenter} zoom={mapZoom} onClick={(e) => handleMapClick(e)} style={{ height: '400px', width: '100%' }}>
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                {userLocation && <Marker position={userLocation}><Popup>You are here</Popup></Marker>}
+                {userLocation && <Marker position={userLocation}><Popup>You are here</Popup></Marker>} 
                 {selectedLocation && <Marker position={selectedLocation}><Popup>You selected this location</Popup></Marker>}
+               
             </MapContainer>}
             {selectedLocation && (
                 <div>
