@@ -8,7 +8,7 @@ import Donor from '../Models/Donor.js';
 //NGO Register
 export const registerNGO = async (req, res) => {
 
-  
+
   try {
     const { name, email, password, phoneNumber, address, description } = req.body;
 
@@ -19,7 +19,7 @@ export const registerNGO = async (req, res) => {
     }
 
     // Hash the password
-   // const hashedPassword = await bcrypt.hash(password, 10);
+    // const hashedPassword = await bcrypt.hash(password, 10);
 
     // Create new NGO
     const newNGO = await NGO.create({
@@ -55,7 +55,7 @@ export const loginNGO = async (req, res) => {
     }
 
     // Generate JWT token
-   // const token = jwt.sign({ id: NGOData._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    // const token = jwt.sign({ id: NGOData._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     res.json({ token });
   } catch (error) {
@@ -79,7 +79,7 @@ export const createBloodDonationCamp = async (req, res) => {
       endTime,
       longitude,
       latitude
-      
+
     } = req.body;
 
     if (!startTime || !endTime) {
@@ -99,7 +99,7 @@ export const createBloodDonationCamp = async (req, res) => {
       maxDonorsPerSlot,
       startTime,
       endTime,
-      
+
     });
 
     const sD = new Date(startDate);
@@ -109,14 +109,14 @@ export const createBloodDonationCamp = async (req, res) => {
     // Convert milliseconds to days
     const durationInDays = Math.ceil(differenceInMs / (1000 * 60 * 60 * 24));
     //creating slots
-    for (let i = 0; i < durationInDays+1; i++) {
+    for (let i = 0; i < durationInDays + 1; i++) {
       const currentDate = new Date(startDate);
       currentDate.setDate(currentDate.getDate() + i);
 
       const startHour = parseInt(startTime.split(':')[0]);
-      console.log("Start ", startHour )
+      console.log("Start ", startHour)
       const endHour = parseInt(endTime.split(':')[0]);
-      console.log("End ", endHour )
+      console.log("End ", endHour)
       for (let j = startHour; j < endHour; j++) {
         const slotStartTime = `${j}:00`;
         const slotEndTime = `${j + 1}:00`;
@@ -129,13 +129,13 @@ export const createBloodDonationCamp = async (req, res) => {
             startTime: slotStartTime,
             endTime: slotEndTime,
             maxDonorsPerSlot,
-            slotsLeft:maxDonorsPerSlot
+            slotsLeft: maxDonorsPerSlot
           });
         }
       }
     }
 
-    notifyUsers({campId:newCamp._id})
+    // notifyUsers({campId:newCamp._id})
     res.json(newCamp);
   } catch (err) {
     console.error(err);
@@ -144,10 +144,10 @@ export const createBloodDonationCamp = async (req, res) => {
 };
 
 //notifying volunteers function
-const notifyVolunteers = (volunteers,Camp) => {
-    //Message logic
+const notifyVolunteers = (volunteers, Camp) => {
+  //Message logic
 
-    
+
 
 
 
@@ -155,7 +155,7 @@ const notifyVolunteers = (volunteers,Camp) => {
   console.log('Notifying volunteers:', volunteers);
 };
 
-const notifyDonors = (Donors,Camp) => {
+const notifyDonors = (Donors, Camp) => {
   //Message Logic
 
 
@@ -171,38 +171,38 @@ const notifyDonors = (Donors,Camp) => {
 export const notifyUsers = async (req, res) => {
 
 
-   console.log("notifications sent")
-   let campId=req.body;
-   let camp = Camp.find({_id:campId});
-    //Notify nearest volunteers and Donors code 
-  let maxDistance= 10; //kms
+  console.log("notifications sent")
+  let campId = req.body;
+  let camp = Camp.find({ _id: campId });
+  //Notify nearest volunteers and Donors code 
+  let maxDistance = 10; //kms
   const nearestVolunteers = await Volunteer.find({
     livelocation: {
       $nearSphere: {
         $geometry: {
           type: "Point",
-          coordinates: [longitude, latitude] // Specify camp location coordinates
+          coordinates: [camp.geolocation.coordinates[0], camp.geolocation.coordinates[1]] // Specify camp location coordinates
         },
         $maxDistance: maxDistance * 1000 // Convert kilometers to meters
       }
     }
   });
   // Notify the nearest volunteers !!!! send the camp details also
-  notifyVolunteers(nearestVolunteers,camp);
+  notifyVolunteers(nearestVolunteers, camp);
   //notify the nearest donors
   const nearestDonors = await Donor.find({
     location: {
       $near: {
         $geometry: {
           type: 'Point',
-          coordinates: [longitude,latitude]
+          coordinates: [camp.geolocation.coordinates[0], camp.geolocation.coordinates[1]]
         },
-        $maxDistance: maxDistance *1000
+        $maxDistance: maxDistance * 1000
       }
     }
   });
   //notify the donors, send the camp detailss!!!!!!!
-  notifyDonors(nearestDonors,camp);
+  notifyDonors(nearestDonors, camp);
 };
 
 
@@ -210,7 +210,7 @@ export const notifyUsers = async (req, res) => {
 //Get Previously Organized Camps
 export const getPreviousCamps = async (req, res) => {
   try {
-    const { ngoId } = req.params;
+    const { ngoId } = req.body;
 
     // Find previous camps organized by the NGO
     const previousCamps = await Camp.find({ ngo: ngoId });

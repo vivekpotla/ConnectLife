@@ -1,16 +1,17 @@
 import Volunteer from '../Models/Volunteer.js';
 import Camp from '../Models/Camp.js';
 
-
 //Volunteer Signup
 export const registerVolunteer = async (req, res) => {
   try {
-    const { name, phoneNumber, email, address } = req.body;
+    const { name, email, password, contactNumber, aadhaarNumber, address } = req.body;
 
     const volunteer = new Volunteer({
       name,
-      phoneNumber,
       email,
+      password,
+      contactNumber,
+      aadhaarNumber,
       address
     });
 
@@ -21,6 +22,7 @@ export const registerVolunteer = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 //Volunteer Login
 export const loginVolunteer = async (req, res) => {
   try {
@@ -33,7 +35,7 @@ export const loginVolunteer = async (req, res) => {
 
     // Add password validation logic here
 
-    res.status(200).json({ message: 'Volunteer logged in successfully' ,payload:volunteer});
+    res.status(200).json({ message: 'Volunteer logged in successfully', payload: volunteer });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -43,8 +45,8 @@ export const loginVolunteer = async (req, res) => {
 //Update Live Location
 export const updateVolunteerLocation = async (req, res) => {
   try {
-    
-    const {volunteerId , latitude, longitude } = req.body;
+
+    const { volunteerId, latitude, longitude } = req.body;
 
     // Find the volunteer by ID
     const volunteer = await Volunteer.findById(volunteerId);
@@ -68,10 +70,7 @@ export const searchBloodDonationCamps = async (req, res) => {
   try {
     const query = req.params.query;
     const camps = await Camp.find({
-      $or: [
-        { _id: query },
-        { name: { $regex: new RegExp(query, 'i') } }
-      ]
+      name: { $regex: new RegExp(query, 'i') }
     });
     res.json(camps);
   } catch (err) {
@@ -83,7 +82,7 @@ export const searchBloodDonationCamps = async (req, res) => {
 //search camps by location (nearest)
 export const findNearestCamps = async (req, res) => {
   try {
-    const { latitude, longitude } = req.body; 
+    const { latitude, longitude } = req.body;
 
     // Find the nearest camps within a specified radius (e.g., 10 kilometers)
     const nearestCamps = await Camp.find({
@@ -150,8 +149,21 @@ export const myCamps = async (req, res) => {
 
     // Get the list of camps the volunteer has participated in
     const volunteerCamps = volunteer.campsParticipated;
-
-    res.status(200).json(volunteerCamps);
+    let camps = []
+    // Iterate over volunteerCamps array
+    for (const campId of volunteerCamps) {
+      try {
+        // Find camp details by ID
+        const camp = await Camp.findById(campId);
+        if (camp) {
+          // If camp found, push it to the camps array
+          camps.push(camp);
+        }
+      } catch (err) {
+        console.error(`Error fetching camp details for camp ID ${campId}:`, err);
+      }
+    }
+    res.status(200).json(camps);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });

@@ -7,7 +7,11 @@ const campSchema = new Schema({
     ref: 'NGO',
     required: true
   },
-    location: {
+  name: {
+    type: String,
+    required: true
+  },
+  location: {
     type: String,
     required: true
   },

@@ -5,6 +5,7 @@ const { Schema, model } = mongoose;
 const volunteerSchema = new Schema({
   name: { type: String, required: true },
   email: { type: String, required: true, unique: true },
+  password: { type: String, required: true },
   aadhaarNumber: {
     type: String,
     unique: true,
@@ -15,9 +16,10 @@ const volunteerSchema = new Schema({
     street: { type: String, required: true },
     city: { type: String, required: true },
     state: { type: String, required: true },
+    country: { type: String, required: true },
     zipCode: { type: String, required: true }
   },
-  livelocation:{
+  livelocation: {
     latitude: { type: Number, default: 0 },
     longitude: { type: Number, default: 0 }
   },
