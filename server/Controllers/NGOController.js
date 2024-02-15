@@ -170,9 +170,7 @@ const notifyDonors = (Donors,Camp) => {
 //Notify Donors and Volunteers for a camp separately
 export const notifyUsers = async (req, res) => {
 
-
-   console.log("notifications sent")
-   let campId=req.body;
+   const{campId}=req.body;
    let camp = Camp.find({_id:campId});
     //Notify nearest volunteers and Donors code 
   let maxDistance= 10; //kms
@@ -210,7 +208,7 @@ export const notifyUsers = async (req, res) => {
 //Get Previously Organized Camps
 export const getPreviousCamps = async (req, res) => {
   try {
-    const { ngoId } = req.params;
+    const { ngoId } = req.body;
 
     // Find previous camps organized by the NGO
     const previousCamps = await Camp.find({ ngo: ngoId });
