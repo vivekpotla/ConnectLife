@@ -5,7 +5,8 @@ import {
   getDonorAppointments,
   bookAppointment,
   searchBloodDonationCamps,
-  updateDonorLocation
+  updateDonorLocation,
+  findNearestCamps,getAllSlotsForCamp
 } from '../Controllers/DonorController.js';
 const donorrouter = express.Router();
 
@@ -18,12 +19,17 @@ donorrouter.post('/login', loginDonor);
 // Route to get old appointments for a donor
 donorrouter.get('/appointments/:donorId', getDonorAppointments);
 
+// Route to get all slots date wise of a camp with campid
+donorrouter.post('/camp/getslots', getAllSlotsForCamp);
+
 // Route to book an appointment for a donor
 donorrouter.post('/book-appointment', bookAppointment);
 
-// Route to search for blood donation camps
+// Route to search for blood donation camps by name 
 donorrouter.get('/camps/:query', searchBloodDonationCamps);
 
+//nearest blood donation camps 
+donorrouter.post('/nearestcamps', findNearestCamps);
 
 //update live location
 donorrouter.post('/location/', updateDonorLocation);

@@ -3,6 +3,7 @@ import Appointment from '../Models/Appointment.js';
 import Camp from '../Models/Camp.js';
 import Slot from '../Models/Slot.js';
 
+//donor signup
 export const registerDonor = async (req, res) => {
   try {
     const { name, email, password, phoneNumber,aadhaarNumber, bloodGroup ,address } = req.body;
@@ -23,27 +24,7 @@ export const registerDonor = async (req, res) => {
   }
 };
 
-export const updateDonorLocation = async (req, res) => {
-  try {
-    
-    const {donorId, latitude, longitude } = req.body;
-
-    // Find the donor by ID
-    const donor = await Donor.findById(donorId);
-    if (!donor) {
-      return res.status(404).json({ message: 'Donor not found' });
-    }
-
-    // Update live location
-    donor.livelocation = { latitude, longitude };
-    await donor.save();
-
-    res.json({ message: 'Live location updated successfully' });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
-};
+//donor login
 export const loginDonor = async (req, res) => {
   try {
     const { phoneNumber, password } = req.body;
@@ -70,6 +51,30 @@ export const loginDonor = async (req, res) => {
   }
 };
 
+//update live location 
+export const updateDonorLocation = async (req, res) => {
+  try {
+    
+    const {donorId, latitude, longitude } = req.body;
+
+    // Find the donor by ID
+    const donor = await Donor.findById(donorId);
+    if (!donor) {
+      return res.status(404).json({ message: 'Donor not found' });
+    }
+
+    // Update live location
+    donor.livelocation = { latitude, longitude };
+    await donor.save();
+
+    res.json({ message: 'Live location updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+//get donor previos/current appointments
 export const getDonorAppointments = async (req, res) => {
   try {
     
@@ -82,6 +87,7 @@ export const getDonorAppointments = async (req, res) => {
   }
 };
 
+//book appointment slot
 export const bookAppointment = async (req, res) => {
   try {
     
@@ -117,6 +123,7 @@ export const bookAppointment = async (req, res) => {
   }
 };
 
+//search camps based on string input 
 export const searchBloodDonationCamps = async (req, res) => {
   try {
     const query = req.params.query;
@@ -132,6 +139,63 @@ export const searchBloodDonationCamps = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+//search camps by location (nearest)
+export const findNearestCamps = async (req, res) => {
+  try {
+    const { latitude, longitude } = req.body; 
+
+    // Find the nearest camps within a specified radius (e.g., 10 kilometers)
+    const nearestCamps = await Camp.find({
+      location: {
+        $near: {
+          $geometry: {
+            type: 'Point',
+            coordinates: [longitude, latitude] // Note: MongoDB uses [longitude, latitude] order
+          },
+          $maxDistance: 10000 // 10 kilometers in meters
+        }
+      }
+    });
+    res.status(200).json(nearestCamps);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+//get slots of a camp with camp id
+export const getAllSlotsForCamp = async (req, res) => {
+  try {
+    const { campId } = req.body;
+
+    // Find the camp by ID
+    const camp = await Camp.findById(campId);
+    if (!camp) {
+      return res.status(404).json({ message: 'Camp not found' });
+    }
+
+    // Find all slots for the camp
+    const slots = await Slot.find({ camp: campId });
+
+    // Group slots by date
+    const slotsByDate = {};
+    slots.forEach(slot => {
+      const date = slot.date.toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
+      if (!slotsByDate[date]) {
+        slotsByDate[date] = [];
+      }
+      slotsByDate[date].push(slot);
+    });
+
+    res.status(200).json(slotsByDate);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 
 async function isSlotAvailableForDate(campId, date, slot) {
   try {

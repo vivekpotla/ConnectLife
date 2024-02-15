@@ -3,6 +3,69 @@ import Camp from '../Models/Camp.js';
 import NGO from '../Models/NGO.js';
 import Volunteer from '../Models/Volunteer.js';
 import Donor from '../Models/Donor.js';
+
+
+//NGO Register
+export const registerNGO = async (req, res) => {
+
+  
+  try {
+    const { name, email, password, phoneNumber, address, description } = req.body;
+
+    // Check if NGO with the provided email or phone number already exists
+    const existingNGO = await NGO.findOne({ $or: [{ email }, { phoneNumber }] });
+    if (existingNGO) {
+      return res.status(400).json({ message: 'NGO with this email or phone number already exists' });
+    }
+
+    // Hash the password
+   // const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Create new NGO
+    const newNGO = await NGO.create({
+      name,
+      email,
+      password: password,
+      phoneNumber,
+      address,
+      description
+    });
+
+    res.status(201).json({ message: 'NGO registered successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+//NGO Login
+export const loginNGO = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    // Check if NGO with the provided email exists
+    const NGOData = await NGO.findOne({ email });
+    if (!NGOData) {
+      return res.status(404).json({ message: 'NGO not found' });
+    }
+
+    // Compare passwords
+    const isPasswordValid = await bcrypt.compare(password, NGOData.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+
+    // Generate JWT token
+   // const token = jwt.sign({ id: NGOData._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
+
+    res.json({ token });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+//create camp
 export const createBloodDonationCamp = async (req, res) => {
   try {
     const {
@@ -72,47 +135,7 @@ export const createBloodDonationCamp = async (req, res) => {
       }
     }
 
-
-    ////////////////////////////////////////////
-    //Notify nearest volunteers and Donors code 
-    let maxDistance= 10; //kms
-    const nearestVolunteers = await Volunteer.find({
-      livelocation: {
-        $nearSphere: {
-          $geometry: {
-            type: "Point",
-            coordinates: [longitude, latitude] // Specify camp location coordinates
-          },
-          $maxDistance: maxDistance * 1000 // Convert kilometers to meters
-        }
-      }
-    });
-
-    // Notify the nearest volunteers !!!! send the camp details also
-    notifyVolunteers(nearestVolunteers);
-    //notify the nearest donors
-    const nearestDonors = await Donor.find({
-      location: {
-        $near: {
-          $geometry: {
-            type: 'Point',
-            coordinates: [longitude,latitude]
-          },
-          $maxDistance: maxDistance *1000
-        }
-      }
-    });
-    //notify the donors, send the camp detailss!!!!!!!
-    notifyDonors(nearestDonors);
-
-
-
-    //  ******************************************
-
-
-
-
-    /////////////////////////////////////////////
+    notifyUsers({campId:newCamp._id})
     res.json(newCamp);
   } catch (err) {
     console.error(err);
@@ -120,72 +143,71 @@ export const createBloodDonationCamp = async (req, res) => {
   }
 };
 
-
-
 //notifying volunteers function
-const notifyVolunteers = (volunteers) => {
-  // Implement your notification logic here (e.g., sending messages or emails to volunteers)
+const notifyVolunteers = (volunteers,Camp) => {
+    //Message logic
+
+    
+
+
+
+
   console.log('Notifying volunteers:', volunteers);
 };
 
-export const registerNGO = async (req, res) => {
+const notifyDonors = (Donors,Camp) => {
+  //Message Logic
 
-  
-  try {
-    const { name, email, password, phoneNumber, address, description } = req.body;
 
-    // Check if NGO with the provided email or phone number already exists
-    const existingNGO = await NGO.findOne({ $or: [{ email }, { phoneNumber }] });
-    if (existingNGO) {
-      return res.status(400).json({ message: 'NGO with this email or phone number already exists' });
-    }
 
-    // Hash the password
-   // const hashedPassword = await bcrypt.hash(password, 10);
 
-    // Create new NGO
-    const newNGO = await NGO.create({
-      name,
-      email,
-      password: password,
-      phoneNumber,
-      address,
-      description
-    });
 
-    res.status(201).json({ message: 'NGO registered successfully' });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+
+  console.log('Notifying Donors:', Donors);
 };
 
-export const loginNGO = async (req, res) => {
-  try {
-    const { email, password } = req.body;
 
-    // Check if NGO with the provided email exists
-    const NGOData = await NGO.findOne({ email });
-    if (!NGOData) {
-      return res.status(404).json({ message: 'NGO not found' });
+//Notify Donors and Volunteers for a camp separately
+export const notifyUsers = async (req, res) => {
+
+
+   console.log("notifications sent")
+   let campId=req.body;
+   let camp = Camp.find({_id:campId});
+    //Notify nearest volunteers and Donors code 
+  let maxDistance= 10; //kms
+  const nearestVolunteers = await Volunteer.find({
+    livelocation: {
+      $nearSphere: {
+        $geometry: {
+          type: "Point",
+          coordinates: [longitude, latitude] // Specify camp location coordinates
+        },
+        $maxDistance: maxDistance * 1000 // Convert kilometers to meters
+      }
     }
-
-    // Compare passwords
-    const isPasswordValid = await bcrypt.compare(password, NGOData.password);
-    if (!isPasswordValid) {
-      return res.status(401).json({ message: 'Invalid password' });
+  });
+  // Notify the nearest volunteers !!!! send the camp details also
+  notifyVolunteers(nearestVolunteers,camp);
+  //notify the nearest donors
+  const nearestDonors = await Donor.find({
+    location: {
+      $near: {
+        $geometry: {
+          type: 'Point',
+          coordinates: [longitude,latitude]
+        },
+        $maxDistance: maxDistance *1000
+      }
     }
-
-    // Generate JWT token
-   // const token = jwt.sign({ id: NGOData._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-
-    res.json({ token });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+  });
+  //notify the donors, send the camp detailss!!!!!!!
+  notifyDonors(nearestDonors,camp);
 };
 
+
+
+//Get Previously Organized Camps
 export const getPreviousCamps = async (req, res) => {
   try {
     const { ngoId } = req.params;
