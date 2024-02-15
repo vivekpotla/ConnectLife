@@ -171,11 +171,11 @@ const notifyDonors = (Donors, Camp) => {
 export const notifyUsers = async (req, res) => {
 
 
-  console.log("notifications sent")
-  let campId = req.body;
+  const { campId } = req.body;
   let camp = Camp.find({ _id: campId });
   //Notify nearest volunteers and Donors code 
   let maxDistance = 10; //kms
+
   const nearestVolunteers = await Volunteer.find({
     livelocation: {
       $nearSphere: {
