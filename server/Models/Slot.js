@@ -1,15 +1,33 @@
-import { Schema, model } from 'mongoose';
+import mongoose from 'mongoose';
+
+const { Schema } = mongoose;
 
 const slotSchema = new Schema({
-  camp: { type: Schema.Types.ObjectId, ref: 'BloodDonationCamp', required: true },
-  date: { type: Date, required: true },
-  startTime: { type: String, required: true }, // Start time of the slot
-  endTime: { type: String, required: true }, // End time of the slot
-  maxDonorsPerSlot: { type: Number, default: 1 }, // Maximum number of donors allowed in the slot
-  donors: [{ type: Schema.Types.ObjectId, ref: 'Donor' }], // Donors booked for this slot
-  volunteers: [{ type: Schema.Types.ObjectId, ref: 'Volunteer' }] // Volunteers participating in this slot
+  camp: {
+    type: Schema.Types.ObjectId,
+    ref: 'Camp',
+    required: true
+  },
+  date: {
+    type: Date,
+    required: true
+  },
+  startTime: {
+    type: String,
+    required: true
+  },
+  endTime: {
+    type: String,
+    required: true
+  },
+  maxDonorsPerSlot: {
+    type: Number,
+    required: true
+  },
+  slotsLeft:{
+    type:Number,
+    required:true
+  }
 });
 
-const Slot = model('Slot', slotSchema);
-
-export default Slot;
+export default mongoose.model('Slot', slotSchema);

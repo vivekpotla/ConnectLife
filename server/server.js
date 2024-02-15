@@ -3,6 +3,9 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from 'dotenv';
 import path from 'path';
+// import donorrouter from "./Routes/DonorRoute";
+// import volunteerroute from "./Routes/VolunteerRoute";
+// import ngoroute from "./Routes/NGORoute";
 
 
 dotenv.config();
@@ -13,13 +16,9 @@ mongoose.connect(process.env.CONNECTION_URL)
 
 App.use(cors());
 App.use(express.json());
-// App.use("/api/ngo", studentrouter);
-// App.use("/api/donor", facultyRouter);
-// App.use("/api/volunteer", classRouter);
-
-
-
-
+// App.use("/api/donor", donorrouter);
+// App.use("/api/ngo", ngoroute);
+// App.use("/api/volunteer", volunteerroute);
 
 
 // ------------deployment------------
