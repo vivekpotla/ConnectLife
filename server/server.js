@@ -23,7 +23,6 @@ App.use("/api/donor", donorrouter);
 App.use("/api/ngo", ngoroute);
 App.use("/api/volunteer", volunteerroute);
 
-
 // ------------deployment------------
 const __dirname = path.resolve();
 //Serve Static assets if in production
@@ -38,6 +37,7 @@ if (process.env.NODE_ENV === 'production') {
 // ------------deployment--------------
 
 const PORT = process.env.PORT;
-App.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 App.listen(PORT || 5000, () => console.log(`server listening on port ${PORT}`));
+App.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
+
 

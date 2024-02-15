@@ -4,9 +4,9 @@ import {
   loginDonor,
   getDonorAppointments,
   bookAppointment,
-  searchBloodDonationCamps
+  searchBloodDonationCamps,
+  updateDonorLocation
 } from '../Controllers/DonorController.js';
-
 const donorrouter = express.Router();
 
 // Route for donor registration
@@ -16,12 +16,16 @@ donorrouter.post('/register', registerDonor);
 donorrouter.post('/login', loginDonor);
 
 // Route to get old appointments for a donor
-donorrouter.get('/:donorId/appointments', getDonorAppointments);
+donorrouter.get('/appointments/:donorId', getDonorAppointments);
 
 // Route to book an appointment for a donor
-donorrouter.post('/:donorId/appointments', bookAppointment);
+donorrouter.post('/book-appointment', bookAppointment);
 
 // Route to search for blood donation camps
-donorrouter.get('/blood-donation-camps/:query', searchBloodDonationCamps);
+donorrouter.get('/camps/:query', searchBloodDonationCamps);
+
+
+//update live location
+donorrouter.post('/location/', updateDonorLocation);
 
 export default donorrouter;

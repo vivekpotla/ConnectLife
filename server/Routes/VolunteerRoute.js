@@ -1,10 +1,11 @@
 import express from 'express';
-import { registerVolunteer, loginVolunteer, joinCamp } from '../Controllers/VolunteerController.js';
+import { registerVolunteer, loginVolunteer, joinCamp, updateVolunteerLocation } from '../Controllers/VolunteerController.js';
 
 const volunteerroute = express.Router();
 
-volunteerroute.post('/volunteers/register', registerVolunteer);
-volunteerroute.post('/volunteers/login', loginVolunteer);
-volunteerroute.post('/volunteers/join-camp', joinCamp);
-
+volunteerroute.post('/register', registerVolunteer);
+volunteerroute.post('/login', loginVolunteer);
+volunteerroute.post('/join-camp', joinCamp);
+//update live location
+volunteerroute.post('/location/', updateVolunteerLocation);
 export default volunteerroute;

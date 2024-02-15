@@ -11,6 +11,17 @@ const campSchema = new Schema({
     type: String,
     required: true
   },
+  geolocation: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number],
+      required: true
+    }
+  },
   description: {
     type: String,
     required: true

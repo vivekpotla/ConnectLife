@@ -20,6 +20,28 @@ export const registerVolunteer = async (req, res) => {
   }
 };
 
+export const updateVolunteerLocation = async (req, res) => {
+  try {
+    
+    const {volunteerId , latitude, longitude } = req.body;
+
+    // Find the volunteer by ID
+    const volunteer = await Volunteer.findById(volunteerId);
+    if (!volunteer) {
+      return res.status(404).json({ message: 'Volunteer not found' });
+    }
+
+    // Update live location
+    volunteer.livelocation = { latitude, longitude };
+    await volunteer.save();
+
+    res.json({ message: 'Live location updated successfully' });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
 export const loginVolunteer = async (req, res) => {
   try {
     const { phoneNumber, password } = req.body;
@@ -67,6 +89,8 @@ export const joinCamp = async (req, res) => {
     // Add the volunteer to the camp's list of volunteers
     camp.volunteers.push(volunteerId);
     await camp.save();
+    volunteer.campsParticipated.push(campId);
+    await volunteer.save();
 
     res.json({ message: 'Volunteer joined the camp successfully' });
   } catch (err) {

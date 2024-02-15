@@ -1,4 +1,5 @@
 import { Schema, mongoose } from 'mongoose';
+
 const appointmentSchema = new Schema({
   donor: {
     type: Schema.Types.ObjectId,
@@ -18,6 +19,10 @@ const appointmentSchema = new Schema({
   date: {
     type: Date,
     required: true
+  },
+  donated:{
+    type:Boolean,
+    default:false
   }
 });
 

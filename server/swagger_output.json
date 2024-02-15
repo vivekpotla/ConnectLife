@@ -5,7 +5,7 @@
     "title": "REST API",
     "description": ""
   },
-  "host": "localhost:3000",
+  "host": "localhost:5000",
   "basePath": "/",
   "schemes": [
     "http"
@@ -33,7 +33,13 @@
                 "phoneNumber": {
                   "example": "any"
                 },
+                "aadhaarNumber": {
+                  "example": "any"
+                },
                 "bloodGroup": {
+                  "example": "any"
+                },
+                "address": {
                   "example": "any"
                 }
               }
@@ -89,7 +95,7 @@
         }
       }
     },
-    "/api/donor/{donorId}/appointments": {
+    "/api/donor/appointments/{donorId}": {
       "get": {
         "description": "",
         "parameters": [
@@ -108,16 +114,12 @@
             "description": "Internal Server Error"
           }
         }
-      },
+      }
+    },
+    "/api/donor/book-appointment": {
       "post": {
         "description": "",
         "parameters": [
-          {
-            "name": "donorId",
-            "in": "path",
-            "required": true,
-            "type": "string"
-          },
           {
             "name": "body",
             "in": "body",
@@ -131,6 +133,9 @@
                   "example": "any"
                 },
                 "slot": {
+                  "example": "any"
+                },
+                "donorId": {
                   "example": "any"
                 }
               }
@@ -150,7 +155,7 @@
         }
       }
     },
-    "/api/donor/blood-donation-camps/{query}": {
+    "/api/donor/camps/{query}": {
       "get": {
         "description": "",
         "parameters": [
@@ -171,7 +176,7 @@
         }
       }
     },
-    "/api/ngo/blood-donation-camps": {
+    "/api/ngo/create-camp": {
       "post": {
         "description": "",
         "parameters": [
@@ -222,7 +227,101 @@
         }
       }
     },
-    "/api/volunteer/volunteers/register": {
+    "/api/ngo/register": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                },
+                "phoneNumber": {
+                  "example": "any"
+                },
+                "address": {
+                  "example": "any"
+                },
+                "description": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Created"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/ngo/login": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "example": "any"
+                },
+                "password": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/ngo/previous-camps": {
+      "post": {
+        "description": "",
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/volunteer/register": {
       "post": {
         "description": "",
         "parameters": [
@@ -258,7 +357,7 @@
         }
       }
     },
-    "/api/volunteer/volunteers/login": {
+    "/api/volunteer/login": {
       "post": {
         "description": "",
         "parameters": [
@@ -291,7 +390,7 @@
         }
       }
     },
-    "/api/volunteer/volunteers/join-camp": {
+    "/api/volunteer/join-camp": {
       "post": {
         "description": "",
         "parameters": [

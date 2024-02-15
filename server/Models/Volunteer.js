@@ -16,7 +16,12 @@ const volunteerSchema = new Schema({
     city: { type: String, required: true },
     state: { type: String, required: true },
     zipCode: { type: String, required: true }
-  }
+  },
+  livelocation:{
+    latitude: { type: Number, default: 0 },
+    longitude: { type: Number, default: 0 }
+  },
+  campsParticipated: [{ type: Schema.Types.ObjectId, ref: 'Camp' }]
 });
 
 const Volunteer = model('Volunteer', volunteerSchema);

@@ -53,6 +53,10 @@ const donorSchema = new Schema({
       required: true
     }
   },
+  livelocation:{
+    latitude: { type: Number, default: 0 },
+    longitude: { type: Number, default: 0 }
+  },
   previousAppointments: [{
     type: Schema.Types.ObjectId,
     ref: 'Appointment'

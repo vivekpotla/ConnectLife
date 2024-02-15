@@ -1,8 +1,12 @@
 import express from 'express';
-import { createBloodDonationCamp } from '../Controllers/NGOController.js';
+import { createBloodDonationCamp, getPreviousCamps, loginNGO, registerNGO } from '../Controllers/NGOController.js';
 
 const ngoroute = express.Router();
 
-ngoroute.post('/blood-donation-camps', createBloodDonationCamp);
+ngoroute.post('/create-camp', createBloodDonationCamp);
+ngoroute.post('/register', registerNGO);
+ngoroute.post('/login', loginNGO);
+ngoroute.post('/previous-camps', getPreviousCamps);
+
 
 export default ngoroute;
