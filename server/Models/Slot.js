@@ -27,7 +27,12 @@ const slotSchema = new Schema({
   slotsLeft:{
     type:Number,
     required:true
-  }
+  },
+  donors: {
+    type: [Schema.Types.ObjectId],
+    ref: 'Donor',
+    default:[]
+  },
 });
 
 export default mongoose.model('Slot', slotSchema);

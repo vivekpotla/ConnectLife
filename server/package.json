@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon server.js && node swagger.js"
+    "dev": "node swagger.js && nodemon server"
   },
   "author": "Vivek,Neeha,Vikas,Bharadwaj",
   "license": "ISC",
@@ -17,8 +17,10 @@
     "dotenv": "^16.4.4",
     "mongodb": "^6.3.0",
     "mongoose": "^8.1.2",
+    "nodemailer": "^6.9.9",
     "nodemon": "^3.0.3",
     "swagger-autogen": "^2.23.7",
-    "swagger-ui-express": "^5.0.0"
+    "swagger-ui-express": "^5.0.0",
+    "twilio": "^4.22.0"
   }
 }

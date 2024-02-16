@@ -77,10 +77,17 @@ export const updateDonorLocation = async (req, res) => {
 //get donor previos/current appointments
 export const getDonorAppointments = async (req, res) => {
   try {
-    
     const donorId = req.params.donorId;
-    const appointments = await Appointment.find({ donor: donorId });
-    res.json(appointments);
+
+    // Find all appointments for the donor and populate camp details
+    const appointments = await Appointment.find({ donor: donorId }).populate('camp', 'name location');
+
+    // Separate appointments based on donated status
+    const donatedAppointments = appointments.filter(appointment => appointment.donated);
+    const notDonatedAppointments = appointments.filter(appointment => !appointment.donated);
+
+    // Send separated appointments in the response
+    res.json({ donatedAppointments, notDonatedAppointments });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -92,7 +99,7 @@ export const bookAppointment = async (req, res) => {
   try {
     
     const { campId, date, slot , donorId} = req.body;
-
+    let donor = Donor.find({_id:donorId})
     // Check if the slot is available
     const {isSlotAvailable , slotId} = await isSlotAvailableForDate(campId, date, slot);
     if (!isSlotAvailable) {
@@ -108,12 +115,14 @@ export const bookAppointment = async (req, res) => {
       donor: donorId,
       camp: campId,
       date: new Date(date),
-      slot:slotId.toString()
+      slot:slotId.toString(),
+      bloodGroup:donor.bloodGroup
     });
      // Decrement slotsLeft for the booked slot
      await Slot.findOneAndUpdate(
       { camp: campId, date: new Date(date), startTime:  slot.startTime , endTime: slot.endTime  },
-      { $inc: { slotsLeft: -1 } } // Decrement slotsLeft by 1
+      { $inc: { slotsLeft: -1 } ,$push: { donors: donorId }} // Decrement slotsLeft by 1
+      
     );
     await Donor.findByIdAndUpdate(donorId, { $push: { previousAppointments: appointment._id } });
     res.json(appointment);
@@ -195,6 +204,7 @@ export const getAllSlotsForCamp = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 
 async function isSlotAvailableForDate(campId, date, slot) {
