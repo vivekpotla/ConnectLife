@@ -437,6 +437,30 @@
         }
       }
     },
+    "/api/ngo/notify-users": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "campId": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "default": {
+            "description": ""
+          }
+        }
+      }
+    },
     "/api/volunteer/register": {
       "post": {
         "description": "",
@@ -450,10 +474,16 @@
                 "name": {
                   "example": "any"
                 },
-                "phoneNumber": {
+                "email": {
                   "example": "any"
                 },
-                "email": {
+                "password": {
+                  "example": "any"
+                },
+                "contactNumber": {
+                  "example": "any"
+                },
+                "aadhaarNumber": {
                   "example": "any"
                 },
                 "address": {
@@ -638,6 +668,36 @@
             "in": "path",
             "required": true,
             "type": "string"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/volunteer/mark-donated": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "appointmentId": {
+                  "example": "any"
+                }
+              }
+            }
           }
         ],
         "responses": {

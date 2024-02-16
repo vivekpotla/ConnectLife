@@ -1,5 +1,6 @@
 import Volunteer from '../Models/Volunteer.js';
 import Camp from '../Models/Camp.js';
+import Appointment from '../Models/Appointment.js';
 
 //Volunteer Signup
 export const registerVolunteer = async (req, res) => {
@@ -168,6 +169,28 @@ export const myCamps = async (req, res) => {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
   }
+};
 
+export const markAppointmentAsDonated = async (req, res) => {
+  try {
+    // Extract the appointment ID from the request body or params
+    const { appointmentId } = req.body; // Assuming appointmentId is provided in the request body
+
+    // Find the appointment by ID
+    const appointment = await Appointment.findById(appointmentId);
+    if (!appointment) {
+      return res.status(404).json({ message: 'Appointment not found' });
+    }
+
+    // Mark the appointment as donated
+    appointment.donated = true;
+    await appointment.save();
+
+    // Respond with success message
+    res.json({ message: 'Appointment marked as donated successfully' });
+  } catch (error) {
+    console.error('Error marking appointment as donated:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
 
