@@ -5,12 +5,11 @@ import Volunteer from '../Models/Volunteer.js';
 import Donor from '../Models/Donor.js';
 import Appointment from '../Models/Appointment.js';
 import BloodQuantity from '../Models/BloodQuantity.js';
-
+import twilio from "twilio";
+import nodemailer from 'nodemailer';
 
 //NGO Register
 export const registerNGO = async (req, res) => {
-
-
   try {
     const { name, email, password, phoneNumber, address, description } = req.body;
 
@@ -159,28 +158,28 @@ export const checkBloodQuantity = async (req, res) => {
     }
 
     // Prepare the response object
-  // Find the camp details
-  const camp = await Camp.findById(campId);
-  if (!camp) {
-    return res.status(404).json({ message: 'Camp details not found for the specified camp' });
-  }
-
-  // Prepare the response object
-  const response = {
-    campId: bloodQuantity.camp,
-    campName: camp.name,
-    campAddress: camp.location,
-    bloodQuantity: {
-      A_positive: bloodQuantity.A_positive,
-      A_negative: bloodQuantity.A_negative,
-      B_positive: bloodQuantity.B_positive,
-      B_negative: bloodQuantity.B_negative,
-      AB_positive: bloodQuantity.AB_positive,
-      AB_negative: bloodQuantity.AB_negative,
-      O_positive: bloodQuantity.O_positive,
-      O_negative: bloodQuantity.O_negative
+    // Find the camp details
+    const camp = await Camp.findById(campId);
+    if (!camp) {
+      return res.status(404).json({ message: 'Camp details not found for the specified camp' });
     }
-  };
+
+    // Prepare the response object
+    const response = {
+      campId: bloodQuantity.camp,
+      campName: camp.name,
+      campAddress: camp.location,
+      bloodQuantity: {
+        A_positive: bloodQuantity.A_positive,
+        A_negative: bloodQuantity.A_negative,
+        B_positive: bloodQuantity.B_positive,
+        B_negative: bloodQuantity.B_negative,
+        AB_positive: bloodQuantity.AB_positive,
+        AB_negative: bloodQuantity.AB_negative,
+        O_positive: bloodQuantity.O_positive,
+        O_negative: bloodQuantity.O_negative
+      }
+    };
 
 
     // Send the response
@@ -248,17 +247,104 @@ export const getDonorsInCamp = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-//notifying volunteers function
-const notifyVolunteers = (volunteers, Camp) => {
-  //Message logic
 
+//notify Volunteers by campId
+export const notifyVolunteersByCampId = async (req, res) => {
+  try {
+    const { campId } = req.body;
 
+    // Find the camp by ID
+    const camp = await Camp.findById(campId);
+    if (!camp) {
+      return res.status(404).json({ message: 'Camp not found' });
+    }
 
+    // Find all volunteers
+    const volunteers = await Volunteer.find();
 
+    // Send notification to all volunteers
+    const result = await sendNotificationToVolunteers(volunteers, camp);
 
+    if (!result) {
+      return res.status(404).json({ message: 'Error in sending notification' });
+    }
 
-  console.log('Notifying volunteers:', volunteers);
+    res.status(200).json({ message: 'Notifications sent to all volunteers successfully' });
+  } catch (error) {
+    console.error('Error notifying volunteers:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };
+
+const accountSid = 'ACca1a2e49b90bb4dc87abfd05ea48f41e';
+const authToken = 'eea0c25195c839f8c143b6539fddcde7';
+const client = twilio(accountSid, authToken);
+
+
+//notifying volunteers function
+const sendNotificationToVolunteers = async (volunteers, campDetails) => {
+  try {
+    // Iterate through each volunteer
+    for (const volunteer of volunteers) {
+      // Send a notification to the volunteer
+      await client.messages.create({
+        body: `Hello ${volunteer.name}, ConnectLife: There's a new camp at ${campDetails.location}. Date: ${campDetails.startDate}`,
+        from: '+17865743487',
+        to: '+91' + volunteer.contactNumber
+      });
+    }
+    console.log('Notifications sent successfully');
+    return true;
+  } catch (error) {
+    console.error('Error sending notifications:', error);
+  }
+};
+
+//notify Volunteers by Email
+export const notifyVolunteersByEmail = async (req, res) => {
+  try {
+    const { campId } = req.body;
+
+    // Find the camp by ID
+    const camp = await Camp.findById(campId);
+    if (!camp) {
+      return res.status(404).json({ message: 'Camp not found' });
+    }
+
+    // Find all volunteers
+    const volunteers = await Volunteer.find();
+
+    // create reusable transporter object using the default SMTP transport
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "kamarapuvikas@gmail.com",
+        pass: "qylwofsjmvxewelm"
+      }
+    });
+
+    // Iterate over each volunteer and send an email
+    for (const volunteer of volunteers) {
+      // send mail with defined transport object
+      await transporter.sendMail({
+        from: '"NSS Camp" kamarapuvikas@gmail.com', // sender address
+        to: volunteer.email, // list of receivers
+        subject: "New Camp Notification", // Subject line
+        text: `Hello ${volunteer.name}! There's a new camp at ${camp.name}. ${camp.description}`, // plain text body
+        html: `<p>Hello ${volunteer.name}!</p><p>There's a new camp at ${camp.name}. ${camp.description}</p>`, // html body
+      });
+
+      console.log('Email sent to', volunteer.email);
+    }
+
+    res.status(200).json({ message: 'Emails sent to all volunteers successfully' });
+  } catch (error) {
+    console.error('Error notifying volunteers:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 
 const notifyDonors = (Donors, Camp) => {
   //Message Logic
@@ -309,7 +395,6 @@ export const notifyUsers = async (req, res) => {
   //notify the donors, send the camp detailss!!!!!!!
   notifyDonors(nearestDonors, camp);
 };
-
 
 
 //Get Previously Organized Camps
