@@ -1,5 +1,5 @@
 import express from 'express';
-import { registerVolunteer, loginVolunteer, joinCamp, updateVolunteerLocation,findNearestCamps,searchBloodDonationCamps , myCamps, markAppointmentAsDonated } from '../Controllers/VolunteerController.js';
+import { registerVolunteer, loginVolunteer, joinCamp, updateVolunteerLocation,findNearestCamps,searchBloodDonationCamps,getAllSlotsWithDonorsForCamp , myCamps, markAppointmentAsDonated } from '../Controllers/VolunteerController.js';
 
 const volunteerroute = express.Router();
 
@@ -11,4 +11,6 @@ volunteerroute.get('/campsearch/:query', searchBloodDonationCamps);
 volunteerroute.post('/nearestcamps', findNearestCamps);
 volunteerroute.get('/mycamps/:volunteerId', myCamps);
 volunteerroute.post('/mark-donated', markAppointmentAsDonated);
+volunteerroute.post('/get-slot-details', getAllSlotsWithDonorsForCamp);
+
 export default volunteerroute;

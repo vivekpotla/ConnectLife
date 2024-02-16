@@ -3,6 +3,8 @@ import Camp from '../Models/Camp.js';
 import NGO from '../Models/NGO.js';
 import Volunteer from '../Models/Volunteer.js';
 import Donor from '../Models/Donor.js';
+import Appointment from '../Models/Appointment.js';
+import BloodQuantity from '../Models/BloodQuantity.js';
 
 
 //NGO Register
@@ -78,7 +80,8 @@ export const createBloodDonationCamp = async (req, res) => {
       startTime,
       endTime,
       longitude,
-      latitude
+      latitude,
+      name
 
     } = req.body;
 
@@ -99,6 +102,7 @@ export const createBloodDonationCamp = async (req, res) => {
       maxDonorsPerSlot,
       startTime,
       endTime,
+      name
 
     });
 
@@ -143,6 +147,107 @@ export const createBloodDonationCamp = async (req, res) => {
   }
 };
 
+export const checkBloodQuantity = async (req, res) => {
+  try {
+    // Extract the camp ID from the request body
+    const { campId } = req.body;
+
+    // Find the blood quantity for the specified camp
+    const bloodQuantity = await BloodQuantity.findOne({ camp: campId });
+    if (!bloodQuantity) {
+      return res.status(404).json({ message: 'Blood quantity data not found for the specified camp' });
+    }
+
+    // Prepare the response object
+  // Find the camp details
+  const camp = await Camp.findById(campId);
+  if (!camp) {
+    return res.status(404).json({ message: 'Camp details not found for the specified camp' });
+  }
+
+  // Prepare the response object
+  const response = {
+    campId: bloodQuantity.camp,
+    campName: camp.name,
+    campAddress: camp.location,
+    bloodQuantity: {
+      A_positive: bloodQuantity.A_positive,
+      A_negative: bloodQuantity.A_negative,
+      B_positive: bloodQuantity.B_positive,
+      B_negative: bloodQuantity.B_negative,
+      AB_positive: bloodQuantity.AB_positive,
+      AB_negative: bloodQuantity.AB_negative,
+      O_positive: bloodQuantity.O_positive,
+      O_negative: bloodQuantity.O_negative
+    }
+  };
+
+
+    // Send the response
+    res.status(200).json(response);
+  } catch (error) {
+    console.error('Error checking blood quantity:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const getDonorsInCamp = async (req, res) => {
+  try {
+    const { campId } = req.body;
+
+    // Find appointments where camp ID matches
+    const appointments = await Appointment.find({ camp: campId }).populate('donor', 'name email phoneNumber donated');
+
+    // Extract donor details from appointments
+    const donors = {
+      donated: [],
+      notDonated: []
+    };
+
+    for (const appointment of appointments) {
+      const donorDetails = {
+        donorId: appointment.donor._id,
+        name: appointment.donor.name,
+        email: appointment.donor.email,
+        phoneNumber: appointment.donor.phoneNumber
+      };
+
+      if (appointment.donated) {
+        donors.donated.push(donorDetails);
+      } else {
+        donors.notDonated.push(donorDetails);
+      }
+    }
+
+    // Get slot details for not donated appointments
+    for (const donor of donors.notDonated) {
+      const donorId = donor.donorId;
+      const donorAppointments = await Appointment.find({ donor: donorId, donated: false }).populate('slot', 'date startTime endTime');
+      const slotDetails = donorAppointments.map(appointment => ({
+        date: appointment.slot.date,
+        startTime: appointment.slot.startTime,
+        endTime: appointment.slot.endTime
+      }));
+      donor.slotDetails = slotDetails;
+    }
+    for (const donor of donors.donated) {
+      const donorId = donor.donorId;
+      const donorAppointments = await Appointment.find({ donor: donorId, donated: true }).populate('slot', 'date startTime endTime');
+      const slotDetails = donorAppointments.map(appointment => ({
+        date: appointment.slot.date,
+        startTime: appointment.slot.startTime,
+        endTime: appointment.slot.endTime
+      }));
+      donor.slotDetails = slotDetails;
+    }
+
+
+    res.json(donors);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 //notifying volunteers function
 const notifyVolunteers = (volunteers, Camp) => {
   //Message logic

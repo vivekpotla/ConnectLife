@@ -1,6 +1,9 @@
 import Volunteer from '../Models/Volunteer.js';
 import Camp from '../Models/Camp.js';
 import Appointment from '../Models/Appointment.js';
+import Slot from '../Models/Slot.js';
+import Donor from '../Models/Donor.js';
+import BloodQuantity from '../Models/BloodQuantity.js';
 
 //Volunteer Signup
 export const registerVolunteer = async (req, res) => {
@@ -138,6 +141,29 @@ export const joinCamp = async (req, res) => {
   }
 };
 
+const mapBloodGroup = (bloodGroup) => {
+  switch (bloodGroup) {
+    case 'A+':
+      return 'A_positive';
+    case 'A-':
+      return 'A_negative';
+    case 'B+':
+      return 'B_positive';
+    case 'B-':
+      return 'B_negative';
+    case 'AB+':
+      return 'AB_positive';
+    case 'AB-':
+      return 'AB_negative';
+    case 'O+':
+      return 'O_positive';
+    case 'O-':
+      return 'O_negative';
+    default:
+      return bloodGroup; 
+  }
+};
+
 export const myCamps = async (req, res) => {
   try {
     const { volunteerId } = req.params;
@@ -174,17 +200,41 @@ export const myCamps = async (req, res) => {
 export const markAppointmentAsDonated = async (req, res) => {
   try {
     // Extract the appointment ID from the request body or params
-    const { appointmentId } = req.body; // Assuming appointmentId is provided in the request body
+    const { slotId, donorId ,quantity,bloodGroup} = req.body; // Assuming appointmentId is provided in the request body
 
     // Find the appointment by ID
-    const appointment = await Appointment.findById(appointmentId);
+    const appointment = await Appointment.findOne({
+      slot:slotId , donor:donorId
+    });
+    
     if (!appointment) {
       return res.status(404).json({ message: 'Appointment not found' });
     }
 
     // Mark the appointment as donated
-    appointment.donated = true;
-    await appointment.save();
+    await Appointment.updateOne(
+      { slot: slotId, donor: donorId },
+      { $set: { donated: true,quantity ,bloodGroup } },
+
+    );
+
+
+     const bloodGroupDB = mapBloodGroup(bloodGroup);
+    console.log(bloodGroupDB)
+    // Update the blood quantity for the camp
+    const bloodQuantity = await BloodQuantity.findOne({ camp: appointment.camp });
+    if (!bloodQuantity) {
+      // If no blood quantity record exists for the camp, create a new one
+      const newBloodQuantity = new BloodQuantity({
+        camp: appointment.camp,
+        [bloodGroupDB]: quantity
+      });
+      await newBloodQuantity.save();
+    } else {
+      // If blood quantity record exists, update the quantity for the corresponding blood group
+      bloodQuantity[bloodGroupDB] += quantity;
+      await bloodQuantity.save();
+    }
 
     // Respond with success message
     res.json({ message: 'Appointment marked as donated successfully' });
@@ -194,3 +244,37 @@ export const markAppointmentAsDonated = async (req, res) => {
   }
 };
 
+
+
+//get slot + donor details for a camp
+export const getAllSlotsWithDonorsForCamp = async (req, res) => {
+  try {
+    const { campId } = req.body;
+
+    // Find the camp by ID
+    const camp = await Camp.findById(campId);
+    if (!camp) {
+      return res.status(404).json({ message: 'Camp not found' });
+    }
+
+    // Find all slots for the camp
+    const slots = await Slot.find({ camp: campId }).populate('donors');
+
+    // Group slots by date
+    const slotsByDate = {};
+    slots.forEach(slot => {
+      const date = slot.date.toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
+      if (!slotsByDate[date]) {
+        slotsByDate[date] = [];
+      }
+      // Replace donor IDs with complete donor information
+      const slotWithDonors = { ...slot._doc, donors: slot.donors.map(donor => donor._doc) };
+      slotsByDate[date].push(slotWithDonors);
+    });
+
+    res.status(200).json(slotsByDate);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
