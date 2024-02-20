@@ -3,6 +3,7 @@ import Modal from 'react-modal'
 import { RegisterCamp } from './RegisterCampPage/RegisterCamp';
 import MapComponent from './Components/MapComponent';
 import 'leaflet/dist/leaflet.css';
+import { Header } from './Components/Header';
 
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
@@ -66,7 +67,8 @@ function App() {
 
   return (
     <div className="">
-      <div className="flex flex-row justify-around my-2">
+      <Header />
+      {/* <div className="flex flex-row justify-around my-2">
         <div className="text-lg font-bold" onClick={() => setCamp(true)} >
           Register Camp
         </div>
@@ -98,9 +100,9 @@ function App() {
           </div>
           <RegisterCamp addData={addData} />
         </Modal>
-      </div>
+      </div> */}
       {/* <MapComponent /> */}
-      <div className='flex flex-wrap justify-center'>
+      {/* <div className='flex flex-wrap justify-center'>
         {camps.map((campy) => (
           <div key={campy.campId} className='p-3 w-[300px] border-black border m-2 rounded shadow-md'>
             <div>{campy.campName}</div>
@@ -112,7 +114,7 @@ function App() {
             </div>
           </div>
         ))}
-      </div>
+      </div> */}
     </div>
   );
 }

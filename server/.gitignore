@@ -3,7 +3,7 @@
 /node_modules
 /.pnp
 .pnp.js
-swagger_output.json
+/swagger_output.json
 # testing
 /coverage
 
