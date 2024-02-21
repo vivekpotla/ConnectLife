@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import Modal from 'react-modal'
 import { RegisterCamp } from './RegisterCampPage/RegisterCamp';
 import MapComponent from './Components/MapComponent';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import { Header } from './Components/Header';
 
@@ -66,8 +67,11 @@ function App() {
   }
 
   return (
-    <div className="">
+    <BrowserRouter>
       <Header />
+      <Routes>
+        <Route path='/' element={<MapComponent />} />
+      </Routes>
       {/* <div className="flex flex-row justify-around my-2">
         <div className="text-lg font-bold" onClick={() => setCamp(true)} >
           Register Camp
@@ -115,7 +119,7 @@ function App() {
           </div>
         ))}
       </div> */}
-    </div>
+    </BrowserRouter>
   );
 }
 
