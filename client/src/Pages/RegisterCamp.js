@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-export const RegisterCamp = ({addData}) => {
+export const RegisterCamp = ({ addData }) => {
     const [campName, setCampName] = useState('');
     const [description, setDescription] = useState('');
     const [location, setLocation] = useState('');
@@ -36,7 +36,7 @@ export const RegisterCamp = ({addData}) => {
         setDonorsPerHour('');
     };
     return (
-        <form onSubmit={handleSubmit} className="max-w-md mx-auto mt-4 p-4 bg-gray-100 rounded-lg shadow-lg">
+        <form onSubmit={handleSubmit} className="w-full mt-4 p-4 bg-gray-100 rounded-lg shadow-lg">
             <div className="mb-4">
                 <label className="block text-gray-700 font-bold mb-2">Camp Name:</label>
                 <input
