@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import axios from 'axios';
 
 export const RegisterCamp = ({ addData }) => {
     const [campName, setCampName] = useState('');
@@ -10,21 +11,28 @@ export const RegisterCamp = ({ addData }) => {
     const [endTime, setEndTime] = useState('');
     const [donorsPerHour, setDonorsPerHour] = useState('');
 
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
         // Handle form submission here, e.g., submit the data to a server
         const formData = {
-            campName,
+            ngo: "18028",
+            name: campName,
             description,
             location,
             startDate,
             startTime,
             endDate,
             endTime,
-            donorsPerHour
+            maxDonorsPerSlot: donorsPerHour
         };
         console.log(formData);
-        addData(formData);
+        // await axios.post("http://localhost:5000/api/ngo/create-camp", formData)
+        //     .then(response => {
+        //         console.log(response.data); // handle successful response
+        //     })
+        //     .catch(error => {
+        //         console.error(error); // handle errors
+        //     });
         // Reset form fields after submission
         setCampName('');
         setDescription('');
@@ -36,7 +44,7 @@ export const RegisterCamp = ({ addData }) => {
         setDonorsPerHour('');
     };
     return (
-        <form onSubmit={handleSubmit} className="w-full mt-4 p-4 bg-gray-100 rounded-lg shadow-lg">
+        <form onSubmit={handleSubmit} className="w-full mt-4 p-4 bg-gray-100 rounded-lg shadow-lg max-w-md">
             <div className="mb-4">
                 <label className="block text-gray-700 font-bold mb-2">Camp Name:</label>
                 <input
@@ -75,25 +83,25 @@ export const RegisterCamp = ({ addData }) => {
                     type="date"
                     value={startDate}
                     onChange={(e) => setStartDate(e.target.value)}
-                    className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    className="mb-4 border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
                     required
                 />
-                <label className="block text-gray-700 font-bold mb-2 mt-2">Start Time:</label>
-                <input
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                    required
-                />
-            </div>
-            <div className="mb-4">
                 <label className="block text-gray-700 font-bold mb-2">End Date:</label>
                 <input
                     type="date"
                     value={endDate}
                     onChange={(e) => setEndDate(e.target.value)}
                     className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                    required
+                />
+            </div>
+            <div className="mb-4">
+                <label className="block text-gray-700 font-bold mb-2 mt-2">Start Time:</label>
+                <input
+                    type="time"
+                    value={startTime}
+                    onChange={(e) => setStartTime(e.target.value)}
+                    className="mb-4 border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
                     required
                 />
                 <label className="block text-gray-700 font-bold mb-2 mt-2">End Time:</label>
