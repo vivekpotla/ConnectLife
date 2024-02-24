@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
-import { RegisterCamp } from './Pages/RegisterCamp';
+import { RegisterCamp } from './Components/NGO/RegisterCamp';
 import MapComponent from './Components/MapComponent';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import { Header } from './Components/Header';
-import { Camps } from './Pages/Camps';
+import { DisplayCamps } from './Components/Camps/DisplayCamps';
 
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
@@ -69,7 +69,7 @@ function App() {
       <Header />
       <Routes>
         <Route path='/' element={<MapComponent />} />
-        <Route path='/camps' element={<Camps />} />
+        <Route path='/camps' element={<DisplayCamps />} />
       </Routes>
 
       {/* <div className="flex flex-row justify-around my-2">
@@ -80,9 +80,9 @@ function App() {
           Book Slot
         </div>
 
-      </div> */}
-      {/* <MapComponent /> */}
-      {/* <div className='flex flex-wrap justify-center'>
+      </div>
+      <MapComponent />
+      <div className='flex flex-wrap justify-center'>
         {camps.map((campy) => (
           <div key={campy.campId} className='p-3 w-[300px] border-black border m-2 rounded shadow-md'>
             <div>{campy.campName}</div>

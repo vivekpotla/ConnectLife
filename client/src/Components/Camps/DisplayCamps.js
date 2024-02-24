@@ -1,10 +1,10 @@
 import { Button } from '@material-tailwind/react'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router';
-import { RegisterCamp } from './RegisterCamp';
+import { RegisterCamp } from '../NGO/RegisterCamp';
 import ReactModal from 'react-modal';
 
-export const Camps = () => {
+export const DisplayCamps = () => {
   const [camp, setCamp] = useState(false);
   const navigate = useNavigate();
   const addData = () => {
