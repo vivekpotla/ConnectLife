@@ -1,0 +1,56 @@
+import Donor from "../Models/Donor.js";
+
+
+//find the nearest donors in 10km range
+export const findNearestDonors = async (req, res) => {
+    try {
+        const { recipientLatitude, recipientLongitude } = req.body;
+
+        // Find the nearest donors within a specified radius (e.g., 10 kilometers)
+        const nearestDonors = await Donor.find({
+            livelocation: {
+                $near: {
+                    $geometry: {
+                        type: 'Point',
+                        coordinates: [recipientLongitude, recipientLatitude] // Note: MongoDB uses [longitude, latitude] order
+                    },
+                    $maxDistance: 10000 // 10 kilometers in meters
+                }
+            }
+        });
+        res.status(200).json(nearestDonors);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+
+//search for donors by their name or bloodType
+export const searchDonors = async (req, res) => {
+    try {
+        const { name, bloodType } = req.body;
+
+        let query = {};
+
+        // Check if name or bloodType is provided in the request
+        if (name) {
+            // Case-insensitive search for donors by name
+            query.name = { $regex: new RegExp(name, 'i') };
+        }
+        if (bloodType) {
+            // Search for donors by bloodType
+            query.bloodGroup = bloodType;
+        }
+
+        // Find donors based on the query
+        const donors = await Donor.find(query);
+
+        res.status(200).json(donors);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ message: 'Internal server error' });
+    }
+};
+
+

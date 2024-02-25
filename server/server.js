@@ -6,6 +6,7 @@ import path from 'path';
 import donorrouter from "./routes/DonorRoute.js";
 import ngoroute from "./routes/NGORoute.js";
 import volunteerroute from "./routes/VolunteerRoute.js";
+import recipientroute from "./Routes/RecipientRoute.js";
 import swaggerUi from 'swagger-ui-express';
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
@@ -22,6 +23,7 @@ App.use(express.json());
 App.use("/api/donor", donorrouter);
 App.use("/api/ngo", ngoroute);
 App.use("/api/volunteer", volunteerroute);
+App.use("/api/recipient", recipientroute);
 
 // ------------deployment------------
 const __dirname = path.resolve();
