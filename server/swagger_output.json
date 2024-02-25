@@ -295,10 +295,13 @@
             "schema": {
               "type": "object",
               "properties": {
+                "donorId": {
+                  "example": "any"
+                },
                 "postId": {
                   "example": "any"
                 },
-                "content": {
+                "comment": {
                   "example": "any"
                 }
               }
@@ -740,9 +743,6 @@
                   "example": "any"
                 },
                 "description": {
-                  "example": "any"
-                },
-                "imageURL": {
                   "example": "any"
                 }
               }

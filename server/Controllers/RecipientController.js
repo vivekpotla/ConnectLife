@@ -1,5 +1,6 @@
 import Donor from "../Models/Donor.js";
 import RequestDetails from "../Models/DetailsRequest.js"
+import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
 import Recipient from "../Models/Recipient.js";
 dotenv.config();

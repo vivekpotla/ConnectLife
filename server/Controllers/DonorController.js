@@ -4,7 +4,9 @@ import Camp from '../Models/Camp.js';
 import Slot from '../Models/Slot.js';
 import AwarenessPost from '../Models/NGOpost.js';
 import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
+
 dotenv.config();
 cloudinary.config({
   cloud_name: process.env.CLOUDNAME,

@@ -4,7 +4,7 @@ import Appointment from '../Models/Appointment.js';
 import Slot from '../Models/Slot.js';
 import Donor from '../Models/Donor.js';
 import BloodQuantity from '../Models/BloodQuantity.js';
-
+import { v2 as cloudinary } from 'cloudinary';
 
 import dotenv from 'dotenv';
 dotenv.config();
