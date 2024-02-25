@@ -28,7 +28,7 @@ import {
 } from "@heroicons/react/24/solid";
 import { ConnectlifeIcon } from "../Icons/ConnectlifeIcon";
 import { DonateBloodIcon } from "../Icons/DonateBloodIcon";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // profile menu component
 const profileMenuItems = [
@@ -248,6 +248,8 @@ export function Header() {
 
     const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
+    const navigate = useNavigate();
+
     React.useEffect(() => {
         window.addEventListener(
             "resize",
@@ -285,7 +287,7 @@ export function Header() {
                     <Button size="sm" variant="text" className="">
                         <span>Log In</span>
                     </Button>
-                    <Button size="sm" variant="gradient" className="">
+                    <Button size="sm" variant="gradient" onClick={() => navigate("/SignUp/NGO")}>
                         <span>Sign Up</span>
                     </Button>
                     <ProfileMenu />

@@ -59,20 +59,20 @@ const MapComponent = () => {
             alert('Error sending location. Please try again.');
         }
     };
-    
+
 
 
     return (
-        <div>
+        <div className=''>
             <h1>Select Location</h1>
             {userLocation && (
                 <p>User Location: Latitude: {userLocation[0]}, Longitude: {userLocation[1]}</p>
             )}
-            {userLocation && <MapContainer center={mapCenter} zoom={mapZoom} onClick={(e) => handleMapClick(e)} style={{ height: '400px', width: '100%' }}>
+            {userLocation && <MapContainer center={mapCenter} zoom={mapZoom} onClick={(e) => handleMapClick(e)} style={{ height: '600px', width: '100%' }}>
                 <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-                {userLocation && <Marker position={userLocation}><Popup>You are here</Popup></Marker>} 
+                {userLocation && <Marker position={userLocation}><Popup>You are here</Popup></Marker>}
                 {selectedLocation && <Marker position={selectedLocation}><Popup>You selected this location</Popup></Marker>}
-               
+
             </MapContainer>}
             {selectedLocation && (
                 <div>

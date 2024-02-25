@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router';
 import { RegisterCamp } from './RegisterCamp';
 import ReactModal from 'react-modal';
+import MapComponent from '../MapComponent';
 
 export const CreateCamps=()=>{
   const [camp, setCamp] = useState(false);
@@ -38,9 +39,9 @@ export const CreateCamps=()=>{
             </svg>
           </button>
         </div>
-        <div className='flex justify-evenly mt-4'>
+        <div className='flex flex-col-reverse md:flex-row justify-evenly mt-4'>
           <div className=''>
-            image
+            <MapComponent />
           </div>
           <RegisterCamp addData={addData} />
         </div>
