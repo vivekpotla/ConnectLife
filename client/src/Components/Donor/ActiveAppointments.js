@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import React from 'react';
 import axios from 'axios';
 import Card from 'react-bootstrap/Card';
+
 export default function ActiveAppointments() {
   const [donatedAppointments, setDonatedAppointments] = useState([]);
   const [notDonatedAppointments, setNotDonatedAppointments] = useState([]);
