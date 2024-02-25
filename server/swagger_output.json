@@ -493,7 +493,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "email": {
+                "phoneNumber": {
                   "example": "any"
                 },
                 "password": {

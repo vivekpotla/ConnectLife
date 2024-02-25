@@ -16,18 +16,16 @@ cloudinary.config({
 //donor signup
 export const registerDonor = async (req, res) => {
   try {
-    const { name, email, password, phoneNumber,aadhaarNumber, bloodGroup ,address } = req.body;
-
+    const { name, email, password, phoneNumber, aadhaarNumber, bloodGroup, address } = req.body;
+    console.log(req.body);
     // Check if phoneNumber is already registered
     const existingDonor = await Donor.findOne({ phoneNumber });
     if (existingDonor) {
       return res.status(400).json({ message: 'Phone number already registered' });
     }
-
-    let path = req.files.image.path
     let imageURL = null
-    if(path) 
-    {
+    if (req.files) {
+      let path = req.files.image.path
       const timestamp = Date.now(); // Get current timestamp
       const public_id = `users/${name}_${timestamp}`;
       await cloudinary.uploader.upload(path, {
@@ -35,18 +33,18 @@ export const registerDonor = async (req, res) => {
         width: 500,
         height: 300
       })
-      .then((result) => {
-        imageURL = result.secure_url;
-  
-      })
-      .catch((error) => {
-        console.log("image upload error")
-        console.error(error);
-      });
+        .then((result) => {
+          imageURL = result.secure_url;
+
+        })
+        .catch((error) => {
+          console.log("image upload error")
+          console.error(error);
+        });
     }
     const hashedPassword = bcrypt.hashSync(password);
     // Create new donor
-    const newDonor = await Donor.create({ name, email, password:hashedPassword, phoneNumber, bloodGroup ,address,aadhaarNumber,  ...(imageURL && { imageURL })});
+    const newDonor = await Donor.create({ name, email, password: hashedPassword, phoneNumber, bloodGroup, address, aadhaarNumber, ...(imageURL && { imageURL }) });
 
     res.json(newDonor);
   } catch (err) {
@@ -65,8 +63,8 @@ export const loginDonor = async (req, res) => {
       return res.status(404).json({ message: 'Donor not found' });
     }
     // Check if password is correct
-    const isPasswordValid = bcrypt.compareSync(password,donor.password);
-   
+    const isPasswordValid = bcrypt.compareSync(password, donor.password);
+
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' });
     }
@@ -81,8 +79,8 @@ export const loginDonor = async (req, res) => {
 //update live location 
 export const updateDonorLocation = async (req, res) => {
   try {
-    
-    const {donorId, latitude, longitude } = req.body;
+
+    const { donorId, latitude, longitude } = req.body;
 
     // Find the donor by ID
     const donor = await Donor.findById(donorId);
@@ -124,32 +122,32 @@ export const getDonorAppointments = async (req, res) => {
 //book appointment slot
 export const bookAppointment = async (req, res) => {
   try {
-    
-    const { campId, date, slot , donorId} = req.body;
-    let donor = Donor.find({_id:donorId})
+
+    const { campId, date, slot, donorId } = req.body;
+    let donor = Donor.find({ _id: donorId })
     // Check if the slot is available
-    const {isSlotAvailable , slotId} = await isSlotAvailableForDate(campId, date, slot);
+    const { isSlotAvailable, slotId } = await isSlotAvailableForDate(campId, date, slot);
     if (!isSlotAvailable) {
       return res.status(400).json({ message: 'Slot is not available' });
     }
-   
 
-     console.log( "slotID" , slotId.toString() )
-     console.log( "DonorID" , donorId )
-     console.log( "camp", campId)
+
+    console.log("slotID", slotId.toString())
+    console.log("DonorID", donorId)
+    console.log("camp", campId)
     // Create appointment
     const appointment = await Appointment.create({
       donor: donorId,
       camp: campId,
       date: new Date(date),
-      slot:slotId.toString(),
-      bloodGroup:donor.bloodGroup
+      slot: slotId.toString(),
+      bloodGroup: donor.bloodGroup
     });
-     // Decrement slotsLeft for the booked slot
-     await Slot.findOneAndUpdate(
-      { camp: campId, date: new Date(date), startTime:  slot.startTime , endTime: slot.endTime  },
-      { $inc: { slotsLeft: -1 } ,$push: { donors: donorId }} // Decrement slotsLeft by 1
-      
+    // Decrement slotsLeft for the booked slot
+    await Slot.findOneAndUpdate(
+      { camp: campId, date: new Date(date), startTime: slot.startTime, endTime: slot.endTime },
+      { $inc: { slotsLeft: -1 }, $push: { donors: donorId } } // Decrement slotsLeft by 1
+
     );
     await Donor.findByIdAndUpdate(donorId, { $push: { previousAppointments: appointment._id } });
     res.json(appointment);
@@ -179,7 +177,7 @@ export const searchBloodDonationCamps = async (req, res) => {
 //search camps by location (nearest)
 export const findNearestCamps = async (req, res) => {
   try {
-    const { latitude, longitude } = req.body; 
+    const { latitude, longitude } = req.body;
 
     // Find the nearest camps within a specified radius (e.g., 10 kilometers)
     const nearestCamps = await Camp.find({
@@ -241,38 +239,38 @@ async function isSlotAvailableForDate(campId, date, slot) {
     const camp = await Camp.findById(campId);
     if (!camp) {
       console.log("camp ledhu")
-      return {isSlotAvailable:false,slotId:null};
+      return { isSlotAvailable: false, slotId: null };
     }
 
     // Check if the slot is within the camp's operational hours
     const { startTime, endTime } = camp;
     if (slot.startTime < startTime || slot.endTime > endTime) {
       console.log("false")
-      return {isSlotAvailable:false,slotId:null};
+      return { isSlotAvailable: false, slotId: null };
     }
     let dt = new Date(date);
     // Find the slot for the given date and time
     const slotInfo = await Slot.findOne({
       camp: campId,
       date: dt,
-      startTime:   slot.startTime ,
-      endTime:   slot.endTime 
+      startTime: slot.startTime,
+      endTime: slot.endTime
     });
     if (!slotInfo) {
       console.log("slot eh ledhu")
-      return {isSlotAvailable:false,slotId:null}; // Slot not found for the given date and time
+      return { isSlotAvailable: false, slotId: null }; // Slot not found for the given date and time
     }
 
     // Check if there are available slots left
     if (slotInfo.slotsLeft > 0) {
-      return {isSlotAvailable:true,slotId:slotInfo._id}; // Slot is available
+      return { isSlotAvailable: true, slotId: slotInfo._id }; // Slot is available
     } else {
       console.log("slot full")
-      return {isSlotAvailable:false,slotId:null}; // No available slots left
+      return { isSlotAvailable: false, slotId: null }; // No available slots left
     }
   } catch (error) {
     console.error(error);
-    return {isSlotAvailable:false,slotId:null}; // Error occurred, return false
+    return { isSlotAvailable: false, slotId: null }; // Error occurred, return false
   }
 }
 
@@ -299,7 +297,7 @@ export const getAwarenessPosts = async (req, res) => {
 //adding comments to posts
 export const addCommentToPost = async (req, res) => {
   try {
-    const {postId, comment } = req.body;
+    const { postId, comment } = req.body;
     const post = await AwarenessPost.findById(postId);
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
