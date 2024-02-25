@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import React from 'react';
 import axios from 'axios';
-
+import Card from 'react-bootstrap/Card';
 export default function ActiveAppointments() {
   const [donatedAppointments, setDonatedAppointments] = useState([]);
   const [notDonatedAppointments, setNotDonatedAppointments] = useState([]);
@@ -31,30 +31,55 @@ export default function ActiveAppointments() {
   }, []); // Empty dependency array to run the effect only once on component mount
 
   // Display loading, error, or data
- 
-    
+
+
   return (
-    <div>
-      {error && <div>Error: {error}</div>}
-      {/* Render your appointments */}
-      <div>
-        <h2>Donated Appointments</h2>
-        <ul>
-          {/* {donatedAppointments.map(appointment => (
-            <li key={appointment._id}>{appointment.name} - {appointment.location}</li>
-          ))} */}
-          <li>Nss-camp</li>
-          <li>Hyderabad</li>
-          <li>9:00-10:00</li>
-        </ul>
-      </div>
-      <div>
-        <h2>Not Donated Appointments</h2>
-        <ul>
-          {notDonatedAppointments.map(appointment => (
-            <li key={appointment._id}>{appointment.name} - {appointment.location}</li>
-          ))}
-        </ul>
+
+    <div class="container">
+      <div class="row">
+
+         {donatedAppointments.map((appointment, index) => (
+          <div className="col-md-6 mx-auto mt-5" key={index}>
+            <Card>
+              <Card.Header>Appointment Details</Card.Header>
+              <Card.Body className="col-md">
+                <div>
+                  <strong>Name:</strong> {appointment.name}
+                </div>
+                <div>
+                  <strong>Location:</strong> {appointment.location}
+                </div>
+                <div>
+                  <strong>Time:</strong> {appointment.time}
+                </div>
+                <div>
+                  <strong>Status:</strong> Donated
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        ))}
+        {notDonatedAppointments.map((appointment, index) => (
+          <div className="col-md-6 mx-auto mt-5" key={index}>
+            <Card>
+              <Card.Header>Appointment Details</Card.Header>
+              <Card.Body className="col-md">
+                <div>
+                  <strong>Name:</strong> {appointment.name}
+                </div>
+                <div>
+                  <strong>Location:</strong> {appointment.location}
+                </div>
+                <div>
+                  <strong>Time:</strong> {appointment.time}
+                </div>
+                <div>
+                  <strong>Status:</strong> Not Donated
+                </div>
+              </Card.Body>
+            </Card>
+          </div>
+        ))}
       </div>
     </div>
   )
