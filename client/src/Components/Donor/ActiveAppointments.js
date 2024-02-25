@@ -38,49 +38,34 @@ export default function ActiveAppointments() {
 
     <div class="container">
       <div class="row">
-
-         {donatedAppointments.map((appointment, index) => (
-          <div className="col-md-6 mx-auto mt-5" key={index}>
-            <Card>
-              <Card.Header>Appointment Details</Card.Header>
-              <Card.Body className="col-md">
+        <div class="col-md-6 mx-auto mt-5">
+          <div class="card">
+            <div class="card-header">
+              Appointment Details
+            </div>
+            <div className="card-body">
+            <div className="row">
+              <div className="col-md-8">
                 <div>
-                  <strong>Name:</strong> {appointment.name}
+                  <strong>Name:</strong> Nss-camp
                 </div>
                 <div>
-                  <strong>Location:</strong> {appointment.location}
+                  <strong>Location:</strong> Hyderabad
                 </div>
                 <div>
-                  <strong>Time:</strong> {appointment.time}
+                  <strong>Time:</strong> 9:00-10:00
                 </div>
+              </div>
+              <div className="col-md-4">
                 <div>
                   <strong>Status:</strong> Donated
                 </div>
-              </Card.Body>
-            </Card>
+              </div>
+              </div>
+            </div>
+
           </div>
-        ))}
-        {notDonatedAppointments.map((appointment, index) => (
-          <div className="col-md-6 mx-auto mt-5" key={index}>
-            <Card>
-              <Card.Header>Appointment Details</Card.Header>
-              <Card.Body className="col-md">
-                <div>
-                  <strong>Name:</strong> {appointment.name}
-                </div>
-                <div>
-                  <strong>Location:</strong> {appointment.location}
-                </div>
-                <div>
-                  <strong>Time:</strong> {appointment.time}
-                </div>
-                <div>
-                  <strong>Status:</strong> Not Donated
-                </div>
-              </Card.Body>
-            </Card>
-          </div>
-        ))}
+        </div>
       </div>
     </div>
   )
