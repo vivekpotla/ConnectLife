@@ -1,11 +1,11 @@
 import React, { useState } from 'react'
 import Modal from 'react-modal'
-import { RegisterCamp } from './Components/NGO/RegisterCamp';
+import { RegisterCamp } from './Components/Camps/RegisterCamp';
 import MapComponent from './Components/MapComponent';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import { Header } from './Components/Header';
-import { DisplayCamps } from './Components/Camps/DisplayCamps';
+import {NgoHomePage} from './Components/NGO/NgoHomePage';
 
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
@@ -69,7 +69,7 @@ function App() {
       <Header />
       <Routes>
         <Route path='/' element={<MapComponent />} />
-        <Route path='/camps' element={<DisplayCamps />} />
+        <Route path='/ngo' element={<NgoHomePage />} />
       </Routes>
 
       {/* <div className="flex flex-row justify-around my-2">

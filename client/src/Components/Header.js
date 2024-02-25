@@ -202,6 +202,11 @@ const navListItems = [
         link: "/camps"
     },
     {
+        label: "NGO",
+        icon: BuildingStorefrontIcon,
+        link: "/ngo"
+    },
+    {
         label: "Donate",
         icon: DonateBloodIcon,
         link: "/donor"
