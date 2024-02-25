@@ -6,7 +6,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import { Header } from './Components/Header';
 import {NgoHomePage} from './Components/NGO/NgoHomePage';
-
+import Registration from './Components/SignUp/Registration';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -17,6 +17,7 @@ function App() {
       <Header />
       <Routes>
         <Route path='/' element={<MapComponent />} />
+        <Route path='/signup/:userType' element={<Registration />} />
         <Route path='/ngo' element={<NgoHomePage />} />
       </Routes>
     </BrowserRouter>
