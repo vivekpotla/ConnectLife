@@ -10,10 +10,12 @@ const awarenessPostSchema = new Schema({
   authorNGO: { type: Schema.Types.ObjectId, ref: 'NGO', required: true },
   comments: [{
     author: { type: Schema.Types.ObjectId, ref: 'Donor' },
-    content: { type: String, required: true },
+    comment: { type: String, required: true },
+    createdAt: { type: Date, default: Date.now },
     replies: [{
       author: { type: Schema.Types.ObjectId, ref: 'NGO' },
-      content: { type: String, required: true },
+      comment: { type: String, required: true },
+      createdAt: { type: Date, default: Date.now },
     }],
   }],
 }, { timestamps: true });

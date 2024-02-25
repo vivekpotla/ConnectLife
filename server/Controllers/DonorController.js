@@ -258,8 +258,7 @@ function generateToken(donor) {
 
 
 
-//Posts 
-
+//get all Posts 
 export const getAwarenessPosts = async (req, res) => {
   try {
     const posts = await AwarenessPost.find().sort({ createdAt: -1 }); // Sort by createdAt field in descending order
@@ -270,14 +269,16 @@ export const getAwarenessPosts = async (req, res) => {
   }
 };
 
+
+//adding comments to posts
 export const addCommentToPost = async (req, res) => {
   try {
-    const {postId, content } = req.body;
+    const {postId, comment } = req.body;
     const post = await AwarenessPost.findById(postId);
     if (!post) {
       return res.status(404).json({ message: 'Post not found' });
     }
-    post.comments.push({ author: req.donor.id, content });
+    post.comments.push({ author: req.body.donorId, comment });
     const updatedPost = await post.save();
     res.status(200).json(updatedPost);
   } catch (error) {
@@ -286,7 +287,7 @@ export const addCommentToPost = async (req, res) => {
   }
 };
 
-
+//viewing recipient requests for blood
 export const viewRequests = async (req, res) => {
   try {
     const { donorId } = req.body;
