@@ -496,7 +496,7 @@ export const editOrDeletePost = async (req, res) => {
       let newImageURL = null;
       let path = req.files.image.path
       const timestamp = Date.now(); // Get current timestamp
-      const public_id = `posts/${ngoId}_${timestamp}`;
+      const public_id = `posts/${req.body.ngoId}_${timestamp}`;
       await cloudinary.uploader.upload(path, {
         public_id: public_id,
         width: 500,
