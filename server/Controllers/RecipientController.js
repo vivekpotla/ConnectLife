@@ -71,7 +71,7 @@ export const loginRecipient = async (req, res) => {
 //find the nearest donors in 10km range
 export const findNearestDonors = async (req, res) => {
     try {
-        const { recipientLatitude, recipientLongitude } = req.body;
+        const { recipientLatitude, recipientLongitude, bloodType } = req.body;
 
         // Find the nearest donors within a specified radius (e.g., 10 kilometers)
         const nearestDonors = await Donor.find({
@@ -83,7 +83,8 @@ export const findNearestDonors = async (req, res) => {
                     },
                     $maxDistance: 10000 // 10 kilometers in meters
                 }
-            }
+            },
+            bloodType
         });
         res.status(200).json(nearestDonors);
     } catch (err) {
@@ -109,12 +110,12 @@ export const createRequest = async (req, res) => {
 export const viewRequests = async (req, res) => {
     try {
       const { recipientId } = req.body;
-      const requests = await RequestDetails.find({ recipient: recipientId }).populate('donor', 'name email phoneNumber status').exec();
+      const requests = await RequestDetails.find({ recipient: recipientId }).populate('donor', 'name email phoneNumber bloodGroup').exec();
       
       // Filter requests based on status and include donor contact details if status is accepted
       const filteredRequests = requests.map(request => {
-        if (request.status === 'accepted') {
-          return { ...request.toJSON(), donor: { ...request.donor.toJSON(), email: request.donor.email, phoneNumber: request.donor.phoneNumber } };
+        if (request.status !== 'accepted') {
+          return { ...request.toJSON(), donor: request.donor.name };
         } else {
           return request.toJSON();
         }
@@ -133,23 +134,9 @@ export const viewRequests = async (req, res) => {
 //search for donors by their name or bloodType
 export const searchDonors = async (req, res) => {
     try {
-        const { name, bloodType } = req.body;
-
-        let query = {};
-
-        // Check if name or bloodType is provided in the request
-        if (name) {
-            // Case-insensitive search for donors by name
-            query.name = { $regex: new RegExp(name, 'i') };
-        }
-        if (bloodType) {
-            // Search for donors by bloodType
-            query.bloodGroup = bloodType;
-        }
-
+        const { bloodType } = req.body;
         // Find donors based on the query
-        const donors = await Donor.find(query);
-
+        const donors =  await Donor.find({ bloodGroup: bloodType }).select('name bloodGroup').exec();
         res.status(200).json(donors);
     } catch (err) {
         console.error(err);

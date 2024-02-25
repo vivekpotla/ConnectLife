@@ -3,6 +3,7 @@ import Appointment from '../Models/Appointment.js';
 import Camp from '../Models/Camp.js';
 import Slot from '../Models/Slot.js';
 import AwarenessPost from '../Models/NGOpost.js';
+import RequestDetails from '../Models/DetailsRequest.js';
 import bcrypt from "bcryptjs";
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
@@ -315,7 +316,7 @@ export const addCommentToPost = async (req, res) => {
 export const viewRequests = async (req, res) => {
   try {
     const { donorId } = req.body;
-    const requests = await Request.find({ donor: donorId }).populate('recipient', 'name').exec();
+    const requests = await RequestDetails.find({ donor: donorId }).populate('recipient', 'name phoneNumber').exec();
     res.status(200).json(requests);
   } catch (error) {
     console.error(error);
@@ -327,7 +328,7 @@ export const viewRequests = async (req, res) => {
 export const updateRequestStatus = async (req, res) => {
   try {
     const { requestId, status } = req.body;
-    const request = await Request.findByIdAndUpdate(requestId, { status }, { new: true });
+    const request = await RequestDetails.findByIdAndUpdate(requestId, { status }, { new: true });
     res.status(200).json(request);
   } catch (error) {
     console.error(error);
