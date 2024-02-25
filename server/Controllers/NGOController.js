@@ -432,8 +432,10 @@ export const createAwarenessPost = async (req, res) => {
     let { ngoId, description, title } = req.body
     let imageURL = null;
     let path = req.files.image.path
+    const timestamp = Date.now(); // Get current timestamp
+    const public_id = `posts/${ngoId}_${timestamp}`;
     await cloudinary.uploader.upload(path, {
-      public_id: 'posts/image1',
+      public_id: public_id,
       width: 500,
       height: 300
     })
@@ -493,8 +495,10 @@ export const editOrDeletePost = async (req, res) => {
 
       let newImageURL = null;
       let path = req.files.image.path
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `posts/${ngoId}_${timestamp}`;
       await cloudinary.uploader.upload(path, {
-        public_id: 'posts/image1',
+        public_id: public_id,
         width: 500,
         height: 300
       })
