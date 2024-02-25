@@ -18,6 +18,11 @@ const ngoSchema = new Schema({
     type: String,
     required: true,
   },
+  imageURL:{
+    type: String,
+    required: false,
+    default:"https://nss.gov.in/sites/default/files/nsshomepage.jpeg"
+  },
   phoneNumber: {
     type: String,
     required: true,

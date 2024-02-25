@@ -5,18 +5,43 @@ import Slot from '../Models/Slot.js';
 import Donor from '../Models/Donor.js';
 import BloodQuantity from '../Models/BloodQuantity.js';
 
+
+import dotenv from 'dotenv';
+dotenv.config();
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.APIKEY,
+  api_secret: process.env.APISECRET
+});
 //Volunteer Signup
 export const registerVolunteer = async (req, res) => {
   try {
     const { name, email, password, contactNumber, aadhaarNumber, address } = req.body;
-
+    let path = req.files.image.path
+    let imageURL = null
+    const timestamp = Date.now(); // Get current timestamp
+    const public_id = `users/${name}_${timestamp}`;
+    await cloudinary.uploader.upload(path, {
+      public_id: public_id,
+      width: 500,
+      height: 300
+    })
+      .then((result) => {
+        imageURL = result.secure_url;
+  
+      })
+      .catch((error) => {
+        console.log("image upload error")
+        console.error(error);
+      });
     const volunteer = new Volunteer({
       name,
       email,
       password,
       contactNumber,
       aadhaarNumber,
-      address
+      address,
+      ...(imageURL && { imageURL })
     });
 
     await volunteer.save();

@@ -4,6 +4,13 @@ import Camp from '../Models/Camp.js';
 import Slot from '../Models/Slot.js';
 import AwarenessPost from '../Models/NGOpost.js';
 
+import dotenv from 'dotenv';
+dotenv.config();
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.APIKEY,
+  api_secret: process.env.APISECRET
+});
 //donor signup
 export const registerDonor = async (req, res) => {
   try {
@@ -15,8 +22,26 @@ export const registerDonor = async (req, res) => {
       return res.status(400).json({ message: 'Phone number already registered' });
     }
 
+    let path = req.files.image.path
+    let imageURL = null
+    const timestamp = Date.now(); // Get current timestamp
+    const public_id = `users/${name}_${timestamp}`;
+    await cloudinary.uploader.upload(path, {
+      public_id: public_id,
+      width: 500,
+      height: 300
+    })
+      .then((result) => {
+        imageURL = result.secure_url;
+  
+      })
+      .catch((error) => {
+        console.log("image upload error")
+        console.error(error);
+      });
+    
     // Create new donor
-    const newDonor = await Donor.create({ name, email, password, phoneNumber, bloodGroup ,address,aadhaarNumber});
+    const newDonor = await Donor.create({ name, email, password, phoneNumber, bloodGroup ,address,aadhaarNumber,  ...(imageURL && { imageURL })});
 
     res.json(newDonor);
   } catch (err) {

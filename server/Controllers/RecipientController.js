@@ -1,6 +1,55 @@
 import Donor from "../Models/Donor.js";
 import RequestDetails from "../Models/DetailsRequest.js"
 
+import dotenv from 'dotenv';
+dotenv.config();
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.APIKEY,
+  api_secret: process.env.APISECRET
+});
+
+//signup recipient
+//donor signup
+export const registerRecipient = async (req, res) => {
+  try {
+    const { name, email, password, phoneNumber,aadhaarNumber, bloodGroup ,address } = req.body;
+
+    // Check if phoneNumber is already registered
+    const existingRecipient = await Recipient.findOne({ phoneNumber });
+    if (existingRecipient) {
+      return res.status(400).json({ message: 'Phone number already registered' });
+    }
+
+    let path = req.files.image.path
+    let imageURL = null
+    const timestamp = Date.now(); // Get current timestamp
+    const public_id = `users/${name}_${timestamp}`;
+    await cloudinary.uploader.upload(path, {
+      public_id: public_id,
+      width: 500,
+      height: 300
+    })
+      .then((result) => {
+        imageURL = result.secure_url;
+  
+      })
+      .catch((error) => {
+        console.log("image upload error")
+        console.error(error);
+      });
+    
+    // Create new donor
+    const newRecipient = await Donor.create({ name, email, password, phoneNumber, bloodGroup ,address,aadhaarNumber,  ...(imageURL && { imageURL })});
+
+    res.json(newRecipient);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
 //find the nearest donors in 10km range
 export const findNearestDonors = async (req, res) => {
     try {

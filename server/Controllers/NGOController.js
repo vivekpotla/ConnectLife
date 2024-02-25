@@ -27,7 +27,23 @@ export const registerNGO = async (req, res) => {
     if (existingNGO) {
       return res.status(400).json({ message: 'NGO with this email or phone number already exists' });
     }
-
+    let path = req.files.image.path
+    let imageURL = null
+    const timestamp = Date.now(); // Get current timestamp
+    const public_id = `users/${name}_${timestamp}`;
+    await cloudinary.uploader.upload(path, {
+      public_id: public_id,
+      width: 500,
+      height: 300
+    })
+      .then((result) => {
+        imageURL = result.secure_url;
+  
+      })
+      .catch((error) => {
+        console.log("image upload error")
+        console.error(error);
+      });
     // Hash the password
     // const hashedPassword = await bcrypt.hash(password, 10);
 
@@ -38,7 +54,8 @@ export const registerNGO = async (req, res) => {
       password: password,
       phoneNumber,
       address,
-      description
+      description,
+      ...(imageURL && { imageURL })
     });
 
     res.status(201).json({ message: 'NGO registered successfully' });
@@ -93,6 +110,23 @@ export const createBloodDonationCamp = async (req, res) => {
 
     } = req.body;
 
+    let path = req.files.image.path
+    let imageURL = null
+    const timestamp = Date.now(); // Get current timestamp
+    const public_id = `camps/${ngoID}_${timestamp}`;
+    await cloudinary.uploader.upload(path, {
+      public_id: public_id,
+      width: 500,
+      height: 300
+    })
+      .then((result) => {
+        imageURL = result.secure_url;
+  
+      })
+      .catch((error) => {
+        console.log("image upload error")
+        console.error(error);
+      });
     if (!startTime || !endTime) {
       return res.status(400).json({ message: 'Start time and end time of the day are required' });
     }
@@ -110,8 +144,8 @@ export const createBloodDonationCamp = async (req, res) => {
       maxDonorsPerSlot,
       startTime,
       endTime,
-      name
-
+      name,
+      ...(imageURL && { imageURL })
     });
 
     const sD = new Date(startDate);

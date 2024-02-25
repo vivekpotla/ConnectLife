@@ -11,6 +11,11 @@ const volunteerSchema = new Schema({
     unique: true,
     required: true
   },
+  imageURL:{
+    type: String,
+    required: false,
+    default:"https://i.pinimg.com/736x/64/81/22/6481225432795d8cdf48f0f85800cf66.jpg"
+  },
   contactNumber: { type: String, required: true },
   address: {
     street: { type: String, required: true },

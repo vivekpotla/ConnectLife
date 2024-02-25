@@ -7,6 +7,11 @@ const donorSchema = new Schema({
     type: String,
     required: true
   },
+  imageURL:{
+    type: String,
+    required: false,
+    default:"https://i.pinimg.com/736x/64/81/22/6481225432795d8cdf48f0f85800cf66.jpg"
+  },
   aadhaarNumber: {
     type: String,
     unique: true,
