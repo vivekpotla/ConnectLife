@@ -7,7 +7,16 @@ import Appointment from '../Models/Appointment.js';
 import BloodQuantity from '../Models/BloodQuantity.js';
 import twilio from "twilio";
 import nodemailer from 'nodemailer';
+import AwarenessPost from '../Models/NGOpost.js';
+import {v2 as cloudinary} from 'cloudinary';
 
+import dotenv from 'dotenv';  
+dotenv.config();  
+cloudinary.config({ 
+  cloud_name: process.env.CLOUDNAME, 
+  api_key: process.env.APIKEY, 
+  api_secret: process.env.APISECRET 
+});
 //NGO Register
 export const registerNGO = async (req, res) => {
   try {
@@ -406,6 +415,116 @@ export const getPreviousCamps = async (req, res) => {
     const previousCamps = await Camp.find({ ngo: ngoId });
 
     res.json(previousCamps);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+
+
+//Create Awareness Posts
+//must use FormData in Client
+export const createAwarenessPost = async (req, res) => {
+  try {
+    //const  form_data = req.body;
+    let {ngoId, description, title} = req.body
+    let imageURL =null;
+    let path = req.files.image.path
+   await cloudinary.uploader.upload(path, {
+      public_id: 'posts/image1',  
+      width: 500,  
+      height:300
+    })
+    .then((result) => {
+       imageURL = result.secure_url;
+       console.log(imageURL)
+    })
+    .catch((error) => {
+      console.log("image upload error")
+      console.error(error);
+    });
+    console.log("NOW", imageURL)
+   const newPost = new AwarenessPost({ title, description, imageURL, authorNGO: ngoId});
+   const savedPost = await newPost.save();
+     res.status(201).json(savedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+export const replyToComment = async (req, res) => {
+  try {
+  
+    const { postId, commentIndex,content } = req.body;
+    // Find the post by ID
+    const post = await AwarenessPost.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    // Check if the comment index is valid
+    if (commentIndex < 0 || commentIndex >= post.comments.length) {
+      return res.status(404).json({ message: 'Invalid comment index' });
+    }
+    // Add the reply to the comment
+    post.comments[commentIndex].replies.push({
+      author: req.NGO.id,
+      content,
+    });
+    // Save the post
+    await post.save();
+    res.status(200).json({ message: 'Reply added successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+export const editOrDeletePost = async (req, res) => {
+  try {
+    const { postId, type } = req.body;
+
+    if (type === 'edit') {
+      const { title, description, imageURL } = req.body;
+
+      const updatedPost = await AwarenessPost.findOneAndUpdate(
+        { _id: postId, author: req.NGO.id },
+        { title, description, imageURL },
+        { new: true }
+      );
+
+      if (!updatedPost) {
+        return res.status(404).json({ message: 'Post not found or you are not authorized to edit it' });
+      }
+
+      return res.status(200).json(updatedPost);
+    } else if (type === 'delete') {
+      const deletedPost = await AwarenessPost.findOneAndDelete({ _id: postId, author: req.NGO.id });
+
+      if (!deletedPost) {
+        return res.status(404).json({ message: 'Post not found or you are not authorized to delete it' });
+      }
+
+      return res.status(200).json({ message: 'Post deleted successfully' });
+    } else {
+      return res.status(400).json({ message: 'Invalid request type' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+//view all posts by an NGO
+export const viewAllPosts = async (req, res) => {
+  try {
+    const posts = await AwarenessPost.find({ author: req.NGO.id });
+    res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

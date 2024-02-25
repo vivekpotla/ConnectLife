@@ -11,13 +11,17 @@ import swaggerUi from 'swagger-ui-express';
 import { createRequire } from "module";
 const require = createRequire(import.meta.url);
 const swaggerDoc = require("./swagger_output.json");
-
+import  bodyParser from 'body-parser';
+import formData from 'express-form-data'
 dotenv.config();
 const App = express();
 mongoose.connect(process.env.CONNECTION_URL)
     .then(() => console.log("Connected to database"))
     .catch((err) => console.log(err))
 
+App.use(bodyParser.json());
+App.use(bodyParser.urlencoded({ extended: true }));
+App.use(formData.parse());
 App.use(cors());
 App.use(express.json());
 App.use("/api/donor", donorrouter);

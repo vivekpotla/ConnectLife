@@ -1,5 +1,5 @@
 import Donor from "../Models/Donor.js";
-
+import RequestDetails from "../Models/DetailsRequest.js"
 
 //find the nearest donors in 10km range
 export const findNearestDonors = async (req, res) => {
@@ -24,6 +24,46 @@ export const findNearestDonors = async (req, res) => {
         res.status(500).json({ message: 'Internal server error' });
     }
 };
+
+// Create a new request from recipient to donor
+export const createRequest = async (req, res) => {
+    try {
+      const { recipientId, donorId } = req.body;
+      const request = await RequestDetails.create({ recipient: recipientId, donor: donorId });
+      res.status(201).json(request);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
+  
+
+  export const viewRequests = async (req, res) => {
+    try {
+      const { recipientId } = req.body;
+      const requests = await RequestDetails.find({ recipient: recipientId }).populate('donor', 'name email phoneNumber status').exec();
+      
+      // Filter requests based on status and include donor contact details if status is accepted
+      const filteredRequests = requests.map(request => {
+        if (request.status === 'accepted') {
+          return { ...request.toJSON(), donor: { ...request.donor.toJSON(), email: request.donor.email, phoneNumber: request.donor.phoneNumber } };
+        } else {
+          return request.toJSON();
+        }
+      });
+      
+      res.status(200).json(filteredRequests);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal server error' });
+    }
+  };
+  
+  
+
+  
+
 
 
 //search for donors by their name or bloodType

@@ -2,6 +2,7 @@ import Donor from '../Models/Donor.js';
 import Appointment from '../Models/Appointment.js';
 import Camp from '../Models/Camp.js';
 import Slot from '../Models/Slot.js';
+import AwarenessPost from '../Models/NGOpost.js';
 
 //donor signup
 export const registerDonor = async (req, res) => {
@@ -254,3 +255,57 @@ async function isSlotAvailableForDate(campId, date, slot) {
 function generateToken(donor) {
   // Implement token generation logic (e.g., using JWT library)
 }
+
+
+
+//Posts 
+
+export const getAwarenessPosts = async (req, res) => {
+  try {
+    const posts = await AwarenessPost.find().sort({ createdAt: -1 }); // Sort by createdAt field in descending order
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+export const addCommentToPost = async (req, res) => {
+  try {
+    const {postId, content } = req.body;
+    const post = await AwarenessPost.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    post.comments.push({ author: req.donor.id, content });
+    const updatedPost = await post.save();
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+export const viewRequests = async (req, res) => {
+  try {
+    const { donorId } = req.body;
+    const requests = await Request.find({ donor: donorId }).populate('recipient', 'name').exec();
+    res.status(200).json(requests);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Update the status of a request (accepted/declined) by donor
+export const updateRequestStatus = async (req, res) => {
+  try {
+    const { requestId, status } = req.body;
+    const request = await Request.findByIdAndUpdate(requestId, { status }, { new: true });
+    res.status(200).json(request);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
