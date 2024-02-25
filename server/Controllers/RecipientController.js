@@ -1,7 +1,7 @@
 import Donor from "../Models/Donor.js";
 import RequestDetails from "../Models/DetailsRequest.js"
-
 import dotenv from 'dotenv';
+import Recipient from "../Models/Recipient.js";
 dotenv.config();
 cloudinary.config({
   cloud_name: process.env.CLOUDNAME,
@@ -10,17 +10,14 @@ cloudinary.config({
 });
 
 //signup recipient
-//donor signup
 export const registerRecipient = async (req, res) => {
   try {
     const { name, email, password, phoneNumber,aadhaarNumber, bloodGroup ,address } = req.body;
-
     // Check if phoneNumber is already registered
     const existingRecipient = await Recipient.findOne({ phoneNumber });
     if (existingRecipient) {
       return res.status(400).json({ message: 'Phone number already registered' });
     }
-
     let path = req.files.image.path
     let imageURL = null
     const timestamp = Date.now(); // Get current timestamp
@@ -39,9 +36,8 @@ export const registerRecipient = async (req, res) => {
         console.error(error);
       });
     
-    // Create new donor
-    const newRecipient = await Donor.create({ name, email, password, phoneNumber, bloodGroup ,address,aadhaarNumber,  ...(imageURL && { imageURL })});
-
+    // Create new recipient
+    const newRecipient = await Recipient.create({ name, email, password, phoneNumber, bloodGroup ,address,aadhaarNumber,  ...(imageURL && { imageURL })});
     res.json(newRecipient);
   } catch (err) {
     console.error(err);
@@ -49,6 +45,27 @@ export const registerRecipient = async (req, res) => {
   }
 };
 
+//login 
+//donor login
+export const loginRecipient = async (req, res) => {
+  try {
+    const { phoneNumber, password } = req.body;
+    // Check if recipient exists with provided phoneNumber
+    const recipient = await Recipient.findOne({ phoneNumber });
+    if (!recipient) {
+      return res.status(404).json({ message: 'Recipient not found' });
+    }
+    // Check if password is correct
+    const isPasswordValid = bcrypt.compareSync(password,recipient.password);
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
+    return res.status(200).json(recipient);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
 
 //find the nearest donors in 10km range
 export const findNearestDonors = async (req, res) => {
@@ -84,11 +101,11 @@ export const createRequest = async (req, res) => {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  };
+};
   
   
 //view all my request
-  export const viewRequests = async (req, res) => {
+export const viewRequests = async (req, res) => {
     try {
       const { recipientId } = req.body;
       const requests = await RequestDetails.find({ recipient: recipientId }).populate('donor', 'name email phoneNumber status').exec();
@@ -107,12 +124,9 @@ export const createRequest = async (req, res) => {
       console.error(error);
       res.status(500).json({ message: 'Internal server error' });
     }
-  };
+};
   
   
-
-  
-
 
 
 //search for donors by their name or bloodType

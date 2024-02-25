@@ -3,7 +3,7 @@ import Appointment from '../Models/Appointment.js';
 import Camp from '../Models/Camp.js';
 import Slot from '../Models/Slot.js';
 import AwarenessPost from '../Models/NGOpost.js';
-
+import bcrypt from "bcryptjs";
 import dotenv from 'dotenv';
 dotenv.config();
 cloudinary.config({
@@ -24,13 +24,15 @@ export const registerDonor = async (req, res) => {
 
     let path = req.files.image.path
     let imageURL = null
-    const timestamp = Date.now(); // Get current timestamp
-    const public_id = `users/${name}_${timestamp}`;
-    await cloudinary.uploader.upload(path, {
-      public_id: public_id,
-      width: 500,
-      height: 300
-    })
+    if(path) 
+    {
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `users/${name}_${timestamp}`;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
+      })
       .then((result) => {
         imageURL = result.secure_url;
   
@@ -39,9 +41,10 @@ export const registerDonor = async (req, res) => {
         console.log("image upload error")
         console.error(error);
       });
-    
+    }
+    const hashedPassword = bcrypt.hashSync(password);
     // Create new donor
-    const newDonor = await Donor.create({ name, email, password, phoneNumber, bloodGroup ,address,aadhaarNumber,  ...(imageURL && { imageURL })});
+    const newDonor = await Donor.create({ name, email, password:hashedPassword, phoneNumber, bloodGroup ,address,aadhaarNumber,  ...(imageURL && { imageURL })});
 
     res.json(newDonor);
   } catch (err) {
@@ -54,23 +57,19 @@ export const registerDonor = async (req, res) => {
 export const loginDonor = async (req, res) => {
   try {
     const { phoneNumber, password } = req.body;
-
     // Check if donor exists with provided phoneNumber
     const donor = await Donor.findOne({ phoneNumber });
     if (!donor) {
       return res.status(404).json({ message: 'Donor not found' });
     }
-
     // Check if password is correct
-    const isPasswordValid = await donor.comparePassword(password);
+    const isPasswordValid = bcrypt.compareSync(password,donor.password);
+   
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' });
     }
 
-    // Generate JWT token
-    const token = generateToken(donor);
-
-    res.json({ token });
+    return res.status(200).json(donor);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });

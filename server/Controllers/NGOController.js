@@ -67,26 +67,20 @@ export const registerNGO = async (req, res) => {
 //NGO Login
 export const loginNGO = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    // Check if NGO with the provided email exists
-    const NGOData = await NGO.findOne({ email });
-    if (!NGOData) {
+    const { phoneNumber, password } = req.body;
+    // Check if donor exists with provided phoneNumber
+    const ngo = await NGO.findOne({ phoneNumber });
+    if (!ngo) {
       return res.status(404).json({ message: 'NGO not found' });
     }
-
-    // Compare passwords
-    const isPasswordValid = await bcrypt.compare(password, NGOData.password);
+    // Check if password is correct
+    const isPasswordValid = bcrypt.compareSync(password,ngo.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' });
     }
-
-    // Generate JWT token
-    // const token = jwt.sign({ id: NGOData._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-
-    res.json({ token });
-  } catch (error) {
-    console.error(error);
+    return res.status(200).json(ngo);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -454,8 +448,6 @@ export const getPreviousCamps = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
-
 
 
 //Create Awareness Posts
