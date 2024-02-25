@@ -7,6 +7,7 @@ import 'leaflet/dist/leaflet.css';
 import { Header } from './Components/Header';
 import {NgoHomePage} from './Components/NGO/NgoHomePage';
 import  ActiveAppoinments from './Components/Donor/ActiveAppointments.js'
+import EditProfile from './Components/Donor/EditProfile.js';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -19,6 +20,7 @@ function App() {
         <Route path='/' element={<MapComponent />} />
         <Route path='/ngo' element={<NgoHomePage />} />
         <Route path='/activeappointments' element={<ActiveAppoinments/>} />
+        <Route path='/editprofile' element={<EditProfile/>}/>
       </Routes>
     </BrowserRouter>
   );
