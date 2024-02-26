@@ -26,6 +26,7 @@ export const registerNGO = async (req, res) => {
     const existingNGO = await NGO.findOne({ $or: [{ email }, { phoneNumber }] });
     if (existingNGO) {
       return res.status(400).json({ message: 'NGO with this email or phone number already exists' });
+<<<<<<< HEAD
     }
     let path = req.files.image.path
     let imageURL = null
@@ -44,6 +45,10 @@ export const registerNGO = async (req, res) => {
         console.log("image upload error")
         console.error(error);
       });
+=======
+    }a
+
+>>>>>>> 1c6b83481b90b7c5f5dfb2f755c8310b43a50dba
     // Hash the password
     // const hashedPassword = await bcrypt.hash(password, 10);
 
