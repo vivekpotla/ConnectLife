@@ -8,6 +8,7 @@ import {NgoHomePage} from './Components/NGO/NgoHomePage';
 import {CampsList} from './Components/Camps/CampsList.js';
 import {CampDetails} from './Components/Camps/CampDetails.js';
 import  ActiveAppoinments from './Components/Donor/ActiveAppointments.js'
+import { BookAppointment } from './Components/Donor/BookAppointment.js';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -21,6 +22,7 @@ function App() {
         <Route path='/ngo' element={<NgoHomePage />} />
         <Route path='/camps' element={<CampsList />} />
         <Route path='/campdetails' element={<CampDetails />} />
+        <Route path='/bookappointment' element={<BookAppointment />} />
         <Route path='/activeappointments' element={<ActiveAppoinments/>} />
       </Routes>
     </BrowserRouter>

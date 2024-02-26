@@ -83,7 +83,7 @@ export const CampsList = () => {
     rounded-lg block w-full ps-10 p-2.5" 
     placeholder="Enter Camp Name or Camp ID" required onChange={handleInputChange}/>
     <button type="submit" class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white 
-    bg-red-700 rounded-e-lg border">
+    bg-red-700 rounded-e-lg border border-gray-500">
     <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" 
     viewBox="0 0 20 20">
     <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
