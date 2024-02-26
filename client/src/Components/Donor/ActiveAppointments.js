@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import React from 'react';
 import axios from 'axios';
-import Card from 'react-bootstrap/Card';
+// import Card from 'react-bootstrap/Card';
 
 export default function ActiveAppointments() {
   const [donatedAppointments, setDonatedAppointments] = useState([]);
@@ -44,23 +44,23 @@ export default function ActiveAppointments() {
               Appointment Details
             </div>
             <div className="card-body">
-            <div className="row">
-              <div className="col-md-8">
-                <div>
-                  <strong>Name:</strong> Nss-camp
+              <div className="row">
+                <div className="col-md-8">
+                  <div>
+                    <strong>Name:</strong> Nss-camp
+                  </div>
+                  <div>
+                    <strong>Location:</strong> Hyderabad
+                  </div>
+                  <div>
+                    <strong>Time:</strong> 9:00-10:00
+                  </div>
                 </div>
-                <div>
-                  <strong>Location:</strong> Hyderabad
+                <div className="col-md-4">
+                  <div>
+                    <strong>Status:</strong> Donated
+                  </div>
                 </div>
-                <div>
-                  <strong>Time:</strong> 9:00-10:00
-                </div>
-              </div>
-              <div className="col-md-4">
-                <div>
-                  <strong>Status:</strong> Donated
-                </div>
-              </div>
               </div>
             </div>
 
