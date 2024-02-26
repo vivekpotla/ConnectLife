@@ -4,6 +4,7 @@ import VolunteerRegistration from './VolunteerRegistration';
 import DonorRegistration from './DonorRegistration';
 import RecipientRegistration from './RecipientRegistration';
 import { useNavigate, useParams } from 'react-router';
+import SignupForm from './SignUp';
 
 const Registration = () => {
 
@@ -37,7 +38,7 @@ const Registration = () => {
 
 
     return (
-        <div className='min-h-screen bg-gray-100 py-1'>
+        <div className='bg-gray-100 py-1 h-screen'>
             <div className='flex flex-row gap-5 my-3 justify-center flex-wrap text-sm'>
                 <div className={userType === "NGO" ? userButtonStyle.active : userButtonStyle.inactive} onClick={() => navigate("/SignUp/NGO")}>NGO</div>
                 <div className={userType === "Volunteer" ? userButtonStyle.active : userButtonStyle.inactive} onClick={() => navigate("/SignUp/Volunteer")}>Volunteer</div>
@@ -45,6 +46,7 @@ const Registration = () => {
                 <div className={userType === "Recipient" ? userButtonStyle.active : userButtonStyle.inactive} onClick={() => navigate("/SignUp/Recipient")}>Recipient</div>
             </div>
             {selectComponent(userType)}
+            {/* <SignupForm /> */}
         </div>
     )
 }

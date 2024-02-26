@@ -17,7 +17,7 @@ export const registerNGO = async (req, res) => {
     const existingNGO = await NGO.findOne({ $or: [{ email }, { phoneNumber }] });
     if (existingNGO) {
       return res.status(400).json({ message: 'NGO with this email or phone number already exists' });
-    }
+    }a
 
     // Hash the password
     // const hashedPassword = await bcrypt.hash(password, 10);
