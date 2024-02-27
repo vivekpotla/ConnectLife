@@ -536,6 +536,7 @@ const RecipientRegistration = () => {
                         ripple={true}
                         type="submit"
                         className="w-full text-center flex justify-center"
+                        disabled={loading}
                     >
                         {loading ? <Spinner className="h-4 w-4" /> : "Sign up"}
                     </Button>

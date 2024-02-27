@@ -515,7 +515,8 @@ const VolunteerRegistration = () => {
                         color="blue"
                         ripple={true}
                         type="submit"
-                        className="w-full"
+                        className="w-full flex justify-center"
+                        disabled={loading}
                     >
                         {loading ? <Spinner className="h-4 w-4" /> : "Sign up"}
                     </Button>
