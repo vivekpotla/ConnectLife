@@ -4,7 +4,7 @@ import { createRequest, findNearestDonors, searchDonors, viewRequests,registerRe
 
 const recipientroute = express.Router();
 
-recipientroute.post('/signup', registerRecipient);
+recipientroute.post('/register', registerRecipient);
 recipientroute.post('/login', loginRecipient);
 recipientroute.post('/get-nearest-donors', findNearestDonors);
 recipientroute.post('/search-donor', searchDonors);

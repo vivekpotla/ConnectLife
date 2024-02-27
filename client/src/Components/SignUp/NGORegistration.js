@@ -3,9 +3,9 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import axios from "axios";
-import { Input, Button, Typography, Avatar } from "@material-tailwind/react";
+import { Input, Button, Typography, Avatar, Spinner } from "@material-tailwind/react";
 import ProfilePic from '../Images/profile.jpg';
-
+import { useNavigate } from 'react-router';
 const NGORegistration = () => {
     // define the validation schema for the form
     const validationSchema = Yup.object().shape({
@@ -32,11 +32,14 @@ const NGORegistration = () => {
         }),
     });
 
+    const navigate = useNavigate();
+
     // use the useForm hook with the validation schema
     const { register, handleSubmit, formState: { errors } } = useForm({
         resolver: yupResolver(validationSchema),
     });
     const [message, setMessage] = useState("");
+    const [loading, setLoading] = useState(false);
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -55,12 +58,12 @@ const NGORegistration = () => {
 
     const onSubmit = async (data) => {
         try {
+            setLoading(false);
             const formData = new FormData();
             // Append each form field to the FormData object
             formData.append('name', data.name);
             formData.append('email', data.email);
             formData.append('password', data.password);
-            formData.append('confirmPassword', data.confirmPassword);
             formData.append('phoneNumber', data.phoneNumber);
             formData.append('description', data.description);
             formData.append('address[street]', data.address.street);
@@ -70,7 +73,7 @@ const NGORegistration = () => {
             formData.append('address[postalCode]', data.address.postalCode);
 
             // Append the file to the FormData object
-            formData.append('profilePic', objectFile);
+            formData.append('image', objectFile);
 
             // Make the POST request using axios
             const axiosConfig = {
@@ -78,14 +81,21 @@ const NGORegistration = () => {
                     'Content-Type': 'multipart/form-data',
                 },
             };
-            console.log(formData.get("profilePic"));
-            // const axiosResponse = await axios.post("/api/signup", formData, axiosConfig);
-
+            await axios.post("http://localhost:5000/api/ngo/register", formData, axiosConfig).then((res) => {
+                // Assuming res.data.payload contains the user data
+                console.log("then method");
+                localStorage.setItem("user", JSON.stringify({ ...res.data.payload, userType: "ngo" }));
+                navigate("/");
+            }).catch((error) => {
+                setMessage(error.response.data.message);
+            });
+            console.log(localStorage.getItem("user"));
             // // Handle success response
-            // setMessage(axiosResponse.data.message);
         } catch (error) {
             // Handle error response
             setMessage(error);
+        } finally {
+            setLoading(false);
         }
     };
 
@@ -215,9 +225,9 @@ const NGORegistration = () => {
                                     />
                                 </svg>
                             ) : (
-                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" >
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
-                                    <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
+                                <svg xmlns="http://www.w3.org/2000/svg" className="h-4 w-4 text-gray-600" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" >
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                                    <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                                 </svg>
                             )}
                         </button>
@@ -505,10 +515,23 @@ const NGORegistration = () => {
                         type="submit"
                         className="w-full"
                     >
-                        Sign up
+                        {loading ? <Spinner className="h-4 w-4" /> : "Sign up"}
                     </Button>
                 </form>
-                {/* {message && <div className="mt-4 text-center text-gray-600">{message}</div>} */}
+                {message && <div className="mt-4 text-center text-sm font-semibold flex items-center gap-1 text-red-600">
+                    <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                        fill="currentColor"
+                        className="-mt-px h-3 w-3"
+                    >
+                        <path
+                            fillRule="evenodd"
+                            d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                            clipRule="evenodd"
+                        />
+                    </svg> {message}
+                </div>}
             </div>
         </div>
     );

@@ -3,6 +3,7 @@ import RequestDetails from "../Models/DetailsRequest.js"
 import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
 import Recipient from "../Models/Recipient.js";
+import bcrypt from "bcryptjs";
 dotenv.config();
 cloudinary.config({
   cloud_name: process.env.CLOUDNAME,

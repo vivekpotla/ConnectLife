@@ -9,6 +9,7 @@ import twilio from "twilio";
 import nodemailer from 'nodemailer';
 import AwarenessPost from '../Models/NGOpost.js';
 import { v2 as cloudinary } from 'cloudinary';
+import bcrypt from "bcryptjs";
 
 import dotenv from 'dotenv';
 dotenv.config();
