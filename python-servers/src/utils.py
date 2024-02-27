@@ -4,7 +4,7 @@ from langchain_openai import OpenAI
 from langchain import LLMChain
 from tqdm import tqdm
 
-OPENAI_KEY = "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"
+OPENAI_KEY = ""
 
 
 def OpenAIChatCompletion(question):
