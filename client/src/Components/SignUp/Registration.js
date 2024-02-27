@@ -11,8 +11,6 @@ const Registration = () => {
     const { userType } = useParams();
     const navigate = useNavigate();
 
-    console.log(userType);
-
     const userButtonStyle = {
         active: "border border-blue-gray-300 rounded-lg w-24 text-center py-1 cursor-pointer bg-red-600 font-semibold transition duration-300 ease-in-out transform hover:scale-105",
         inactive: "border border-blue-gray-300 rounded-lg w-24 text-center py-1 cursor-pointer transition duration-300 ease-in-out transform hover:scale-105"

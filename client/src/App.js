@@ -4,17 +4,13 @@ import MapComponent from './Components/MapComponent';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import { Header } from './Components/Header';
-<<<<<<< HEAD
-import {NgoHomePage} from './Components/NGO/NgoHomePage';
-import Registration from './Components/SignUp/Registration';
-=======
 import { NgoHomePage } from './Components/NGO/NgoHomePage';
 import { CampsList } from './Components/Camps/CampsList.js';
 import { CampDetails } from './Components/Camps/CampDetails.js';
 import ActiveAppoinments from './Components/Donor/ActiveAppointments.js'
 import EditProfile from './Components/Donor/EditProfile.js';
 import Registration from './Components/SignUp/Registration.js';
->>>>>>> 1c6b83481b90b7c5f5dfb2f755c8310b43a50dba
+import Login from './Components/SignUp/Login.js';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -32,6 +28,7 @@ function App() {
         <Route path='/activeappointments' element={<ActiveAppoinments />} />
         <Route path='/editprofile' element={<EditProfile />} />
         <Route path='/SignUp/:userType' element={<Registration />} />
+        <Route path='/login/:userType' element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
