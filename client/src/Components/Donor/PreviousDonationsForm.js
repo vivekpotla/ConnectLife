@@ -13,7 +13,7 @@ export const PreviousDonationsForm = ({ isOpen, onClose, onConfirm }) => {
     if (new Date(lastDonationDate) > sixMonthsAgo) {
       // User is not eligible for booking
       alert('You are not eligible for booking this slot. Your last donation was within the last 6 months.');
-    } else {
+    } else if(lastDonationDate!=='') {
       // User is eligible, proceed with booking
       onConfirm();
       // Here, you can close the modal if needed

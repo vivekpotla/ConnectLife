@@ -1,20 +1,34 @@
 import React, {useState} from 'react'
 import Modal from 'react-modal';
 import {PreviousDonationsForm} from './PreviousDonationsForm';
+import { GenerateSlotReciept } from './GenerateSlotReciept';
+import { useNavigate  } from 'react-router-dom'; 
 
 const campDetails = {
   startTime: '09:00', // Example start time
   endTime: '18:00',   // Example end time
-  maxDonorsPerSlot: 4
+  maxDonorsPerSlot: 4,
+  street: "At VNR Vignan Jyothi Eng. College,Bachupally, Pragathi Nagar",
+  city: "Nizampet",
+  state: "Telangana",
+  zipcode: "500092",
+  description: "NSS Blood Donation Camp",
+  startDate: "2024-02-17",
+  endDate: "2024-02-18",
+  name:"NSS Camp"
 };
-
+const donorDetails = {
+  name:'donor4',
+  email:'donor4@gmail.com',
+  phoneNumber:'9876543210',
+  bloodGroup:'B+'
+};
 export const BookAppointment=() =>{
-  const generateSlots = (details) => {
+    const generateSlots = (details) => {
     const slots = [];
     let startTime = new Date(`01/01/2000 ${details.startTime}`);
     const endTime = new Date(`01/01/2000 ${details.endTime}`);
     const maxDonorsPerSlot = details.maxDonorsPerSlot;
-
     while (startTime < endTime) {
       const endTimeSlot = new Date(startTime);
       endTimeSlot.setHours(endTimeSlot.getHours() + 1);
@@ -36,6 +50,9 @@ export const BookAppointment=() =>{
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastDonationDate, setLastDonationDate] = useState('');
+  const [bookingSuccess, setBookingSuccess] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSlotClick = (slot) => {
     if (slot.bookedCount < slot.maxDonors) {
@@ -49,8 +66,11 @@ export const BookAppointment=() =>{
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedSlot(null);
-    setLastDonationDate('');
+    if (lastDonationDate !== '') {
+      setBookingSuccess(true);
+      setSelectedSlot(null);
+      setLastDonationDate('');
+  }
   };
 
   const handleConfirmBooking = () => {
@@ -65,8 +85,11 @@ export const BookAppointment=() =>{
     });
     setSlots(updatedSlots);
     console.log(`Booking confirmed for slot ${selectedSlot.startTime} - ${selectedSlot.endTime}`);
+    console.log(selectedSlot)
     // Close the modal
     handleCloseModal();
+    setBookingSuccess(true)
+    navigate('/receipt', { state: { campDetails, selectedSlot,donorDetails } })
   };
 
   return (
@@ -102,6 +125,9 @@ export const BookAppointment=() =>{
     </div>
     {/* Modal */}
     <PreviousDonationsForm isOpen={isModalOpen} onClose={handleCloseModal} onConfirm={handleConfirmBooking} />
+    {bookingSuccess && (
+        <GenerateSlotReciept campDetails={campDetails} selectedSlot={selectedSlot} donorDetails={donorDetails} />
+      )}
     </div>
     </>
   );

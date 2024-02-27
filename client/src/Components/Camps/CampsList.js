@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
 import CampCard from './CampCard';
-import { SearchIcon } from '@heroicons/react/outline';
 export const CampsList = () => {
   const [query, setQuery] = useState('');
   const [filteredCamps, setFilteredCamps] = useState([]);
