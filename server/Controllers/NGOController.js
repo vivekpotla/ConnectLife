@@ -26,44 +26,42 @@ export const registerNGO = async (req, res) => {
     const existingNGO = await NGO.findOne({ $or: [{ email }, { phoneNumber }] });
     if (existingNGO) {
       return res.status(400).json({ message: 'NGO with this email or phone number already exists' });
-<<<<<<< HEAD
     }
-    let path = req.files.image.path
-    let imageURL = null
-    const timestamp = Date.now(); // Get current timestamp
-    const public_id = `users/${name}_${timestamp}`;
-    await cloudinary.uploader.upload(path, {
-      public_id: public_id,
-      width: 500,
-      height: 300
-    })
-      .then((result) => {
-        imageURL = result.secure_url;
-  
-      })
-      .catch((error) => {
-        console.log("image upload error")
-        console.error(error);
-      });
-=======
-    }a
 
->>>>>>> 1c6b83481b90b7c5f5dfb2f755c8310b43a50dba
+    let imageURL = null
+    let path = req.files?.image?.path
+    if (path) {
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `users/${name}_${timestamp}`;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
+      })
+        .then((result) => {
+          imageURL = result.secure_url;
+
+        })
+        .catch((error) => {
+          console.log("image upload error")
+          console.error(error);
+        });
+    }
     // Hash the password
-    // const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = bcrypt.hashSync(password);
 
     // Create new NGO
     const newNGO = await NGO.create({
       name,
       email,
-      password: password,
+      password: hashedPassword,
       phoneNumber,
       address,
       description,
       ...(imageURL && { imageURL })
     });
 
-    res.status(201).json({ message: 'NGO registered successfully' });
+    res.status(200).json({ message: 'Ngo registered successfully', payload: newNGO });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -79,11 +77,13 @@ export const loginNGO = async (req, res) => {
       return res.status(404).json({ message: 'NGO not found' });
     }
     // Check if password is correct
-    const isPasswordValid = bcrypt.compareSync(password,ngo.password);
+    const isPasswordValid = bcrypt.compareSync(password, ngo.password);
+
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' });
     }
-    return res.status(200).json(ngo);
+
+    res.status(200).json({ message: 'Ngo logged in successfully', payload: ngo });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -120,7 +120,7 @@ export const createBloodDonationCamp = async (req, res) => {
     })
       .then((result) => {
         imageURL = result.secure_url;
-  
+
       })
       .catch((error) => {
         console.log("image upload error")

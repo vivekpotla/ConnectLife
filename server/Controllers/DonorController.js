@@ -25,8 +25,8 @@ export const registerDonor = async (req, res) => {
       return res.status(400).json({ message: 'Phone number already registered' });
     }
     let imageURL = null
-    if (req.files) {
-      let path = req.files.image.path
+    let path = req.files?.image?.path
+    if (path) {
       const timestamp = Date.now(); // Get current timestamp
       const public_id = `users/${name}_${timestamp}`;
       await cloudinary.uploader.upload(path, {
@@ -47,7 +47,7 @@ export const registerDonor = async (req, res) => {
     // Create new donor
     const newDonor = await Donor.create({ name, email, password: hashedPassword, phoneNumber, bloodGroup, address, aadhaarNumber, ...(imageURL && { imageURL }) });
 
-    res.json(newDonor);
+    res.status(200).json({ message: 'Donor registered successfully', payload: newDonor });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -70,7 +70,7 @@ export const loginDonor = async (req, res) => {
       return res.status(401).json({ message: 'Invalid password' });
     }
 
-    return res.status(200).json(donor);
+    res.status(200).json({ message: 'Donor logged in successfully', payload: donor });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });

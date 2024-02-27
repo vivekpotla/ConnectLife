@@ -17,35 +17,41 @@ cloudinary.config({
 export const registerVolunteer = async (req, res) => {
   try {
     const { name, email, password, contactNumber, aadhaarNumber, address } = req.body;
-    let path = req.files.image.path
+
+    let path = req.files?.image?.path
     let imageURL = null
-    const timestamp = Date.now(); // Get current timestamp
-    const public_id = `users/${name}_${timestamp}`;
-    await cloudinary.uploader.upload(path, {
-      public_id: public_id,
-      width: 500,
-      height: 300
-    })
-      .then((result) => {
-        imageURL = result.secure_url;
-  
+
+    if (path) {
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `users/${name}_${timestamp}`;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
       })
-      .catch((error) => {
-        console.log("image upload error")
-        console.error(error);
-      });
+        .then((result) => {
+          imageURL = result.secure_url;
+
+        })
+        .catch((error) => {
+          console.log("image upload error")
+          console.error(error);
+        });
+    }
+    // hash the password
+    const hashedPassword = bcrypt.hashSync(password);
+
     const volunteer = new Volunteer({
       name,
       email,
-      password,
+      password: hashedPassword,
       contactNumber,
       aadhaarNumber,
       address,
       ...(imageURL && { imageURL })
     });
 
-    await volunteer.save();
-    res.status(201).json({ message: 'Volunteer registered successfully' });
+    res.status(200).json({ message: 'Volunteer registered successfully', payload: volunteer });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -62,7 +68,12 @@ export const loginVolunteer = async (req, res) => {
       return res.status(404).json({ message: 'Volunteer not found' });
     }
 
-    // Add password validation logic here
+    // Check if password is correct
+    const isPasswordValid = bcrypt.compareSync(password, volunteer.password);
+
+    if (!isPasswordValid) {
+      return res.status(401).json({ message: 'Invalid password' });
+    }
 
     res.status(200).json({ message: 'Volunteer logged in successfully', payload: volunteer });
   } catch (err) {
@@ -185,7 +196,7 @@ const mapBloodGroup = (bloodGroup) => {
     case 'O-':
       return 'O_negative';
     default:
-      return bloodGroup; 
+      return bloodGroup;
   }
 };
 
@@ -225,13 +236,13 @@ export const myCamps = async (req, res) => {
 export const markAppointmentAsDonated = async (req, res) => {
   try {
     // Extract the appointment ID from the request body or params
-    const { slotId, donorId ,quantity,bloodGroup} = req.body; // Assuming appointmentId is provided in the request body
+    const { slotId, donorId, quantity, bloodGroup } = req.body; // Assuming appointmentId is provided in the request body
 
     // Find the appointment by ID
     const appointment = await Appointment.findOne({
-      slot:slotId , donor:donorId
+      slot: slotId, donor: donorId
     });
-    
+
     if (!appointment) {
       return res.status(404).json({ message: 'Appointment not found' });
     }
@@ -239,12 +250,12 @@ export const markAppointmentAsDonated = async (req, res) => {
     // Mark the appointment as donated
     await Appointment.updateOne(
       { slot: slotId, donor: donorId },
-      { $set: { donated: true,quantity ,bloodGroup } },
+      { $set: { donated: true, quantity, bloodGroup } },
 
     );
 
 
-     const bloodGroupDB = mapBloodGroup(bloodGroup);
+    const bloodGroupDB = mapBloodGroup(bloodGroup);
     console.log(bloodGroupDB)
     // Update the blood quantity for the camp
     const bloodQuantity = await BloodQuantity.findOne({ camp: appointment.camp });
