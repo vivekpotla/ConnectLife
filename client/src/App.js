@@ -13,6 +13,7 @@ import EditProfile from './Components/Donor/EditProfile.js';
 import Registration from './Components/SignUp/Registration.js';
 import { BookAppointment } from './Components/Donor/BookAppointment.js';
 import { GenerateSlotReciept } from './Components/Donor/GenerateSlotReciept.js';
+import MyPosts from './Components/NGO/MyPosts.js';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -31,6 +32,7 @@ function App() {
         <Route path='/bookappointment' element={<BookAppointment />} />
         <Route path='/receipt' element={<GenerateSlotReciept />} />
         <Route path='/posts' element={<PostsLists />} />
+        <Route path='/myposts' element={<MyPosts />} />
         <Route path='/SignUp/:userType' element={<Registration />} />
       </Routes>
     </BrowserRouter>
