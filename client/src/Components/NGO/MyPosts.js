@@ -68,8 +68,16 @@ function MyPosts() {
         <p className="text-gray-600 mb-2">{post.description}</p>
         <img src={post.image} alt={post.title} className="w-full h-auto mb-2" />
         <div className="flex justify-between">
-          <button className="text-blue-500 hover:text-blue-700 mr-2" onClick={() => handleEditPost(post)}>Edit</button>
-          <button className="text-red-500 hover:text-red-700" onClick={() => handleDeletePost(post.id)}>Delete</button>
+          <button className="text-blue-500 hover:text-blue-700 mr-2 flex" onClick={() => handleEditPost(post)}>
+          Edit<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue ms-1" viewBox="0 0 20 20" fill="currentColor">
+                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
+              </svg></button>
+          <button className="text-red-500 hover:text-red-700 flex" onClick={() => handleDeletePost(post.id)}>
+            Delete 
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue ms-1 mt-1" viewBox="0 0 20 20" fill="currentColor">
+            <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" 
+            d="M1 3.5h12m-10.5 0h9v9a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1zm2 0V3a2.5 2.5 0 1 1 5 0v.5m-4 3.001v4.002m3-4.002v4.002"/></svg>
+          </button>
         </div>
         {editPost && editPost.id === post.id && (
           <EditForm post={editPost} onSaveEdit={handleSaveEdit} onCancelEdit={() => setEditPost(null)} />
