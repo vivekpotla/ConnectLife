@@ -287,7 +287,7 @@ export function Header() {
                     </IconButton>
 
                     {!userObj ? <>
-                        <Button size="sm" variant="text" className="">
+                        <Button size="sm" variant="text" onClick={() => navigate("/login/NGO")}>
                             <span>Log In</span>
                         </Button>
                         <Button size="sm" variant="gradient" onClick={() => navigate("/SignUp/NGO")}>

@@ -10,6 +10,7 @@ import { CampDetails } from './Components/Camps/CampDetails.js';
 import ActiveAppoinments from './Components/Donor/ActiveAppointments.js'
 import EditProfile from './Components/Donor/EditProfile.js';
 import Registration from './Components/SignUp/Registration.js';
+import Login from './Components/SignUp/Login.js';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -27,6 +28,7 @@ function App() {
         <Route path='/activeappointments' element={<ActiveAppoinments />} />
         <Route path='/editprofile' element={<EditProfile />} />
         <Route path='/SignUp/:userType' element={<Registration />} />
+        <Route path='/login/:userType' element={<Login />} />
       </Routes>
     </BrowserRouter>
   );
