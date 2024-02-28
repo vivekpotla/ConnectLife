@@ -75,7 +75,7 @@ export const CampsList = () => {
     <div>
     <form class="max-w-md mx-auto mt-4" onSubmit={handleSubmit}>
     <div class="flex">
-    <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Camp</label>
+    <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Camp</label>
     </div>
     <div class="relative w-full">
     <input type="search" id="search" class="bg-gray-50 border border-gray-500 text-gray-900 text-sm 
