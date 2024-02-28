@@ -22,7 +22,7 @@ function App() {
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path='/' element={<MapComponent />} />
+        <Route path='/' element={<MapComponent setLocationAddress={()=>{}} setMarker={()=>{}} />} />
         <Route path='/signup/:userType' element={<Registration />} />
         <Route path='/ngo' element={<NgoHomePage />} />
         <Route path='/camps' element={<CampsList />} />
