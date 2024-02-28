@@ -37,13 +37,14 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify({ ...res.data.payload, userType: userType.toLowerCase() }));
         navigate("/");
       }).catch((error) => {
-        setMessage(error.response.data.message);
+        console.log(error);
+        setMessage(error.message);
       });
       console.log(localStorage.getItem("user"));
 
       // Redirect user after successful login
     } catch (error) {
-      setMessage(error.response.data.message || "An error occurred");
+      setMessage(error.message || "An error occurred");
     } finally {
       setLoading(false); // Set loading state to false when request completes
     }

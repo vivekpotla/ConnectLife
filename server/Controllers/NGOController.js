@@ -110,23 +110,25 @@ export const createBloodDonationCamp = async (req, res) => {
 
     } = req.body;
 
-    let path = req.files.image.path
+    let path = req?.files?.image?.path
     let imageURL = null
-    const timestamp = Date.now(); // Get current timestamp
-    const public_id = `camps/${ngoID}_${timestamp}`;
-    await cloudinary.uploader.upload(path, {
-      public_id: public_id,
-      width: 500,
-      height: 300
-    })
-      .then((result) => {
-        imageURL = result.secure_url;
-
+    if (path) {
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `camps/${ngoId}_${timestamp}`;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
       })
-      .catch((error) => {
-        console.log("image upload error")
-        console.error(error);
-      });
+        .then((result) => {
+          imageURL = result.secure_url;
+
+        })
+        .catch((error) => {
+          console.log("image upload error")
+          console.error(error);
+        });
+    }
     if (!startTime || !endTime) {
       return res.status(400).json({ message: 'Start time and end time of the day are required' });
     }

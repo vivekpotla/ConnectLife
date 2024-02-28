@@ -1,6 +1,8 @@
 import React from 'react'
 import Modal from 'react-modal'
 import MapComponent from './Components/MapComponent';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import { Header } from './Components/Header';
