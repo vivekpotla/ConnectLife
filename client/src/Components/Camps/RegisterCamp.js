@@ -1,133 +1,384 @@
-import React, { useState } from 'react'
+import React, { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import * as Yup from 'yup';
 import axios from 'axios';
+import { Input, Button, Typography, Spinner } from '@material-tailwind/react';
+import { useNavigate } from 'react-router-dom';
 
-export const RegisterCamp = ({ addData }) => {
-    const [campName, setCampName] = useState('');
-    const [description, setDescription] = useState('');
-    const [location, setLocation] = useState('');
-    const [startDate, setStartDate] = useState('');
-    const [startTime, setStartTime] = useState('');
-    const [endDate, setEndDate] = useState('');
-    const [endTime, setEndTime] = useState('');
-    const [donorsPerHour, setDonorsPerHour] = useState('');
+const RegisterCamp = ({ marker, locationAddress, ngoId, setLocationAddress }) => {
+    const validationSchema = Yup.object().shape({
+        description: Yup.string().required('Description is required'),
+        startDate: Yup.string().required('Start Date is required'),
+        endDate: Yup.string().required('End Date is required'),
+        maxDonorsPerSlot: Yup.number().required('Maximum Donors per Slot is required').positive().integer(),
+        startTime: Yup.string().required('Start Time is required'),
+        endTime: Yup.string().required('End Time is required'),
+        name: Yup.string().required('Name is required'),
+    });
 
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        // Handle form submission here, e.g., submit the data to a server
-        const formData = {
-            ngo: "18028",
-            name: campName,
-            description,
-            location,
-            startDate,
-            startTime,
-            endDate,
-            endTime,
-            maxDonorsPerSlot: donorsPerHour
-        };
-        console.log(formData);
-        // await axios.post("http://localhost:5000/api/ngo/create-camp", formData)
-        //     .then(response => {
-        //         console.log(response.data); // handle successful response
-        //     })
-        //     .catch(error => {
-        //         console.error(error); // handle errors
-        //     });
-        // Reset form fields after submission
-        setCampName('');
-        setDescription('');
-        setLocation('');
-        setStartDate('');
-        setStartTime('');
-        setEndDate('');
-        setEndTime('');
-        setDonorsPerHour('');
+    const { register, handleSubmit, formState: { errors } } = useForm({
+        resolver: yupResolver(validationSchema),
+    });
+
+    const navigate = useNavigate();
+    const [message, setMessage] = useState('');
+    const [loading, setLoading] = useState(false);
+
+    const [imageURL, setImageURL] = useState(null);
+    const [fileObject, setFileObject] = useState();
+
+    function handleCampImage(e) {
+        console.log(e.target.files);
+        setImageURL(URL.createObjectURL(e.target.files[0]));
+        setFileObject(e.target.files[0]);
+        console.log(fileObject);
+    }
+
+    const onSubmit = async (data) => {
+        try {
+            setLoading(true);
+            const formData = new FormData();
+
+            Object.keys(data).forEach((key, index) => {
+                formData.append(key, data[key])
+            });
+
+            formData.append("ngoId", ngoId);
+            formData.append("longitude", marker.longitude);
+            formData.append("latitude", marker.latitude);
+            formData.append("location", locationAddress);
+            formData.append("image", fileObject);
+
+            const axiosConfig = {
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                },
+            };
+            await axios.post("http://localhost:5000/api/ngo/create-camp", formData, axiosConfig).then((res) => {
+                // Assuming res.data.payload contains the user data
+                navigate("/camps");
+            }).catch((error) => {
+                setMessage(error.message);
+            });
+
+            console.log(formData.get("image"));
+            console.log(formData.get("location"));
+        } catch (error) {
+            setMessage('Failed to create camp');
+        } finally {
+            setLoading(false);
+        }
     };
+
     return (
-        <form onSubmit={handleSubmit} className="w-full mt-4 p-4 bg-gray-100 rounded-lg shadow-lg max-w-md">
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2">Camp Name:</label>
-                <input
-                    type="text"
-                    value={campName}
-                    onChange={(e) => setCampName(e.target.value)}
-                    className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                    required
-                />
+        <div className="flex items-center justify-center bg-gray-100 p-5 rounded-lg">
+            <div className="max-w-md w-full px-8 py-6 bg-white shadow-lg rounded-lg">
+                <h1 className="text-2xl font-bold text-center text-gray-800">
+                    Camp Details
+                </h1>
+                <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-4">
+                    <Input
+                        type="text"
+                        label="Camp Name"
+                        placeholder="Name"
+                        {...register('name')}
+                    />
+                    {errors?.name && (
+                        <Typography
+                            variant="small"
+                            color="red"
+                            className="mt-1 flex items-center gap-1 text-xs font-normal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-3 w-3"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors.name.message}
+                        </Typography>
+                    )}
+                    <Input
+                        type="text"
+                        label="Description"
+                        placeholder="Description"
+                        {...register('description')}
+                    />
+                    {errors?.description && (
+                        <Typography
+                            variant="small"
+                            color="red"
+                            className="mt-1 flex items-center gap-1 text-xs font-normal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-3 w-3"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors.description.message}
+                        </Typography>
+                    )}
+                    <Input
+                        type="date"
+                        label="Start Date"
+                        placeholder="Start Date"
+                        {...register('startDate')}
+                    />
+                    {errors?.startDate && (
+                        <Typography
+                            variant="small"
+                            color="red"
+                            className="mt-1 flex items-center gap-1 text-xs font-normal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-3 w-3"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors.startDate.message}
+                        </Typography>
+                    )}
+                    <Input
+                        type="date"
+                        label="End Date"
+                        placeholder="End Date"
+                        {...register('endDate')}
+                    />
+                    {errors?.endDate && (
+                        <Typography
+                            variant="small"
+                            color="red"
+                            className="mt-1 flex items-center gap-1 text-xs font-normal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-3 w-3"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors.endDate.message}
+                        </Typography>
+                    )}
+                    <Input
+                        type="time"
+                        label="Start Time"
+                        defaultValue="09:00:00"
+                        placeholder="Start Time"
+                        {...register('startTime')}
+                    />
+                    {errors?.startTime && (
+                        <Typography
+                            variant="small"
+                            color="red"
+                            className="mt-1 flex items-center gap-1 text-xs font-normal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-3 w-3"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors.startTime.message}
+                        </Typography>
+                    )}
+                    <Input
+                        type="time"
+                        label="End Time"
+                        defaultValue="18:00:00"
+                        placeholder="End Time"
+                        {...register('endTime')}
+                    />
+                    {errors?.endTime && (
+                        <Typography
+                            variant="small"
+                            color="red"
+                            className="mt-1 flex items-center gap-1 text-xs font-normal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-3 w-3"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors.endTime.message}
+                        </Typography>
+                    )}
+                    <Input
+                        type="number"
+                        label="Maximum Donors per Slot"
+                        defaultValue={4}
+                        placeholder="Maximum Donors per Slot"
+                        {...register('maxDonorsPerSlot')}
+                    />
+                    {errors?.maxDonorsPerSlot && (
+                        <Typography
+                            variant="small"
+                            color="red"
+                            className="mt-1 flex items-center gap-1 text-xs font-normal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-3 w-3"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors.maxDonorsPerSlot.message}
+                        </Typography>
+                    )}
+                    <Input
+                        type="text"
+                        label="Location"
+                        value={locationAddress}
+                        onChange={(e) => setLocationAddress(e.target.value)}
+                        placeholder="Location"
+                    />
+                    {errors?.location && (
+                        <Typography
+                            variant="small"
+                            color="red"
+                            className="mt-1 flex items-center gap-1 text-xs font-normal"
+                        >
+                            <svg
+                                xmlns="http://www.w3.org/2000/svg"
+                                viewBox="0 0 24 24"
+                                fill="currentColor"
+                                className="-mt-px h-3 w-3"
+                            >
+                                <path
+                                    fillRule="evenodd"
+                                    d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12zm8.706-1.442c1.146-.573 2.437.463 2.126 1.706l-.709 2.836.042-.02a.75.75 0 01.67 1.34l-.04.022c-1.147.573-2.438-.463-2.127-1.706l.71-2.836-.042.02a.75.75 0 11-.671-1.34l.041-.022zM12 9a.75.75 0 100-1.5.75.75 0 000 1.5z"
+                                    clipRule="evenodd"
+                                />
+                            </svg>
+                            {errors.location.message}
+                        </Typography>
+                    )}
+                    {/* <Input
+                        type="text"
+                        label="Street"
+                        placeholder="Street"
+                        {...register('address.street')}
+                    />
+                    <Input
+                        type="text"
+                        label="City"
+                        placeholder="City"
+                        {...register('address.city')}
+                    />
+                    <Input
+                        type="text"
+                        label="State"
+                        placeholder="State"
+                        {...register('address.state')}
+                    />
+                    <Input
+                        type="text"
+                        label="Country"
+                        placeholder="Country"
+                        {...register('address.country')}
+                    />
+                    <Input
+                        type="text"
+                        label="Postal Code"
+                        placeholder="Postal Code"
+                        {...register('address.postalCode')}
+                    /> */}
+                    <div>
+                        <Typography className='mb-2 text-gray-600'>Camp Image</Typography>
+                        <figure className="relative h-80 w-full">
+                            {imageURL != null ?
+                                <img
+                                    className="h-full w-full rounded-xl object-cover object-center"
+                                    src={imageURL}
+                                    alt="campImage"
+                                /> :
+                                <div className="grid animate-pulse h-full w-full place-items-center rounded-lg bg-gray-300">
+                                    <svg
+                                        xmlns="http://www.w3.org/2000/svg"
+                                        fill="none"
+                                        viewBox="0 0 24 24"
+                                        strokeWidth={2}
+                                        stroke="currentColor"
+                                        className="h-12 w-12 text-gray-500"
+                                    >
+                                        <path
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                            d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z"
+                                        />
+                                    </svg>
+                                </div>
+                            }
+                            <figcaption className="absolute bottom-8 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-center rounded-xl border border-white bg-white/50 py-2 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-[1px]">
+                                <input
+                                    type="file"
+                                    placeholder="Image"
+                                    className='text-sm w-fit'
+                                    onChange={handleCampImage}
+                                />
+                            </figcaption>
+                        </figure>
+                    </div>
+                    <Button
+                        color="blue"
+                        ripple={true}
+                        type="submit"
+                        className="w-full flex justify-center"
+                        disabled={loading}
+                    >
+                        {loading ? <Spinner className="h-4 w-4" /> : "Create Camp"}
+                    </Button>
+                </form>
+                {message && <Typography color="red" className='mt-2 text-sm'>{message}</Typography>}
             </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2">Description:</label>
-                <textarea
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                    required
-                />
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2">Location :</label>
-                <input
-                    type="text"
-                    value={location}
-                    onChange={(e) => setLocation(e.target.value)}
-                    className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                    required
-                />
-            </div>
-            <div className='mb-4 cursor-pointer'>
-                select from map
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2">Start Date:</label>
-                <input
-                    type="date"
-                    value={startDate}
-                    onChange={(e) => setStartDate(e.target.value)}
-                    className="mb-4 border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                    required
-                />
-                <label className="block text-gray-700 font-bold mb-2">End Date:</label>
-                <input
-                    type="date"
-                    value={endDate}
-                    onChange={(e) => setEndDate(e.target.value)}
-                    className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                    required
-                />
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2 mt-2">Start Time:</label>
-                <input
-                    type="time"
-                    value={startTime}
-                    onChange={(e) => setStartTime(e.target.value)}
-                    className="mb-4 border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                    required
-                />
-                <label className="block text-gray-700 font-bold mb-2 mt-2">End Time:</label>
-                <input
-                    type="time"
-                    value={endTime}
-                    onChange={(e) => setEndTime(e.target.value)}
-                    className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                    required
-                />
-            </div>
-            <div className="mb-4">
-                <label className="block text-gray-700 font-bold mb-2">No. of Donors per Hour Slot:</label>
-                <input
-                    type="number"
-                    value={donorsPerHour}
-                    onChange={(e) => setDonorsPerHour(e.target.value)}
-                    className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-                    required
-                />
-            </div>
-            <div className='flex justify-end'>
-                <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-                    Register Camp
-                </button>
-            </div>
-        </form>
-    )
-}
+        </div>
+    );
+};
+
+export default RegisterCamp;
+

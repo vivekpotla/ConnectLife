@@ -1,6 +1,8 @@
 import React from 'react'
 import Modal from 'react-modal'
 import MapComponent from './Components/MapComponent';
+import 'mapbox-gl/dist/mapbox-gl.css';
+import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import 'leaflet/dist/leaflet.css';
 import { Header } from './Components/Header';
@@ -15,6 +17,7 @@ import { GenerateSlotReciept } from './Components/Donor/GenerateSlotReciept.js';
 import MyPosts from './Components/NGO/MyPosts.js';
 import SearchDonors from './Components/Recipient/SearchDonors.js';
 import HomePage from './Components/HomePage.js';
+import Login from './Components/SignUp/Login.js';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -36,6 +39,7 @@ function App() {
         <Route path='/searchdonors' element={<SearchDonors />} />
         <Route path='/myposts' element={<MyPosts />} />
         <Route path='/SignUp/:userType' element={<Registration />} />
+        <Route path='/login/:userType' element={<Login />} />
       </Routes>
     </BrowserRouter>
   );

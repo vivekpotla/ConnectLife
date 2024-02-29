@@ -13,7 +13,7 @@ let userSlice=createSlice({
     login:(state,action)=>{
 
         state.isLoggedIn=true;
-        state.userType=action.payload.userType;
+        // state.userType=action.payload.userType;
         state.userObj=action.payload;
         //api call to get cart
     },

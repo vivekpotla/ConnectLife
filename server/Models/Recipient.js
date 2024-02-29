@@ -2,7 +2,7 @@ import mongoose from 'mongoose';
 
 const { Schema } = mongoose;
 
-const donorSchema = new Schema({
+const recipientSchema = new Schema({
   name: {
     type: String,
     required: true
@@ -61,11 +61,7 @@ const donorSchema = new Schema({
   livelocation:{
     latitude: { type: Number, default: 0 },
     longitude: { type: Number, default: 0 }
-  },
-  previousAppointments: [{
-    type: Schema.Types.ObjectId,
-    ref: 'Appointment'
-  }]
+  }
 });
 
-export default mongoose.model('Donor', donorSchema);
+export default mongoose.model('Recipient', recipientSchema);

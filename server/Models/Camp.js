@@ -11,6 +11,10 @@ const campSchema = new Schema({
     type: String,
     required: true
   },
+  imageURL:{
+    type: String,
+    required: false
+  },
   location: {
     type: String,
     required: true

@@ -2,22 +2,53 @@ import Donor from '../Models/Donor.js';
 import Appointment from '../Models/Appointment.js';
 import Camp from '../Models/Camp.js';
 import Slot from '../Models/Slot.js';
+import AwarenessPost from '../Models/NGOpost.js';
+import RequestDetails from '../Models/DetailsRequest.js';
+import bcrypt from "bcryptjs";
+import { v2 as cloudinary } from 'cloudinary';
+import dotenv from 'dotenv';
+
+dotenv.config();
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.APIKEY,
+  api_secret: process.env.APISECRET
+});
 
 //donor signup
 export const registerDonor = async (req, res) => {
   try {
-    const { name, email, password, phoneNumber,aadhaarNumber, bloodGroup ,address } = req.body;
-
+    const { name, email, password, phoneNumber, aadhaarNumber, bloodGroup, address } = req.body;
+    console.log(req.body);
     // Check if phoneNumber is already registered
     const existingDonor = await Donor.findOne({ phoneNumber });
     if (existingDonor) {
       return res.status(400).json({ message: 'Phone number already registered' });
     }
+    let imageURL = null
+    let path = req.files?.image?.path
+    if (path) {
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `users/${name}_${timestamp}`;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
+      })
+        .then((result) => {
+          imageURL = result.secure_url;
 
+        })
+        .catch((error) => {
+          console.log("image upload error")
+          console.error(error);
+        });
+    }
+    const hashedPassword = bcrypt.hashSync(password);
     // Create new donor
-    const newDonor = await Donor.create({ name, email, password, phoneNumber, bloodGroup ,address,aadhaarNumber});
+    const newDonor = await Donor.create({ name, email, password: hashedPassword, phoneNumber, bloodGroup, address, aadhaarNumber, ...(imageURL && { imageURL }) });
 
-    res.json(newDonor);
+    res.status(200).json({ message: 'Donor registered successfully', payload: newDonor });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -28,23 +59,19 @@ export const registerDonor = async (req, res) => {
 export const loginDonor = async (req, res) => {
   try {
     const { phoneNumber, password } = req.body;
-
     // Check if donor exists with provided phoneNumber
     const donor = await Donor.findOne({ phoneNumber });
     if (!donor) {
       return res.status(404).json({ message: 'Donor not found' });
     }
-
     // Check if password is correct
-    const isPasswordValid = await donor.comparePassword(password);
+    const isPasswordValid = bcrypt.compareSync(password, donor.password);
+
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' });
     }
 
-    // Generate JWT token
-    const token = generateToken(donor);
-
-    res.json({ token });
+    res.status(200).json({ message: 'Donor logged in successfully', payload: donor });
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
@@ -54,8 +81,8 @@ export const loginDonor = async (req, res) => {
 //update live location 
 export const updateDonorLocation = async (req, res) => {
   try {
-    
-    const {donorId, latitude, longitude } = req.body;
+
+    const { donorId, latitude, longitude } = req.body;
 
     // Find the donor by ID
     const donor = await Donor.findById(donorId);
@@ -97,32 +124,32 @@ export const getDonorAppointments = async (req, res) => {
 //book appointment slot
 export const bookAppointment = async (req, res) => {
   try {
-    
-    const { campId, date, slot , donorId} = req.body;
-    let donor = Donor.find({_id:donorId})
+
+    const { campId, date, slot, donorId } = req.body;
+    let donor = Donor.find({ _id: donorId })
     // Check if the slot is available
-    const {isSlotAvailable , slotId} = await isSlotAvailableForDate(campId, date, slot);
+    const { isSlotAvailable, slotId } = await isSlotAvailableForDate(campId, date, slot);
     if (!isSlotAvailable) {
       return res.status(400).json({ message: 'Slot is not available' });
     }
-   
 
-     console.log( "slotID" , slotId.toString() )
-     console.log( "DonorID" , donorId )
-     console.log( "camp", campId)
+
+    console.log("slotID", slotId.toString())
+    console.log("DonorID", donorId)
+    console.log("camp", campId)
     // Create appointment
     const appointment = await Appointment.create({
       donor: donorId,
       camp: campId,
       date: new Date(date),
-      slot:slotId.toString(),
-      bloodGroup:donor.bloodGroup
+      slot: slotId.toString(),
+      bloodGroup: donor.bloodGroup
     });
-     // Decrement slotsLeft for the booked slot
-     await Slot.findOneAndUpdate(
-      { camp: campId, date: new Date(date), startTime:  slot.startTime , endTime: slot.endTime  },
-      { $inc: { slotsLeft: -1 } ,$push: { donors: donorId }} // Decrement slotsLeft by 1
-      
+    // Decrement slotsLeft for the booked slot
+    await Slot.findOneAndUpdate(
+      { camp: campId, date: new Date(date), startTime: slot.startTime, endTime: slot.endTime },
+      { $inc: { slotsLeft: -1 }, $push: { donors: donorId } } // Decrement slotsLeft by 1
+
     );
     await Donor.findByIdAndUpdate(donorId, { $push: { previousAppointments: appointment._id } });
     res.json(appointment);
@@ -152,7 +179,7 @@ export const searchBloodDonationCamps = async (req, res) => {
 //search camps by location (nearest)
 export const findNearestCamps = async (req, res) => {
   try {
-    const { latitude, longitude } = req.body; 
+    const { latitude, longitude } = req.body;
 
     // Find the nearest camps within a specified radius (e.g., 10 kilometers)
     const nearestCamps = await Camp.find({
@@ -214,38 +241,38 @@ async function isSlotAvailableForDate(campId, date, slot) {
     const camp = await Camp.findById(campId);
     if (!camp) {
       console.log("camp ledhu")
-      return {isSlotAvailable:false,slotId:null};
+      return { isSlotAvailable: false, slotId: null };
     }
 
     // Check if the slot is within the camp's operational hours
     const { startTime, endTime } = camp;
     if (slot.startTime < startTime || slot.endTime > endTime) {
       console.log("false")
-      return {isSlotAvailable:false,slotId:null};
+      return { isSlotAvailable: false, slotId: null };
     }
     let dt = new Date(date);
     // Find the slot for the given date and time
     const slotInfo = await Slot.findOne({
       camp: campId,
       date: dt,
-      startTime:   slot.startTime ,
-      endTime:   slot.endTime 
+      startTime: slot.startTime,
+      endTime: slot.endTime
     });
     if (!slotInfo) {
       console.log("slot eh ledhu")
-      return {isSlotAvailable:false,slotId:null}; // Slot not found for the given date and time
+      return { isSlotAvailable: false, slotId: null }; // Slot not found for the given date and time
     }
 
     // Check if there are available slots left
     if (slotInfo.slotsLeft > 0) {
-      return {isSlotAvailable:true,slotId:slotInfo._id}; // Slot is available
+      return { isSlotAvailable: true, slotId: slotInfo._id }; // Slot is available
     } else {
       console.log("slot full")
-      return {isSlotAvailable:false,slotId:null}; // No available slots left
+      return { isSlotAvailable: false, slotId: null }; // No available slots left
     }
   } catch (error) {
     console.error(error);
-    return {isSlotAvailable:false,slotId:null}; // Error occurred, return false
+    return { isSlotAvailable: false, slotId: null }; // Error occurred, return false
   }
 }
 
@@ -254,3 +281,58 @@ async function isSlotAvailableForDate(campId, date, slot) {
 function generateToken(donor) {
   // Implement token generation logic (e.g., using JWT library)
 }
+
+
+
+//get all Posts 
+export const getAwarenessPosts = async (req, res) => {
+  try {
+    const posts = await AwarenessPost.find().sort({ createdAt: -1 }); // Sort by createdAt field in descending order
+    res.status(200).json(posts);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+//adding comments to posts
+export const addCommentToPost = async (req, res) => {
+  try {
+    const { postId, comment } = req.body;
+    const post = await AwarenessPost.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    post.comments.push({ author: req.body.donorId, comment });
+    const updatedPost = await post.save();
+    res.status(200).json(updatedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+//viewing recipient requests for blood
+export const viewRequests = async (req, res) => {
+  try {
+    const { donorId } = req.body;
+    const requests = await RequestDetails.find({ donor: donorId }).populate('recipient', 'name phoneNumber').exec();
+    res.status(200).json(requests);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Update the status of a request (accepted/declined) by donor
+export const updateRequestStatus = async (req, res) => {
+  try {
+    const { requestId, status } = req.body;
+    const request = await RequestDetails.findByIdAndUpdate(requestId, { status }, { new: true });
+    res.status(200).json(request);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

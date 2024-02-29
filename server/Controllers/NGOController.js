@@ -7,7 +7,17 @@ import Appointment from '../Models/Appointment.js';
 import BloodQuantity from '../Models/BloodQuantity.js';
 import twilio from "twilio";
 import nodemailer from 'nodemailer';
+import AwarenessPost from '../Models/NGOpost.js';
+import { v2 as cloudinary } from 'cloudinary';
+import bcrypt from "bcryptjs";
 
+import dotenv from 'dotenv';
+dotenv.config();
+cloudinary.config({
+  cloud_name: process.env.CLOUDNAME,
+  api_key: process.env.APIKEY,
+  api_secret: process.env.APISECRET
+});
 //NGO Register
 export const registerNGO = async (req, res) => {
   try {
@@ -17,22 +27,42 @@ export const registerNGO = async (req, res) => {
     const existingNGO = await NGO.findOne({ $or: [{ email }, { phoneNumber }] });
     if (existingNGO) {
       return res.status(400).json({ message: 'NGO with this email or phone number already exists' });
-    }a
+    }
 
+    let imageURL = null
+    let path = req.files?.image?.path
+    if (path) {
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `users/${name}_${timestamp}`;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
+      })
+        .then((result) => {
+          imageURL = result.secure_url;
+
+        })
+        .catch((error) => {
+          console.log("image upload error")
+          console.error(error);
+        });
+    }
     // Hash the password
-    // const hashedPassword = await bcrypt.hash(password, 10);
+    const hashedPassword = bcrypt.hashSync(password);
 
     // Create new NGO
     const newNGO = await NGO.create({
       name,
       email,
-      password: password,
+      password: hashedPassword,
       phoneNumber,
       address,
-      description
+      description,
+      ...(imageURL && { imageURL })
     });
 
-    res.status(201).json({ message: 'NGO registered successfully' });
+    res.status(200).json({ message: 'Ngo registered successfully', payload: newNGO });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -41,26 +71,22 @@ export const registerNGO = async (req, res) => {
 //NGO Login
 export const loginNGO = async (req, res) => {
   try {
-    const { email, password } = req.body;
-
-    // Check if NGO with the provided email exists
-    const NGOData = await NGO.findOne({ email });
-    if (!NGOData) {
+    const { phoneNumber, password } = req.body;
+    // Check if donor exists with provided phoneNumber
+    const ngo = await NGO.findOne({ phoneNumber });
+    if (!ngo) {
       return res.status(404).json({ message: 'NGO not found' });
     }
+    // Check if password is correct
+    const isPasswordValid = bcrypt.compareSync(password, ngo.password);
 
-    // Compare passwords
-    const isPasswordValid = await bcrypt.compare(password, NGOData.password);
     if (!isPasswordValid) {
       return res.status(401).json({ message: 'Invalid password' });
     }
 
-    // Generate JWT token
-    // const token = jwt.sign({ id: NGOData._id }, process.env.JWT_SECRET, { expiresIn: '1d' });
-
-    res.json({ token });
-  } catch (error) {
-    console.error(error);
+    res.status(200).json({ message: 'Ngo logged in successfully', payload: ngo });
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
@@ -84,6 +110,25 @@ export const createBloodDonationCamp = async (req, res) => {
 
     } = req.body;
 
+    let path = req?.files?.image?.path
+    let imageURL = null
+    if (path) {
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `camps/${ngoId}_${timestamp}`;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
+      })
+        .then((result) => {
+          imageURL = result.secure_url;
+
+        })
+        .catch((error) => {
+          console.log("image upload error")
+          console.error(error);
+        });
+    }
     if (!startTime || !endTime) {
       return res.status(400).json({ message: 'Start time and end time of the day are required' });
     }
@@ -101,8 +146,8 @@ export const createBloodDonationCamp = async (req, res) => {
       maxDonorsPerSlot,
       startTime,
       endTime,
-      name
-
+      name,
+      ...(imageURL && { imageURL })
     });
 
     const sD = new Date(startDate);
@@ -406,6 +451,136 @@ export const getPreviousCamps = async (req, res) => {
     const previousCamps = await Camp.find({ ngo: ngoId });
 
     res.json(previousCamps);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+//Create Awareness Posts
+//must use FormData in Client
+export const createAwarenessPost = async (req, res) => {
+  try {
+    //const  form_data = req.body;
+    let { ngoId, description, title } = req.body
+    let imageURL = null;
+    let path = req.files.image.path
+    const timestamp = Date.now(); // Get current timestamp
+    const public_id = `posts/${ngoId}_${timestamp}`;
+    await cloudinary.uploader.upload(path, {
+      public_id: public_id,
+      width: 500,
+      height: 300
+    })
+      .then((result) => {
+        imageURL = result.secure_url;
+        console.log(imageURL)
+      })
+      .catch((error) => {
+        console.log("image upload error")
+        console.error(error);
+      });
+    console.log("NOW", imageURL)
+    const newPost = new AwarenessPost({ title, description, imageURL, authorNGO: ngoId });
+    const savedPost = await newPost.save();
+    res.status(201).json(savedPost);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// replying to donor comments
+export const replyToComment = async (req, res) => {
+  try {
+
+    const { postId, commentIndex, content } = req.body;
+    // Find the post by ID
+    const post = await AwarenessPost.findById(postId);
+    if (!post) {
+      return res.status(404).json({ message: 'Post not found' });
+    }
+    // Check if the comment index is valid
+    if (commentIndex < 0 || commentIndex >= post.comments.length) {
+      return res.status(404).json({ message: 'Invalid comment index' });
+    }
+    // Add the reply to the comment
+    post.comments[commentIndex].replies.push({
+      author: req.body.ngoId,
+      content,
+    });
+    // Save the post
+    await post.save();
+    res.status(200).json({ message: 'Reply added successfully' });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// edit or deleting posts 
+export const editOrDeletePost = async (req, res) => {
+  try {
+    const { postId, type } = req.body;
+
+    if (type === 'edit') {
+      const { title, description } = req.body;
+
+      let newImageURL = null;
+      let path = req.files.image.path
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `posts/${req.body.ngoId}_${timestamp}`;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
+      })
+        .then((result) => {
+          newImageURL = result.secure_url;
+          console.log(newImageURL)
+        })
+        .catch((error) => {
+          console.log("image upload error")
+          console.error(error);
+        });
+      console.log("NOW", newImageURL)
+
+
+      const updatedPost = await AwarenessPost.findOneAndUpdate(
+        { _id: postId, authorNGO: req.body.ngoId },
+        { title, description, imageURL: newImageURL },
+        { new: true }
+      );
+
+      if (!updatedPost) {
+        return res.status(404).json({ message: 'Post not found or you are not authorized to edit it' });
+      }
+      console.log("successful", updatedPost);
+      return res.status(200).json(updatedPost);
+    } else if (type === 'delete') {
+      const deletedPost = await AwarenessPost.findOneAndDelete({ _id: postId, authorNGO: req.body.ngoId });
+
+      if (!deletedPost) {
+        return res.status(404).json({ message: 'Post not found or you are not authorized to delete it' });
+      }
+
+      return res.status(200).json({ message: 'Post deleted successfully' });
+    } else {
+      return res.status(400).json({ message: 'Invalid request type' });
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+
+//view all posts by an NGO
+export const viewAllPosts = async (req, res) => {
+  try {
+    const posts = await AwarenessPost.find({ author: req.body.ngoId });
+    res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
