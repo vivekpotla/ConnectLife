@@ -2,7 +2,7 @@ import React, {useState} from 'react'
 import Modal from 'react-modal';
 import {PreviousDonationsForm} from './PreviousDonationsForm';
 import { GenerateSlotReciept } from './GenerateSlotReciept';
-import { useNavigate  } from 'react-router-dom'; 
+import { useNavigate  } from 'react-router'; 
 
 const campDetails = {
   startTime: '09:00', // Example start time

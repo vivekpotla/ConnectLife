@@ -4,13 +4,12 @@ import MapComponent from './Components/MapComponent';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
-import 'leaflet/dist/leaflet.css';
 import { Header } from './Components/Header';
 import { NgoHomePage } from './Components/NGO/NgoHomePage';
 import { CampsList } from './Components/Camps/CampsList.js';
 import { CampDetails } from './Components/Camps/CampDetails.js';
 import ActiveAppoinments from './Components/Donor/ActiveAppointments.js'
-import EditProfile from './Components/Donor/EditProfile.js';
+import EditProfile from './Components/Profile/EditProfile.js';
 import Registration from './Components/SignUp/Registration.js';
 import { BookAppointment } from './Components/Donor/BookAppointment.js';
 import { GenerateSlotReciept } from './Components/Donor/GenerateSlotReciept.js';

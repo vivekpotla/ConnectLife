@@ -4,7 +4,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import axios from 'axios';
 import { Input, Button, Typography, Spinner } from '@material-tailwind/react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 const RegisterCamp = ({ marker, locationAddress, ngoId, setLocationAddress }) => {
     const validationSchema = Yup.object().shape({

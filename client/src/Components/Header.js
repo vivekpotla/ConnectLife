@@ -28,29 +28,35 @@ import {
 } from "@heroicons/react/24/solid";
 import { ConnectlifeIcon } from "../Icons/ConnectlifeIcon";
 import { DonateBloodIcon } from "../Icons/DonateBloodIcon";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
+import { useNavigate } from 'react-router';
 
 // profile menu component
 const profileMenuItems = [
     {
         label: "My Profile",
         icon: UserCircleIcon,
+        link: ""
     },
     {
         label: "Edit Profile",
         icon: Cog6ToothIcon,
+        link: "/editprofile"
     },
     {
         label: "Inbox",
         icon: InboxArrowDownIcon,
+        link: ""
     },
     {
         label: "Help",
         icon: LifebuoyIcon,
+        link: ''
     },
     {
         label: "Sign Out",
         icon: PowerIcon,
+        link: ''
     },
 ];
 
@@ -58,8 +64,7 @@ const userObj = JSON.parse(localStorage.getItem("user"));
 
 function ProfileMenu() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
-    const closeMenu = () => setIsMenuOpen(false);
+    const naviate = useNavigate();
 
     return (
         <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -84,12 +89,15 @@ function ProfileMenu() {
                 </Button>
             </MenuHandler>
             <MenuList className="p-1">
-                {profileMenuItems.map(({ label, icon }, key) => {
+                {profileMenuItems.map(({ label, icon, link }, key) => {
                     const isLastItem = key === profileMenuItems.length - 1;
                     return (
                         <MenuItem
                             key={label}
-                            onClick={closeMenu}
+                            onClick={()=>{
+                                setIsMenuOpen(false);
+                                naviate(link);
+                            }}
                             className={`flex items-center gap-2 rounded ${isLastItem
                                 ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
                                 : ""

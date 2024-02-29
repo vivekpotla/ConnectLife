@@ -1,17 +1,17 @@
-import React, {useRef} from 'react';
-import { useLocation } from 'react-router-dom';
+import React, { useRef } from 'react';
+import { useLocation } from 'react-router';
 import html2pdf from 'html2pdf.js';
-import {ConnectlifeIcon} from '../../Icons/ConnectlifeIcon'
+import { ConnectlifeIcon } from '../../Icons/ConnectlifeIcon'
 import Nss_logo from '../Images/Nss_logo.png'
 
 export const GenerateSlotReciept = () => {
   const location = useLocation();
-  const { campDetails, selectedSlot,donorDetails } = location.state; 
+  const { campDetails, selectedSlot, donorDetails } = location.state;
   console.log(campDetails)
   const contentRef = useRef(null); // Reference to the content container
 
-   // Function to handle downloading the receipt
-   const handleDownloadReceipt = () => {
+  // Function to handle downloading the receipt
+  const handleDownloadReceipt = () => {
     const content = contentRef.current; // Get the HTML content
     html2pdf()
       .from(content)
@@ -87,9 +87,9 @@ export const GenerateSlotReciept = () => {
           <li>Follow post-donation instructions provided by the staff.</li>
         </ul>
       </div>
-      <div className='flex flex-wrap mt-3'> 
-      <img className="w-14 h-14 rounded-t-lg mr-3" src={Nss_logo} alt="camps image" />
-      <ConnectlifeIcon />
+      <div className='flex flex-wrap mt-3'>
+        <img className="w-14 h-14 rounded-t-lg mr-3" src={Nss_logo} alt="campsImage" />
+        <ConnectlifeIcon />
       </div>
       <div className="mt-4">
         <button onClick={handleDownloadReceipt} className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded">
