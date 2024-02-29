@@ -8,13 +8,13 @@ import { NgoHomePage } from './Components/NGO/NgoHomePage';
 import { CampsList } from './Components/Camps/CampsList.js';
 import { CampDetails } from './Components/Camps/CampDetails.js';
 import ActiveAppoinments from './Components/Donor/ActiveAppointments.js'
-import PostsLists from './Components/Posts/PostsList.js'
 import EditProfile from './Components/Donor/EditProfile.js';
 import Registration from './Components/SignUp/Registration.js';
 import { BookAppointment } from './Components/Donor/BookAppointment.js';
 import { GenerateSlotReciept } from './Components/Donor/GenerateSlotReciept.js';
 import MyPosts from './Components/NGO/MyPosts.js';
 import SearchDonors from './Components/Recipient/SearchDonors.js';
+import HomePage from './Components/HomePage.js';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -24,7 +24,7 @@ function App() {
     <BrowserRouter>
       <Header />
       <Routes>
-        <Route path='/' element={<MapComponent />} />
+        <Route path='/map' element={<MapComponent />} />
         <Route path='/ngo' element={<NgoHomePage />} />
         <Route path='/camps' element={<CampsList />} />
         <Route path='/campdetails' element={<CampDetails />} />
@@ -32,7 +32,7 @@ function App() {
         <Route path='/editprofile' element={<EditProfile />} />
         <Route path='/bookappointment' element={<BookAppointment />} />
         <Route path='/receipt' element={<GenerateSlotReciept />} />
-        <Route path='/posts' element={<PostsLists />} />
+        <Route path='/' element={<HomePage />} />
         <Route path='/searchdonors' element={<SearchDonors />} />
         <Route path='/myposts' element={<MyPosts />} />
         <Route path='/SignUp/:userType' element={<Registration />} />

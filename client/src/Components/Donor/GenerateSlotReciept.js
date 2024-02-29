@@ -3,6 +3,7 @@ import { useLocation } from 'react-router-dom';
 import html2pdf from 'html2pdf.js';
 import {ConnectlifeIcon} from '../../Icons/ConnectlifeIcon'
 import Nss_logo from '../Images/Nss_logo.png'
+
 export const GenerateSlotReciept = () => {
   const location = useLocation();
   const { campDetails, selectedSlot,donorDetails } = location.state; 
