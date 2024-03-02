@@ -116,7 +116,6 @@ function ProfileMenu({ userObj }) {
                                 strokeWidth: 2,
                             })}
                             <Typography
-                                as="span"
                                 variant="small"
                                 className="font-normal"
                                 color={isLastItem ? "red" : "inherit"}
@@ -170,7 +169,7 @@ function NavListMenu() {
         <React.Fragment>
             <Menu allowHover open={isMenuOpen} handler={setIsMenuOpen}>
                 <MenuHandler>
-                    <Typography as="a" href="#" variant="small" className="font-normal">
+                    <Typography variant="small" className="font-normal">
                         <MenuItem className="hidden text-base items-center gap-2 font-medium text-blue-gray-900 lg:flex lg:rounded-full">
                             <Square3Stack3DIcon className="h-[18px] w-[18px] text-blue-gray-500" />{" "}
                             Pages{" "}
@@ -294,11 +293,9 @@ export function Header() {
     }, [userRef]);
 
     return (
-        <Navbar className="p-2 lg:pl-6">
+        <Navbar className="p-2 lg:pl-6 min-w-full">
             <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
                 <Typography
-                    as="a"
-                    href="#"
                     className="mr-2 ml-2 cursor-pointer font-medium"
                 >
                     <div className="flex flex-row gap-2 place-items-center">

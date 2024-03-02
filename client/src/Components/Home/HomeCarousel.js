@@ -3,7 +3,7 @@ import React from 'react'
 
 const HomeCarousel = () => {
     return (
-        <div className='lg:mx-16 h-[80vh]'>
+        <div className='lg:mx-2 h-[85vh]'>
             <Carousel
                 className="rounded-xl"
                 autoplay={true}

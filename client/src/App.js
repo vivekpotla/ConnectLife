@@ -67,7 +67,7 @@ function App() {
           {userObj?.userType === "ngo" && NgoRoutes}
           {userObj?.userType === "donor" && DonorRoutes}
         </Routes>
-        <div className="fixed bottom-0 right-0">
+        <div className="fixed bottom-0 right-[-10px]">
           <ChatBot />
         </div>
       </div>

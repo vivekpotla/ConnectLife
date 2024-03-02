@@ -51,7 +51,7 @@ export const CampsList = () => {
     // Add any form submission logic here
   };
   return (
-    <div className='bg-gray-100 p-1'>
+    <div className='bg-gray-100 max-h-full p-1 h-screen'>
       <form className="max-w-md mx-auto mt-4" onSubmit={handleSubmit}>
         <div className="flex">
           <label htmlFor="search" className="mb-2 text-sm font-medium text-gray-900 sr-only">Camp</label>
