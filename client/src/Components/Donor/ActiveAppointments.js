@@ -8,7 +8,7 @@ export default function ActiveAppointments() {
   const [donatedAppointments, setDonatedAppointments] = useState([]);
   const [notDonatedAppointments, setNotDonatedAppointments] = useState([]);
   const [error, setError] = useState(null);
-
+  const [appointments,setAppointments]=useState([]);
   useEffect(() => {
     // Define the function to fetch the data
     const fetchData = async () => {
@@ -17,6 +17,8 @@ export default function ActiveAppointments() {
         console.log(response);
         setDonatedAppointments(response.data.donatedAppointments);
         setNotDonatedAppointments(response.data.notDonatedAppointments);
+        setAppointments(donatedAppointments,notDonatedAppointments);
+        console.log(appointments)
       } catch (error) {
         setError('Error fetching data');
         console.error('Error fetching data:', error);
@@ -60,9 +62,9 @@ export default function ActiveAppointments() {
             </div>
             <div className=" flex justify-center mt-5">
             
-            {/* donatedAppointments.status && <FontAwesomeIcon icon={faCheckCircle} size='2x' className="text-green-500 "/> ||!donatedAppointments.status && */}
-            <FontAwesomeIcon icon={faCircleXmark} className="text-red-500" size="2x" />
-    
+            
+            
+            {appointments.status? <FontAwesomeIcon icon={faCheckCircle} size='2x' className="text-green-500 "/>:<FontAwesomeIcon icon={faCircleXmark} className="text-red-500" size="2x" />}
             </div>
           </div>
         </div>
