@@ -1,60 +1,40 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CampCard from './CampCard';
+import axios from 'axios';
+
+
 export const CampsList = () => {
   const [query, setQuery] = useState('');
   const [filteredCamps, setFilteredCamps] = useState([]);
 
-  const campsData = [
-    {
-      location: "Hyderabad",
-      description: "NSS Blood Donation Camp",
-      startDate: "2024-02-17",
-      endDate: "2024-02-18",
-      donorsJoined: "4",
-      startTime: "09:00",
-      endTime: "18:00",
-      longitude: "17.64333",
-      latitude: "76.666",
-      name: "NSS1 Camp"
-    },
-    {
-      location: "Hyderabad",
-      description: "NSS Blood Donation Camp",
-      startDate: "2024-02-17",
-      endDate: "2024-02-18",
-      donorsJoined: "4",
-      startTime: "09:00",
-      endTime: "18:00",
-      longitude: "17.64333",
-      latitude: "76.666",
-      name: "NSS2 Camp"
-    },
-    {
-      location: "Hyderabad",
-      description: "Red Cross Blood Donation Camp",
-      startDate: "2024-02-17",
-      endDate: "2024-02-18",
-      donorsJoined: "4",
-      startTime: "09:00",
-      endTime: "18:00",
-      longitude: "17.64333",
-      latitude: "76.666",
-      name: "Red1 Camp"
-    },
-    {
-      location: "Hyderabad",
-      description: "Red Cross Blood Donation Camp",
-      startDate: "2024-02-17",
-      endDate: "2024-02-18",
-      donorsJoined: "4",
-      startTime: "09:00",
-      endTime: "18:00",
-      longitude: "17.64333",
-      latitude: "76.666",
-      name: "Red2 Camp"
-    },
-    // Add more camp objects as needed
-  ];
+  const [campsData, setCampsData] = useState([]);
+
+  useEffect(() => {
+    const getCampsData = async () => {
+      try {
+        // Get latitude and longitude using browser geolocation API
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          // Make API call with latitude and longitude
+
+          await axios.post('http://localhost:5000/api/donor/nearestcamps', {
+            latitude,
+            longitude
+          }).then((res) => {
+            setCampsData(res.data);
+          }).catch((error) => {
+            console.log(error);
+          });
+        });
+      } catch (error) {
+        console.error('Error fetching camps data:', error);
+      }
+    };
+
+    getCampsData();
+  }, []);
+
   const handleInputChange = (e) => {
     const inputValue = e.target.value.toLowerCase().trim(); // Trim any leading or trailing whitespace
     console.log(inputValue);

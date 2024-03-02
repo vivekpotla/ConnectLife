@@ -176,6 +176,8 @@ export const searchBloodDonationCamps = async (req, res) => {
   }
 };
 
+Camp.collection.createIndex({ geolocation: '2dsphere' });
+
 //search camps by location (nearest)
 export const findNearestCamps = async (req, res) => {
   try {
@@ -183,13 +185,13 @@ export const findNearestCamps = async (req, res) => {
 
     // Find the nearest camps within a specified radius (e.g., 10 kilometers)
     const nearestCamps = await Camp.find({
-      location: {
+      geolocation: {
         $near: {
           $geometry: {
             type: 'Point',
             coordinates: [longitude, latitude] // Note: MongoDB uses [longitude, latitude] order
           },
-          $maxDistance: 10000 // 10 kilometers in meters
+          $maxDistance: 50000 // 10 kilometers in meters
         }
       }
     });

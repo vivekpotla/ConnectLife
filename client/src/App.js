@@ -14,9 +14,10 @@ import { BookAppointment } from './Components/Donor/BookAppointment.js';
 import { GenerateSlotReciept } from './Components/Donor/GenerateSlotReciept.js';
 import MyPosts from './Components/NGO/MyPosts.js';
 import SearchDonors from './Components/Recipient/SearchDonors.js';
-import HomePage from './Components/HomePage.js';
+import HomePage from './Components/Home/HomePage.js';
 import Login from './Components/SignUp/Login.js';
 import { useSelector } from 'react-redux';
+import ChatBot from './Components/ChatBot/ChatBot.js';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -27,7 +28,6 @@ function App() {
 
   useEffect(() => {
     setUserObj(JSON.parse(localStorage.getItem("user")));
-    console.log(localStorage.getItem("user"));
   }, [isLoggedIn]);
 
 
@@ -54,18 +54,23 @@ function App() {
 
   return (
     <BrowserRouter>
-      <Header />
-      <Routes>
-        <Route path='/' element={<HomePage />} />
-        <Route path='/camps' element={<CampsList />} />
-        <Route path='/campdetails' element={<CampDetails />} />
-        <Route path='/activeappointments' element={<ActiveAppoinments />} />
-        <Route path='/editprofile' element={<EditProfile />} />
-        <Route path='/searchdonors' element={<SearchDonors />} />
-        {!userObj && AuthRoutes}
-        {userObj?.userType === "ngo" && NgoRoutes}
-        {userObj?.userType === "donor" && DonorRoutes}
-      </Routes>
+      <div className="">
+        <Header />
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/camps' element={<CampsList />} />
+          <Route path='/campdetails' element={<CampDetails />} />
+          <Route path='/activeappointments' element={<ActiveAppoinments />} />
+          <Route path='/editprofile' element={<EditProfile />} />
+          <Route path='/searchdonors' element={<SearchDonors />} />
+          {!isLoggedIn && AuthRoutes}
+          {userObj?.userType === "ngo" && NgoRoutes}
+          {userObj?.userType === "donor" && DonorRoutes}
+        </Routes>
+        <div className="fixed bottom-0 right-0">
+          <ChatBot />
+        </div>
+      </div>
     </BrowserRouter>
   );
 }

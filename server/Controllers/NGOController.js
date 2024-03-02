@@ -112,6 +112,7 @@ export const createBloodDonationCamp = async (req, res) => {
 
     let path = req?.files?.image?.path
     let imageURL = null
+    
     if (path) {
       const timestamp = Date.now(); // Get current timestamp
       const public_id = `camps/${ngoId}_${timestamp}`;
