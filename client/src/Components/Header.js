@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
     Navbar,
     Collapse,
@@ -29,7 +29,9 @@ import {
 import { ConnectlifeIcon } from "../Icons/ConnectlifeIcon";
 import { DonateBloodIcon } from "../Icons/DonateBloodIcon";
 import { Link } from "react-router-dom";
-import { useNavigate } from 'react-router';
+import { useLocation, useNavigate } from 'react-router';
+import { logout } from "../Redux/slices/userSlice";
+import { useDispatch } from "react-redux";
 
 // profile menu component
 const profileMenuItems = [
@@ -56,15 +58,17 @@ const profileMenuItems = [
     {
         label: "Sign Out",
         icon: PowerIcon,
-        link: ''
+        link: '/'
     },
 ];
 
-const userObj = JSON.parse(localStorage.getItem("user"));
+// const userObj = JSON.parse(localStorage.getItem("user"));
 
-function ProfileMenu() {
+function ProfileMenu({ userObj }) {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const naviate = useNavigate();
+
+    const dispatch = useDispatch();
 
     return (
         <Menu open={isMenuOpen} handler={setIsMenuOpen} placement="bottom-end">
@@ -94,8 +98,12 @@ function ProfileMenu() {
                     return (
                         <MenuItem
                             key={label}
-                            onClick={()=>{
+                            onClick={() => {
                                 setIsMenuOpen(false);
+                                if (label === "Sign Out") {
+                                    let log = logout();
+                                    dispatch(log);
+                                }
                                 naviate(link);
                             }}
                             className={`flex items-center gap-2 rounded ${isLastItem
@@ -146,7 +154,7 @@ function NavListMenu() {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
 
     const renderItems = navListMenuItems.map(({ title, description }) => (
-        <a href="#" key={title}>
+        <Link key={title}>
             <MenuItem>
                 <Typography variant="h6" color="blue-gray" className="mb-1">
                     {title}
@@ -155,7 +163,7 @@ function NavListMenu() {
                     {description}
                 </Typography>
             </MenuItem>
-        </a>
+        </Link>
     ));
 
     return (
@@ -204,50 +212,60 @@ const navListItems = [
     {
         label: "Home",
         icon: HomeIcon,
-        link: "/"
+        link: "/",
+        users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
     {
         label: "Camps",
         icon: BuildingStorefrontIcon,
-        link: "/camps"
+        link: "/camps",
+        users: ["ngo", "volunteer", "donor", "recipient"]
     },
     {
         label: "NGO",
         icon: BuildingStorefrontIcon,
-        link: "/ngo"
+        link: "/ngo",
+        users: ["ngo"]
     },
     {
         label: "Donate",
         icon: DonateBloodIcon,
-        link: "/donor"
+        link: "/donate",
+        users: ["donor"]
     },
     {
-        label: "Docs",
+        label: "FAQs",
         icon: CodeBracketSquareIcon,
-        link: "/docs"
+        link: "/faqs",
+        users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
 ];
 
-function NavList() {
+function NavList({ userObj }) {
+
+    const location = useLocation();
+
     return (
         <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
-            {navListItems.map(({ label, icon, link }, key) => (
-                <Typography
-                    key={label}
-                    as="a"
-                    href="#"
-                    variant="small"
-                    color="gray"
-                    className="font-medium text-blue-gray-500 text-base"
-                >
-                    <Link to={link}>
-                        <MenuItem className="flex items-center gap-2 lg:rounded-full">
-                            {React.createElement(icon, { className: "h-[18px] w-[18px]" })}{" "}
-                            <span className="text-gray-900"> {label}</span>
-                        </MenuItem>
-                    </Link>
-                </Typography>
-            ))}
+            {navListItems.map(({ label, icon, link, users }, key) => {
+                if (users.includes(userObj?.userType) || "all" === users[4])
+                    return (
+                        <Link to={link} key={label}>
+                            <Typography
+                                variant="small"
+                                color="gray"
+                                className={"font-medium text-blue-gray-500 text-base"}
+                            >
+                                <MenuItem className={location.pathname === link ? "flex items-center gap-2 lg:rounded-full bg-gray-100" : "flex items-center gap-2 lg:rounded-full"}>
+                                    {React.createElement(icon, { className: "h-[18px] w-[18px]" })}{" "}
+                                    <span className="text-gray-900"> {label}</span>
+                                </MenuItem>
+                            </Typography>
+                        </Link>
+                    )
+                else
+                    return null
+            })}
             <NavListMenu />
         </ul>
     );
@@ -258,14 +276,22 @@ export function Header() {
 
     const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
 
+    const [userObj, setUserObj] = useState(null);
+
     const navigate = useNavigate();
 
-    React.useEffect(() => {
+    useEffect(() => {
         window.addEventListener(
             "resize",
             () => window.innerWidth >= 960 && setIsNavOpen(false),
         );
     }, []);
+
+    const userRef = localStorage.getItem("user");
+
+    useEffect(() => {
+        setUserObj(JSON.parse(localStorage.getItem("user")));
+    }, [userRef]);
 
     return (
         <Navbar className="p-2 lg:pl-6">
@@ -282,7 +308,7 @@ export function Header() {
                 </Typography>
                 <div className="flex gap-2">
                     <div className="hidden lg:block">
-                        <NavList />
+                        <NavList userObj={userObj} />
                     </div>
                     <IconButton
                         size="sm"
@@ -302,12 +328,12 @@ export function Header() {
                             <span>Sign Up</span>
                         </Button>
                     </> :
-                        <ProfileMenu />
+                        <ProfileMenu userObj={userObj} />
                     }
                 </div>
             </div>
             <Collapse open={isNavOpen} className="overflow-scroll">
-                <NavList />
+                <NavList userObj={userObj} />
             </Collapse>
         </Navbar>
     );

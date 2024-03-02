@@ -1,6 +1,6 @@
 import React, { useRef } from 'react';
 import { useLocation } from 'react-router';
-import html2pdf from 'html2pdf.js';
+import html3pdf from 'html3pdf';
 import { ConnectlifeIcon } from '../../Icons/ConnectlifeIcon'
 import Nss_logo from '../Images/Nss_logo.png'
 
@@ -13,7 +13,7 @@ export const GenerateSlotReciept = () => {
   // Function to handle downloading the receipt
   const handleDownloadReceipt = () => {
     const content = contentRef.current; // Get the HTML content
-    html2pdf()
+    html3pdf()
       .from(content)
       .save('receipt.pdf'); // Download the PDF with filename "receipt.pdf"
   };
