@@ -14,7 +14,7 @@ export const CreateCamps = () => {
 
   return (
     <div >
-      <div class="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
+      <div className="max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
         <img src={Create_Camp} alt='CampImage'></img>
         <Button size="md" variant="gradient" color='red'
           className="select-none rounded-lg block w-full hover:scale-105 focus:scale-105 active:scale-100" onClick={() => {

@@ -15,7 +15,7 @@ export const CampsList = () => {
       endTime: "18:00",
       longitude: "17.64333",
       latitude: "76.666",
-      name:"NSS1 Camp"
+      name: "NSS1 Camp"
     },
     {
       location: "Hyderabad",
@@ -27,7 +27,7 @@ export const CampsList = () => {
       endTime: "18:00",
       longitude: "17.64333",
       latitude: "76.666",
-      name:"NSS2 Camp"
+      name: "NSS2 Camp"
     },
     {
       location: "Hyderabad",
@@ -39,7 +39,7 @@ export const CampsList = () => {
       endTime: "18:00",
       longitude: "17.64333",
       latitude: "76.666",
-      name:"Red1 Camp"
+      name: "Red1 Camp"
     },
     {
       location: "Hyderabad",
@@ -51,7 +51,7 @@ export const CampsList = () => {
       endTime: "18:00",
       longitude: "17.64333",
       latitude: "76.666",
-      name:"Red2 Camp"
+      name: "Red2 Camp"
     },
     // Add more camp objects as needed
   ];
@@ -65,7 +65,6 @@ export const CampsList = () => {
       return campNameUntilBlood.startsWith(inputValue);
     });
     setFilteredCamps(filtered);
-    console.log(filtered)
   };
   const handleSubmit = (e) => {
     e.preventDefault(); // Prevent the default form submission behavior
@@ -73,25 +72,25 @@ export const CampsList = () => {
   };
   return (
     <div>
-    <form class="max-w-md mx-auto mt-4" onSubmit={handleSubmit}>
-    <div class="flex">
-    <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only">Camp</label>
-    </div>
-    <div class="relative w-full">
-    <input type="search" id="search" class="bg-gray-50 border border-gray-500 text-gray-900 text-sm 
-    rounded-lg block w-full ps-10 p-2.5" 
-    placeholder="Enter Camp Name or Camp ID" required onChange={handleInputChange}/>
-    <button type="submit" class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white 
+      <form className="max-w-md mx-auto mt-4" onSubmit={handleSubmit}>
+        <div className="flex">
+          <label htmlFor="search" className="mb-2 text-sm font-medium text-gray-900 sr-only">Camp</label>
+        </div>
+        <div className="relative w-full">
+          <input type="search" id="search" className="bg-gray-50 border border-gray-500 text-gray-900 text-sm 
+    rounded-lg block w-full ps-10 p-2.5"
+            placeholder="Enter Camp Name or Camp ID" required onChange={handleInputChange} />
+          <button type="submit" className="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white 
     bg-red-700 rounded-e-lg border border-gray-500">
-    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" 
-    viewBox="0 0 20 20">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-    </svg>
-    <span class="sr-only">Search</span>
-    </button>
-  </div>
-</form>
+            <svg className="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none"
+              viewBox="0 0 20 20">
+              <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2"
+                d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z" />
+            </svg>
+            <span className="sr-only">Search</span>
+          </button>
+        </div>
+      </form>
       <div className="flex flex-wrap justify-center gap-2">
         {query ? filteredCamps.map((camp, index) => (
           <CampCard key={index} camps={camp} />

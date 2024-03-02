@@ -465,7 +465,7 @@ export const createAwarenessPost = async (req, res) => {
     //const  form_data = req.body;
     let { ngoId, description, title } = req.body
     let imageURL = null;
-    let path = req.files.image.path
+    let path = req?.files?.image?.path
     const timestamp = Date.now(); // Get current timestamp
     const public_id = `posts/${ngoId}_${timestamp}`;
     await cloudinary.uploader.upload(path, {
@@ -579,7 +579,7 @@ export const editOrDeletePost = async (req, res) => {
 //view all posts by an NGO
 export const viewAllPosts = async (req, res) => {
   try {
-    const posts = await AwarenessPost.find({ author: req.body.ngoId });
+    const posts = await AwarenessPost.find({ authorNGO: req.body.ngoId });
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);

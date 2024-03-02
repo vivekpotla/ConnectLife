@@ -1,7 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import PostsComments from './PostsComments'; // Assuming you have a separate component for comments
 import img from '../Images/Create_Post.png'; // Import your image
 import { Avatar, Typography } from '@material-tailwind/react';
+import axios from 'axios';
 
 const postsData = [
   {
@@ -22,6 +23,35 @@ const postsData = [
 ];
 
 const PostsLists = () => {
+  const [postsData, setPostsData] = useState([
+    {
+      ngo: "NGO 1",
+      title: "Title number 1",
+      description: "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+      image: img,
+      id: 1
+    },
+    {
+      ngo: "NGO 2",
+      title: "Title number 2",
+      description: "Hello you all must donate blood.",
+      image: img,
+      id: 2
+    },
+    // Add more posts as needed
+  ]);
+
+  useEffect(() => {
+    const getPostData = async () => {
+      await axios.get("http://localhost:5000/api/donor/get-all-posts").then((res) => {
+        console.log(res.data);
+      }).catch((error) => {
+        console.log(error);
+      })
+    }
+    getPostData();
+  }, []);
+
   const [comments, setComments] = useState({});
   const [likes, setLikes] = useState({});
 
