@@ -31,7 +31,7 @@ const ChatBot = () => {
             <SpeedDial>
                 <SpeedDialHandler className={closeSpeedDial ? "hidden" : ""}>
                     <button className='h-4'>
-                        <Lottie animationData={Bot} onClick={openDrawerRight} loop={true} className="block h-[150px] w-[150px] rounded-full" />
+                        <Lottie animationData={Bot} onClick={openDrawerRight} loop={true} className="block lg:h-[150px] lg:w-[150px] h-[80px] w-[80px] rounded-full" />
                         {/* <EnvelopeOpenIcon className="hidden h-7 w-7 group-hover:block" /> */}
                         {/* <EnvelopeIcon className="block h-7 w-7 group-hover:hidden" /> */}
                     </button>

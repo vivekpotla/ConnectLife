@@ -2,6 +2,18 @@ import React, { useEffect } from 'react'
 import { useState } from 'react';
 import img from '../Images/Create_Post.png';
 import axios from 'axios';
+import {
+  Card,
+  CardBody,
+  CardHeader,
+  CardFooter,
+  Button,
+  Typography
+} from '@material-tailwind/react'
+import {
+  TrashIcon,
+  PencilSquareIcon
+} from '@heroicons/react/24/solid'
 
 function MyPosts() {
   const [postsData, setPosts] = useState([
@@ -75,11 +87,37 @@ function MyPosts() {
 
 
   return (
-    <>
+    <div className='bg-gray-100 h-screen'>
+
       {isDeleted && <h5 className="text-xl mt-4 text-green-500 mb-4 text-center">Post successfully deleted!</h5>}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 place-items-center">
         {postsData.map(post => (
-          <div key={post._id} className="border border-gray-300 rounded-lg p-4 mb-4">
+          <Card className="mt-6 md:max-w-96 max-w-72">
+            <CardHeader color="blue-gray" className="relative md:h-56 h-40">
+              <img
+                src={post.imageURL}
+                alt="card-image"
+                className='w-full h-full'
+              />
+            </CardHeader>
+            <CardBody>
+              <Typography variant="h5" color="blue-gray" className="mb-2">
+                {post.title}
+              </Typography>
+              <Typography>
+                {post.description}
+              </Typography>
+            </CardBody>
+            <CardFooter className="pt-0 flex">
+              <Button variant='text' color='yellow' className='px-3' ripple onClick={() => handleEditPost(post)}><PencilSquareIcon className='h-5 w-5' /></Button>
+              <Button variant='text' color='red' className='px-3' ripple onClick={() => handleDeletePost(post._id)}><TrashIcon className='h-5 w-5' /></Button>
+            </CardFooter>
+            {editPost && editPost.id === post.id && (
+              <EditForm post={editPost} onSaveEdit={handleSaveEdit} onCancelEdit={() => setEditPost(null)} />
+            )}
+          </Card>
+        ))}
+        {/* <div key={post._id} className="border border-gray-300 rounded-lg p-4 mb-4">
             <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
             <p className="text-gray-600 mb-2">{post.description}</p>
             <img src={post.imageURL} alt={post.title} className="w-full h-auto rounded-md mb-2" />
@@ -95,11 +133,14 @@ function MyPosts() {
                     d="M1 3.5h12m-10.5 0h9v9a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1zm2 0V3a2.5 2.5 0 1 1 5 0v.5m-4 3.001v4.002m3-4.002v4.002" /></svg>
               </button>
             </div>
+
+
             {editPost && editPost.id === post.id && (
               <EditForm post={editPost} onSaveEdit={handleSaveEdit} onCancelEdit={() => setEditPost(null)} />
             )}
-          </div>
-        ))}
+          </div> */}
+
+
         {deletePostId && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
             <div className="bg-white p-4 rounded-lg shadow-lg">
@@ -112,7 +153,7 @@ function MyPosts() {
           </div>
         )}
       </div>
-    </>
+    </div>
   );
 };
 // EditForm component
