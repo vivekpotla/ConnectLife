@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import React from 'react';
 import axios from 'axios';
-// import Card from 'react-bootstrap/Card';
-
+//import Card from 'react-bootstrap/Card';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faCircle,faCheckCircle, faXmark, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 export default function ActiveAppointments() {
   const [donatedAppointments, setDonatedAppointments] = useState([]);
   const [notDonatedAppointments, setNotDonatedAppointments] = useState([]);
@@ -35,38 +36,39 @@ export default function ActiveAppointments() {
 
 
   return (
-
-    <div class="container">
-      <div class="row">
-        <div class="col-md-6 mx-auto mt-5">
-          <div class="card">
-            <div class="card-header">
-              Appointment Details
+    <div className="containerh-screen flex justify-center mt-10">
+     <div className="w-1/4">
+      <div className="card bg-white shadow-md rounded-lg overflow-hidden">
+        <div className="card-header bg-gray-200 text-gray-700 font-semibold uppercase p-3">
+          Appointment Details
+        </div>
+        <div className="card-body flex justify-between p-7">
+          <div>
+            <div className="mb-2">
+              <strong className="font-semibold">Name:</strong> Nss-camp
             </div>
-            <div className="card-body">
-              <div className="row">
-                <div className="col-md-8">
-                  <div>
-                    <strong>Name:</strong> Nss-camp
-                  </div>
-                  <div>
-                    <strong>Location:</strong> Hyderabad
-                  </div>
-                  <div>
-                    <strong>Time:</strong> 9:00-10:00
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div>
-                    <strong>Status:</strong> Donated
-                  </div>
-                </div>
-              </div>
+            <div className="mb-2">
+              <strong className="font-semibold">Location:</strong> Hyderabad
             </div>
-
+            <div className="mb-2">
+              <strong className="font-semibold">Time:</strong> 9:00-10:00
+            </div>
+          </div>
+          <div>
+            <div>
+              <strong className="font-semibold">Status:</strong> Donated
+            </div>
+            <div className=" flex justify-center mt-5">
+            
+            {/* donatedAppointments.status && <FontAwesomeIcon icon={faCheckCircle} size='2x' className="text-green-500 "/> ||!donatedAppointments.status && */}
+            <FontAwesomeIcon icon={faCircleXmark} className="text-red-500" size="2x" />
+    
+            </div>
           </div>
         </div>
       </div>
     </div>
-  )
+    </div>
+    
+  )
 }
