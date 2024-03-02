@@ -5,6 +5,8 @@ import * as Yup from "yup";
 import axios from "axios";
 import { Input, Button, Spinner, Typography } from "@material-tailwind/react";
 import { useNavigate, useParams } from 'react-router';
+import { useDispatch } from 'react-redux'
+import { login } from "../../Redux/slices/userSlice";
 
 const Login = () => {
 
@@ -27,20 +29,22 @@ const Login = () => {
     resolver: yupResolver(validationSchema),
   });
 
+  const dispatch = useDispatch();
+
   const onSubmit = async (data) => {
     try {
       setLoading(true); // Set loading state to true when form is submitted
       // Make the POST request using axios
       await axios.post(`http://localhost:5000/api/${userType.toLowerCase()}/login`, data).then((res) => {
         // Assuming res.data.payload contains the user data
-        console.log("then method");
+        let reduxObj = login(res.data.payload);
+        dispatch(reduxObj);
         localStorage.setItem("user", JSON.stringify({ ...res.data.payload, userType: userType.toLowerCase() }));
         navigate("/");
       }).catch((error) => {
         console.log(error);
         setMessage(error.message);
       });
-      console.log(localStorage.getItem("user"));
 
       // Redirect user after successful login
     } catch (error) {

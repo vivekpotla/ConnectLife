@@ -73,14 +73,14 @@ const PostsLists = () => {
             </div>
             <div className="flex items-center px-2 py-2">
               <button className="text-gray-500" onClick={() => handleLike(post.id)}>
-                <svg className={`h-8 w-8 ${likes[post.id] ? 'fill-red-600 text-red-500' : 'fill-gray-100 text-gray-500'}`} width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+                <svg className={`h-8 w-8 ${likes[post.id] ? 'fill-red-600 text-red-500' : 'fill-gray-100 text-gray-500'}`} width="24" height="24" viewBox="0 0 24 24" strokeWidth="2" stroke="currentColor" strokeLinecap="round" strokeLinejoin="round">
                   <path fill="none" />
                   <path d="M12 20l-7 -7a4 4 0 0 1 6.5 -6a.9 .9 0 0 0 1 0a4 4 0 0 1 6.5 6l-7 7" />
                 </svg>
               </button>
               <button className="text-gray-600 flex items-center space-x-1" onClick={() => toggleCommentSection(post.id)}>
-                <svg class="h-8 w-8 text-gray-500 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+                <svg className="h-8 w-8 text-gray-500 " fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
                 <p>Comments</p>
               </button>

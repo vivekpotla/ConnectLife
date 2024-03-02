@@ -28,9 +28,6 @@ const DonorRegistration = () => {
         aadhaarNumber: Yup.string()
             .required("Aadhaar Number is required")
             .min(12, "Aadhaar Number must be 12 digits long"),
-        bloodGroup: Yup.string()
-            .required("Blood group is required")
-            .oneOf(bloodGroups, "Invalid blood group"),
         address: Yup.object().shape({
             street: Yup.string().required("Street is required"),
             city: Yup.string().required("City is required"),
@@ -58,6 +55,7 @@ const DonorRegistration = () => {
 
     const [file, setFile] = useState();
     const [objectFile, setObjectFile] = useState();
+
     function handleProfileFile(e) {
         console.log(e.target.files);
         setFile(URL.createObjectURL(e.target.files[0]));
@@ -66,6 +64,7 @@ const DonorRegistration = () => {
     }
 
     const onSubmit = async (data) => {
+        console.log("fff")
         try {
             setLoading(true);
             const formData = new FormData();
@@ -75,6 +74,7 @@ const DonorRegistration = () => {
             formData.append('password', data.password);
             formData.append('phoneNumber', data.phoneNumber);
             formData.append('aadhaarNumber', data.aadhaarNumber);
+            formData.append('bloodGroup', blood);
             formData.append('address[street]', data.address.street);
             formData.append('address[city]', data.address.city);
             formData.append('address[state]', data.address.state);
@@ -115,7 +115,7 @@ const DonorRegistration = () => {
                 <h1 className="text-3xl font-bold text-center text-gray-800">
                     Sign Up
                 </h1>
-                <form onSubmit={handleSubmit(onSubmit)} className="mt-4 space-y-4">
+                <form onSubmit={handleSubmit((val) => onSubmit(val))} className="mt-4 space-y-4">
                     <div className="flex flex-col items-center relative">
                         <Avatar
                             src={file ? file : ProfilePic}
@@ -361,7 +361,6 @@ const DonorRegistration = () => {
                     <Select
                         id="bloodGroup"
                         name="bloodGroup"
-                        {...register('bloodGroup')}
                         label="Blood group"
                         size="md"
                         onChange={(e) => {

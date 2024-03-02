@@ -4,7 +4,7 @@ import HomeCarousel from './Home/HomeCarousel'
 
 const HomePage = () => {
     return (
-        <div className='bg-gray-100 p-4'>
+        <div className='bg-gray-100 p-2'>
             <HomeCarousel />
             <PostsLists />
         </div>

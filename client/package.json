@@ -16,7 +16,7 @@
     "axios": "^1.6.7",
     "dotenv": "^16.4.5",
     "framer-motion": "^11.0.6",
-    "html2pdf.js": "^0.10.1",
+    "html3pdf": "^0.12.2",
     "mapbox-gl": "^3.1.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
