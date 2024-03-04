@@ -41,7 +41,7 @@ const ChatBot = () => {
                         <HomeIcon className="h-5 w-5" />
                     </SpeedDialAction>
                     <SpeedDialAction>
-                        <CogIcon className="h-5 w-5" />
+                        <CogIcon className="h-5 w-5 hover:animate-spin" />
                     </SpeedDialAction>
                     <SpeedDialAction onClick={() => {
                         setCloseSpeedDial(true);
