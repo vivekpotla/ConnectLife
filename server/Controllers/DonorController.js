@@ -165,8 +165,8 @@ export const searchBloodDonationCamps = async (req, res) => {
     const query = req.params.query;
     const camps = await Camp.find({
       $or: [
-        { _id: query },
-        { name: { $regex: new RegExp(query, 'i') } }
+        { name: { $regex: new RegExp(query, 'i') } }, // Search by name
+        { location: { $regex: new RegExp(query, 'i') } } // Search by location
       ]
     });
     res.json(camps);
@@ -175,6 +175,7 @@ export const searchBloodDonationCamps = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 Camp.collection.createIndex({ geolocation: '2dsphere' });
 

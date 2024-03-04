@@ -1,4 +1,4 @@
-import {  mongoose, Schema } from 'mongoose';
+import { mongoose, Schema } from 'mongoose';
 
 
 const campSchema = new Schema({
@@ -11,7 +11,7 @@ const campSchema = new Schema({
     type: String,
     required: true
   },
-  imageURL:{
+  imageURL: {
     type: String,
     required: false
   },
@@ -57,8 +57,9 @@ const campSchema = new Schema({
   slotsPerHour: {
     type: Number,
     required: true,
-    default:1
+    default: 1
   },
+  createdAt: { type: Date, default: Date.now },
   volunteers: [{
     type: Schema.Types.ObjectId,
     ref: 'Volunteer'

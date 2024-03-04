@@ -587,3 +587,22 @@ export const viewAllPosts = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+// view all camps by their creation time
+export const viewAllCamps = async (req, res) => {
+  try {
+    // Retrieve all camps from the database sorted by creation time
+    const camps = await Camp.find().sort({ createdAt: 'desc' });
+
+    // Check if there are no camps found
+    if (!camps || camps.length === 0) {
+      return res.status(404).json({ message: 'No camps found' });
+    }
+
+    // Return the list of camps
+    res.status(200).json(camps);
+  } catch (error) {
+    console.error('Error viewing all camps:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};

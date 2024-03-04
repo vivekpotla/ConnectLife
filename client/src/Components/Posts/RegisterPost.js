@@ -235,6 +235,7 @@ const RegisterPost = () => {
               <figcaption className="absolute bottom-8 left-2/4 flex w-[calc(100%-4rem)] -translate-x-2/4 justify-center rounded-xl border border-white bg-white/50 py-2 px-6 shadow-lg shadow-black/5 saturate-200 backdrop-blur-[1px]">
                 <input
                   type="file"
+                  accept='image/*'
                   className='text-sm w-fit text-gray-600'
                   onChange={handleCampImage}
                 />
