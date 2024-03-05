@@ -18,6 +18,8 @@ import HomePage from './Components/Home/HomePage.js';
 import Login from './Components/SignUp/Login.js';
 import { useSelector } from 'react-redux';
 import ChatBot from './Components/ChatBot/ChatBot.js';
+import { Faqs } from './Components/Donor/Faqs.js';
+import ContactRequests from './Components/Donor/ContactRequests.js';
 // Make sure to bind modal to your app
 Modal.setAppElement('#root');
 
@@ -49,6 +51,8 @@ function App() {
     <>
       <Route path='/bookappointment' element={<BookAppointment />} />
       <Route path='/receipt' element={<GenerateSlotReciept />} />
+      <Route path='/contactrequests' element={<ContactRequests />} />
+      <Route path='/faqs' element={<Faqs />} />
     </>
   )
 

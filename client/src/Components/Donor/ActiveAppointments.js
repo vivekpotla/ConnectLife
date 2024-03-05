@@ -10,13 +10,17 @@ export default function ActiveAppointments() {
     { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
     { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
     { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
+    { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
+    { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
+    { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
+    { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
     // Add more appointments here
   ]);
 
   return (
     <>
       <h1 className="text-2xl font-bold mb-10 mt-4 text-center">Active Appointments</h1>
-      <div className="md:flex-row flex-col flex md:mx-auto mt-3 justify-center">
+      <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
         {appointments.map((appointment, index) => (
           appointment.status === "not donated" && (
             <div key={index} className="w-full md:w-1/2 lg:w-1/3 xl:w-1/3 px-4 mb-4">
@@ -55,7 +59,7 @@ export default function ActiveAppointments() {
       </div>
 
       <h1 className="text-2xl font-bold m-10 text-center">Previous Appointments</h1>
-      <div className="md:flex-row flex-col flex md:mx-auto mt-3 justify-center">
+      <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
         {appointments.map((appointment, index) => (
           appointment.status === "donated" && (
             <div key={index} className="w-full md:w-1/2 lg:w-1/3 xl:w-1/3 px-4 mb-4">
