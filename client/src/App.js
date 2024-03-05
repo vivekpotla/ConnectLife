@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from 'react'
-import Modal from 'react-modal'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
@@ -18,8 +17,7 @@ import HomePage from './Components/Home/HomePage.js';
 import Login from './Components/SignUp/Login.js';
 import { useSelector } from 'react-redux';
 import ChatBot from './Components/ChatBot/ChatBot.js';
-// Make sure to bind modal to your app
-Modal.setAppElement('#root');
+
 
 function App() {
 
