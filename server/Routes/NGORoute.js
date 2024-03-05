@@ -1,5 +1,20 @@
 import express from 'express';
-import { createBloodDonationCamp,createAwarenessPost, getPreviousCamps, loginNGO, registerNGO,notifyUsers,getDonorsInCamp,checkBloodQuantity, notifyVolunteersByCampId, notifyVolunteersByEmail, editOrDeletePost, viewAllPosts, replyToComment } from '../Controllers/NGOController.js';
+import {
+    createBloodDonationCamp,
+    createAwarenessPost,
+    getPreviousCamps,
+    loginNGO,
+    registerNGO,
+    notifyUsers,
+    getDonorsInCamp,
+    checkBloodQuantity,
+    notifyVolunteersByCampId,
+    notifyVolunteersByEmail,
+    editOrDeletePost,
+    viewAllPosts,
+    replyToComment,
+    viewAllCamps
+} from '../Controllers/NGOController.js';
 
 const ngoroute = express.Router();
 
@@ -16,5 +31,6 @@ ngoroute.post('/create-post', createAwarenessPost);
 ngoroute.post('/edit-delete-post', editOrDeletePost);
 ngoroute.post('/view-my-posts', viewAllPosts);
 ngoroute.post('/reply-to-comment', replyToComment);
+ngoroute.get('/view-all-camps', viewAllCamps);
 
 export default ngoroute;

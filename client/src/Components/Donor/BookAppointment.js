@@ -1,26 +1,25 @@
 import React, { useState } from 'react'
 import { PreviousDonationsForm } from './PreviousDonationsForm';
 import { GenerateSlotReciept } from './GenerateSlotReciept';
-import { useNavigate } from 'react-router';
+import { useNavigate, useOutlet } from 'react-router';
 
 const campDetails = {
   startTime: '09:00', // Example start time
   endTime: '18:00',   // Example end time
   maxDonorsPerSlot: 4,
-  street: "At VNR Vignan Jyothi Eng. College,Bachupally, Pragathi Nagar",
-  city: "Nizampet",
-  state: "Telangana",
-  zipcode: "500092",
+  location: "At VNR Vignan Jyothi Eng. College,Bachupally, Pragathi Nagar,Nizampet,Telangana,500092",
   description: "NSS Blood Donation Camp",
   startDate: "2024-02-17",
   endDate: "2024-02-18",
   name: "NSS Camp"
 };
+const userObj = JSON.parse(localStorage.getItem("user"));
+console.log(userObj)
 const donorDetails = {
-  name: 'donor4',
-  email: 'donor4@gmail.com',
-  phoneNumber: '9876543210',
-  bloodGroup: 'B+'
+  name: userObj.name,
+  email: userObj.email,
+  phoneNumber: userObj.phoneNumber,
+  bloodGroup: userObj.bloodGroup
 };
 export const BookAppointment = () => {
   const generateSlots = (details) => {
@@ -93,8 +92,9 @@ export const BookAppointment = () => {
 
   return (
     <>
+   <h1 className="text-2xl font-bold text-center">Book Slot</h1>
       {/* Legend */}
-      <div className="flex justify-center m-4">
+      <div className="flex justify-center mt-16 m-4">
         <div className=" inline-block mr-4">
           <div className="w-4 h-4 bg-green-500 rounded-full inline-block mr-2"></div>
           <span className="text-sm">Slot Available</span>

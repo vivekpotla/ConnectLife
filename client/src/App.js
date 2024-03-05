@@ -54,19 +54,21 @@ function App() {
 
   return (
     <BrowserRouter>
-      <div className="">
+      <div className="h-dvh overflow-hidden">
         <Header />
-        <Routes>
-          <Route path='/' element={<HomePage />} />
-          <Route path='/camps' element={<CampsList />} />
-          <Route path='/campdetails' element={<CampDetails />} />
-          <Route path='/activeappointments' element={<ActiveAppoinments />} />
-          <Route path='/editprofile' element={<EditProfile />} />
-          <Route path='/searchdonors' element={<SearchDonors />} />
-          {!isLoggedIn && AuthRoutes}
-          {userObj?.userType === "ngo" && NgoRoutes}
-          {userObj?.userType === "donor" && DonorRoutes}
-        </Routes>
+        <div className='h-dvh overflow-scroll pb-10'>
+          <Routes>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/camps' element={<CampsList />} />
+            <Route path='/campdetails' element={<CampDetails />} />
+            <Route path='/activeappointments' element={<ActiveAppoinments />} />
+            <Route path='/editprofile' element={<EditProfile />} />
+            <Route path='/searchdonors' element={<SearchDonors />} />
+            {!isLoggedIn && AuthRoutes}
+            {userObj?.userType === "ngo" && NgoRoutes}
+            {userObj?.userType === "donor" && DonorRoutes}
+          </Routes>
+        </div>
         <div className="fixed bottom-0 right-[-10px]">
           <ChatBot />
         </div>

@@ -55,7 +55,7 @@ export const GenerateSlotReciept = () => {
             </tr>
             <tr>
               <td className="font-semibold border border-gray-400 p-2">Location:</td>
-              <td className="border border-gray-400 ">{campDetails.street},{campDetails.city},{campDetails.state},{campDetails.zipcode}</td>
+              <td className="border border-gray-400 ">{campDetails.location}</td>
             </tr>
             <tr>
               <td className="font-semibold border border-gray-400 p-1">Description:</td>
