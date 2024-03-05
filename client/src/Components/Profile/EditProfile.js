@@ -24,7 +24,7 @@ export default function EditProfile() {
   };
 
   return (
-    <div className='flex justify-center bg-gradient-to-br from-gray-200 via-gray-300 to-gray-100 py-6 px-6'>
+    <div className='flex justify-center bg-gradient-to-br from-gray-200 via-gray-300 to-gray-00 py-6 px-6'>
       <div className='w-full md:max-w-3xl'>
         <h1 className='text-3xl font-bold text-center mb-5'>Edit Profile</h1>
         <div className='bg-white rounded-lg shadow-lg p-8'>

@@ -339,3 +339,56 @@ export const updateRequestStatus = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+//update donor profile
+export const updateDonorProfile = async (req, res) => {
+  try {
+    const { donorId } = req.params; // Assuming donorId is passed as a parameter
+    const { name, email, phoneNumber, address, bloodGroup } = req.body;
+
+    // Find the donor by ID
+    let donor = await Donor.findById(donorId);
+    if (!donor) {
+      return res.status(404).json({ message: 'Donor not found' });
+    }
+
+    // Update donor fields
+    donor.name = name || donor.name;
+    donor.email = email || donor.email;
+    donor.phoneNumber = phoneNumber || donor.phoneNumber;
+    donor.address = address || donor.address;
+    donor.bloodGroup = bloodGroup || donor.bloodGroup;
+
+    // Check if the profile image is being updated
+    if (req?.files?.image) {
+      const path = req.files.image.path;
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `users/${name}_${timestamp}`;
+
+      // Upload the new profile image to cloudinary
+      let imageURL = null;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
+      })
+        .then((result) => {
+          imageURL = result.secure_url;
+        })
+        .catch((error) => {
+          console.log("Image upload error:", error);
+        });
+
+      // Update the imageURL field in the donor document
+      donor.imageURL = imageURL;
+    }
+
+    // Save the updated donor document
+    donor = await donor.save();
+
+    res.status(200).json({ message: 'Donor profile updated successfully', payload: donor });
+  } catch (err) {
+    console.error('Error updating donor profile:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
