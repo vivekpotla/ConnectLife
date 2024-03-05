@@ -9,8 +9,6 @@ import {
   CardBody,
   IconButton,
   Tooltip,
-  CardFooter,
-  Button
 } from '@material-tailwind/react';
 import axios from 'axios';
 import {
@@ -105,8 +103,8 @@ const PostsLists = () => {
             </IconButton>
           </div>
           <Card className="w-full rounded-lg bg-gray-50">
-            <CardHeader floated={false} className="md:h-[50vh] h-[30vh]">
-              <img src={post.imageURL} alt="profile-picture" className='w-full h-full' />
+            <CardHeader floated={false} className="md:h-[43vh] h-[24vh]">
+              <img src={post.imageURL} alt="PostPicture" className='w-full h-full' />
             </CardHeader>
             <CardBody className="pt-2 pb-4 sm:h-[22vh] h-[15vh] relative">
               <div className="flex justify-between">

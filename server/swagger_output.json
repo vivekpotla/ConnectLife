@@ -185,7 +185,7 @@
         }
       }
     },
-    "/api/donor/camps/{query}": {
+    "/api/donor/search-camps/{query}": {
       "get": {
         "description": "",
         "parameters": [
@@ -818,6 +818,22 @@
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/ngo/view-all-camps": {
+      "get": {
+        "description": "",
         "responses": {
           "200": {
             "description": "OK"
