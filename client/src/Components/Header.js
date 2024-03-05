@@ -47,9 +47,9 @@ const profileMenuItems = [
         link: "/editprofile"
     },
     {
-        label: "Inbox",
+        label: "Contact Requests",
         icon: InboxArrowDownIcon,
-        link: ""
+        link: "/contactrequests"
     },
     {
         label: "Help",
