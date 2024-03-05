@@ -94,13 +94,15 @@ const PostsLists = () => {
         </IconButton>
       </DialogHeader>
       <DialogBody className='p-0 lg:mx-2 py-3 bg-blue-gray-50 rounded-md'>
-        <div className='h-[73vh] overflow-auto lg:flex justify-between gap-3'>
+        <div className='h-[73vh] overflow-auto lg:flex justify-center gap-3'>
           <div className='max-w-[500px]'>
-            <img
-              className="w-full mb-3 lg:ml-4 ml-2 rounded-lg object-cover object-center shadow-xl shadow-blue-gray-900/50"
-              src={post.imageURL}
-              alt="natureImage"
-            />
+            <div className='p-2'>
+              <img
+                className="max-w-full mb-3 rounded-lg object-cover object-center shadow-xl shadow-blue-gray-900/50"
+                src={post.imageURL}
+                alt="natureImage"
+              />
+            </div>
             <div className="flex justify-between px-3 my-2 lg:ml-4 ml-2">
               <Typography variant="h5" color="blue-gray" className="mb-2 font-bold">
                 {post.title}
@@ -117,7 +119,7 @@ const PostsLists = () => {
                 </IconButton>
               </div>
             </div>
-            <div className="text-sm lg:ml-4 ml-2 px-1 mb-3 text-center font-thin text-blue-gray-500">
+            <div className="text-sm lg:ml-4 ml-2 px-1 mb-3 font-thin text-blue-gray-500">
               {post.description}{" "}
               Cupidatat duis irure magna ad elit. Exercitation esse minim labore proident velit est. Laboris ut dolore eiusmod mollit nostrud elit ex occaecat nostrud amet ex velit veniam. Incididunt cupidatat ex nostrud nostrud. Sunt occaecat velit adipisicing enim veniam eiusmod duis ea proident cupidatat ullamco duis. Minim adipisicing ullamco ex ut.
               Ad amet occaecat exercitation et. Exercitation irure consequat reprehenderit ea labore esse. Ea aute aliquip velit non. Ullamco dolore sint tempor magna laborum.
@@ -125,8 +127,8 @@ const PostsLists = () => {
               Aliquip pariatur proident ea proident ad enim magna officia veniam consequat ex voluptate adipisicing. Sunt et aliqua aliqua esse ipsum. Qui adipisicing cillum in Lorem excepteur proident exercitation dolore consequat ullamco eu exercitation proident do.
             </div>
           </div>
-          <div className='max-w-[500px] w-full p-1'>
-            <div className=''>
+          <div className='max-w-[500px] w-full p-2'>
+            <div className='bg-white rounded-md h-full p-3'>
               comments
             </div>
           </div>

@@ -11,10 +11,10 @@ const HomePage = () => {
         <div className='bg-gray-100 p-2'>
             <HomeCarousel />
             <div className='lg:flex justify-between lg:pr-10 bg-blue-gray-500 my-3 mx-1 rounded-xl'>
-                <div className="lg:sticky m-4 lg:top-14 lg:h-16 lg:ml-24">
+                <div className="lg:sticky m-4 lg:top-14 lg:h-16 lg:ml-24 ">
                     {/* <Lottie animationData={Bot} loop={true} /> */}
                     {/* <Lottie animationData={Blood} loop={true} /> */}
-                    <Lottie animationData={Donor} loop={true} className='hover:animate-bounce cursor-pointer' />
+                    <Lottie animationData={Donor} loop={true} className='cursor-pointer' />
                 </div>
                 <PostsLists />
             </div>
