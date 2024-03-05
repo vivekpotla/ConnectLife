@@ -102,8 +102,8 @@ export const CampsList = () => {
           </button>
         </div>
       </form> */}
-      <div className="md:flex-row flex-col flex justify-between md:mr-5 mr-2 mt-3">
-        <Typography variant='h5' className='font-semibold md:ml-10 ml-4 text-gray-700' >Blood Donation Camps</Typography>
+      <Typography variant='h5' className='font-semibold md:ml-10 ml-4 text-gray-700 text-center' >Blood Donation Camps</Typography>
+      <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
         <div className='relative flex justify-end place-self-end md:mt-0 mt-3'>
           <ListMenu selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
           <Input
@@ -126,14 +126,14 @@ export const CampsList = () => {
               setSelectedFilter("");
               setSelectedFilter("Search");
             }}
-            className="!absolute right-1 top-1 rounded bg-red-700 px-3 py-1.5"
+            className="!absolute right-1 top-1 rounded bg-red-900 px-3 py-1.5"
           >
             <MagnifyingGlassIcon className='h-5 w-5' />
           </Button>
         </div>
       </div>
       {searchedCamps.length !== 0 && <div>
-        <Typography variant='h6' className='md:ml-10 ml-3 text-gray-600'>Search Result:</Typography>
+        <Typography variant='h6' className='md:ml-10 ml-3 mt-2 text-yellow-600 text-center'>Showing Search Results:</Typography>
         <div className="flex flex-wrap justify-center">
           {searchedCamps.map((camp, index) => (
             <CampCard key={index} camps={camp} />
@@ -142,7 +142,7 @@ export const CampsList = () => {
       </div>}
       <div>
         {searchedCamps.length !== 0 &&
-          <Typography variant='h6' className='md:ml-10 ml-3 text-gray-600'>Latest Camps:</Typography>
+          <Typography variant='h6' className='md:ml-10 ml-3 mt-2 text-yellow-600 text-center'>Latest Camps:</Typography>
         }
         <div className="flex flex-wrap justify-center">
           {campsData.map((camp, index) => (

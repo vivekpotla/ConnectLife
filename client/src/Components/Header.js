@@ -25,6 +25,7 @@ import {
     Bars2Icon,
     HomeIcon,
     BuildingStorefrontIcon,
+    PlusCircleIcon,
 } from "@heroicons/react/24/solid";
 import { ConnectlifeIcon } from "../Icons/ConnectlifeIcon";
 import { DonateBloodIcon } from "../Icons/DonateBloodIcon";
@@ -221,15 +222,15 @@ const navListItems = [
         users: ["ngo", "volunteer", "donor", "recipient"]
     },
     {
-        label: "NGO",
-        icon: BuildingStorefrontIcon,
+        label: "New",
+        icon: PlusCircleIcon,
         link: "/ngo",
         users: ["ngo"]
     },
     {
-        label: "Donate",
+        label: "Donations",
         icon: DonateBloodIcon,
-        link: "/donate",
+        link: "/activeappointments",
         users: ["donor"]
     },
     {
