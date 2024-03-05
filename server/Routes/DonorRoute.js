@@ -6,7 +6,7 @@ import {
   bookAppointment,
   searchBloodDonationCamps,
   updateDonorLocation,
-  findNearestCamps,getAllSlotsForCamp, getAwarenessPosts, addCommentToPost, viewRequests, updateRequestStatus
+  findNearestCamps,getAllSlotsForCamp, getAwarenessPosts, addCommentToPost, viewRequests, updateRequestStatus, updateDonorProfile
 } from '../Controllers/DonorController.js';
 const donorrouter = express.Router();
 
@@ -30,5 +30,5 @@ donorrouter.get('/get-all-posts', getAwarenessPosts);
 donorrouter.post('/add-comments', addCommentToPost);
 donorrouter.post('/view-recipient-requests', viewRequests);
 donorrouter.post('/update-requests', updateRequestStatus);
-
+donorrouter.post('/updateDonorProfile',updateDonorProfile);
 export default donorrouter;

@@ -1,51 +1,84 @@
 import React from 'react';
-import { useForm } from 'react-hook-form';
-
+import { useForm} from 'react-hook-form';
+import  {useEffect,useState} from 'react';
+import { useNavigate, useParams } from 'react-router';
+import axios from 'axios';
 export default function EditProfile() {
   //code for getting donor profile details from redux store
   const { register, handleSubmit, setValue } = useForm();
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState('');
+  const { userType } = useParams();
+  const navigate = useNavigate();
 
-  const onSubmit = (e) => {
-    e.preventDefault();
-    //code for updating details in DB
+   // Function to retrieve donor details from local storage
+   const getDonorDetailsFromLocalStorage = () => {
+    const donorDetails = JSON.parse(localStorage.getItem('user'));
+    return donorDetails || {};
   };
 
+  useEffect(() => {
+    // Get donor details from local storage
+    const donor = getDonorDetailsFromLocalStorage();
+    console.log(donor)
+    // Set initial form values using setValue
+    Object.keys(donor).forEach((key) => {
+      setValue(key, donor[key]);
+    });
+  }, [setValue]);
+
+  const onSubmit = async(data) => {
+    try {
+      setLoading(true); // Set loading state to true when form is submitted
+      // Make the PUT request using axios
+      await axios.post(`http://localhost:5000/api/donor/updateDonorProfile`, data).then((res) => {
+        console.log('Profile updated successfully:', res.data);
+        // Optionally, you can perform additional actions after successful profile update
+      }).catch((error) => {
+        console.error('Failed to update profile:', error.response.data);
+        setMessage(error.response.data.message);
+      });
+
+      // Optionally, you can perform additional actions after successful profile update
+    } catch (error) {
+      console.error('Error updating profile:', error.message || "An error occurred");
+      setMessage(error.message || "An error occurred");
+    } finally {
+      setLoading(false); // Set loading state to false when request completes
+    }
+  };
 
   return (
-    <div className='row  bg-gradient-to-br from-gray-200 via-gray-300 to-gray-200  py-6 px-60'>
-      <div className='col-md-5 '>
-  <h1 className='mt-5'>Edit Profile</h1>
-  <img 
-    src="https://cdn-icons-png.flaticon.com/512/6915/6915987.png" 
-    alt="Edit profile icon" 
-    className="flex flex-col items-center rounded-full w-80 h-80 object-cover mt-5"
-  />
-</div>
-
-      <div className='col-md-7'>
-   
-    <div className='container '>
-    
-      
-      <form onSubmit={handleSubmit(onSubmit)} className="w-full mt-4 p-4 bg-gray-100 rounded-lg shadow-lg max-w-md">
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">Name:</label>
+    <div className="flex justify-center">
+      <div className="w-full md:w-1/2">
+        <div className="bg-white rounded-lg shadow-lg p-6">
+          <h1 className="text-2xl font-bold mb-6">Edit Profile</h1>
+          <div className="flex items-center justify-center mb-6">
+            <img 
+              src="https://cdn-icons-png.flaticon.com/512/6915/6915987.png" 
+              alt="Edit profile icon" 
+              className="rounded-full w-32 h-32 object-cover"
+            />
+          </div>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
+            <div>
+              <label htmlFor="name" className="block text-gray-700 font-bold mb-2">Name:</label>
+              <input
+                id="name"
+                type="text"
+                {...register('name')}
+                className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
+                required
+              />
+            </div>
+            <div className="mb-4">
+          <label className="block text-gray-700 font-bold mb-2">AadhaarNumber:</label>
           <input
             type="text"
-            {...register('name')}
+            {...register('aadhaarNumber')}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-            value='bharadwaj'//{donor.name}
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block text-gray-700 font-bold mb-2">AadharNumber:</label>
-          <input
-            type="text"
-            {...register('aadhar')}
-            className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
-            required
-            value='546789789456'//{donor.aadharNumber}
+            //{donor.aadharNumber}
           />
         </div>
         <div className="mb-4">
@@ -55,7 +88,7 @@ export default function EditProfile() {
             {...register('email')}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-            value='saipachipala@gmail.com'//{donor.email}
+           //{donor.email}
           />
         </div>
         <div className="mb-4">
@@ -65,7 +98,7 @@ export default function EditProfile() {
             {...register('phoneNumber')}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-            value='6301496072'//{donor.phoneNumber}
+            //{donor.phoneNumber}
           />
         </div>
         <div className="mb-4">
@@ -75,7 +108,7 @@ export default function EditProfile() {
             {...register('bloodGroup')}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-            value='B+'//{donor.bloodGroup}
+           
           />
         </div>
         <div className="mb-4">
@@ -86,7 +119,7 @@ export default function EditProfile() {
             {...register('address.street')}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-            value='road no 36'//{donor.address.street}
+            
           />
           <label className="block text-gray-700 font-bold mb-2">city:</label>
           <input
@@ -94,7 +127,7 @@ export default function EditProfile() {
             {...register('address.city')}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-            value='Hyderabad'//{donor.address.city}
+           
           />
           <label className="block text-gray-700 font-bold mb-2">State:</label>
           <input
@@ -102,15 +135,15 @@ export default function EditProfile() {
             {...register('address.state')}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-            value='Telangana'//{donor.address.state}
+            
           />
           <label className="block text-gray-700 font-bold mb-2">zipcode:</label>
           <input
             type="text"
-            {...register('address.zipcode')}
+            {...register('address.postalCode')}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-            value='zipcode'//{donor.address.zipcode}
+            
           />
           <label className="block text-gray-700 font-bold mb-2">Country:</label>
           <input
@@ -118,17 +151,17 @@ export default function EditProfile() {
             {...register('address.country')}
             className="border rounded-md px-4 py-2 w-full focus:outline-none focus:border-blue-500"
             required
-            value='India'//{donor.address.country}
+           
           />
         </div>
-        <div className='flex justify-end'>
-          <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
-            Update Profile
-          </button>
+            <div className="flex justify-end">
+              <button type="submit" className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline">
+                Update Profile
+              </button>
+            </div>
+          </form>
         </div>
-      </form>
-    </div>
-    </div>
+      </div>
     </div>
   );
 }

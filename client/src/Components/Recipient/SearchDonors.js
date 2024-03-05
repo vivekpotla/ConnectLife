@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-
+import axios from 'axios';
 const donorsData = [
   { id: 1, name: 'John Doe', bloodGroup: 'A+', latitude: 17.1030, longitude: 76.39 },
   { id: 2, name: 'Jane Smith', bloodGroup: 'B-', latitude: 17.1, longitude: 76.36 },
@@ -12,28 +12,48 @@ const SearchDonors = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [requestedDonor, setRequestedDonor] = useState(null);
   const [nearestDonors, setNearestDonors] = useState([]);
+  const [donorData,setDonorData]=useState('');
+  const [recipentData,setRecipientData]=useState({
+    recipientLatitude:0,
+    recipientLongitude:0,
+    recipientBloodGroup:'A+'
+  })
+  // // Recipient's details
+  // const recipientLatitude = 17.1010;
+  // const recipientLongitude = 76.37;
+  // const recipientBloodGroup = 'A+'; // Default blood group
+   // Function to retrieve recipient details from local storage
+   const getRecipentDetailsFromLocalStorage = () => {
+    const recipentDetails = JSON.parse(localStorage.getItem('user'));
+    return recipentDetails || {};
+  };
 
-  // Recipient's details
-  const recipientLatitude = 17.1010;
-  const recipientLongitude = 76.37;
-  const recipientBloodGroup = 'A+'; // Default blood group
+
+  
 
   useEffect(() => {
+    // Get recipent details from local storage
+    const recipient = getRecipentDetailsFromLocalStorage();
+    setRecipientData({
+      recipientLatitude: recipient.livelocation.latitude,
+      recipientLongitude: recipient.livelocation.longitude,
+      recipientBloodGroup: recipient.bloodGroup
+    });
     // Calculate distances and prioritize by blood group
     const donorsWithDistances = donorsData.map(donor => {
-      const distance = getDistance(recipientLatitude, recipientLongitude, donor.latitude, donor.longitude);
+      const distance = getDistance(recipentData.recipientLatitude, recipentData.recipientLongitude, donor.latitude, donor.longitude);
       return { ...donor, distance };
     });
 
     // Sort donors by blood group and then by distance
     const sortedDonors = donorsWithDistances.sort((a, b) => {
-      if (a.bloodGroup === recipientBloodGroup) {
-        if (b.bloodGroup === recipientBloodGroup) {
+      if (a.bloodGroup === recipentData.recipientBloodGroup) {
+        if (b.bloodGroup === recipentData.recipientBloodGroup) {
           return a.distance - b.distance;
         }
         return -1;
       }
-      if (b.bloodGroup === recipientBloodGroup) {
+      if (b.bloodGroup === recipentData.recipientBloodGroup) {
         return 1;
       }
       // Add more conditions for other blood groups as needed
@@ -41,7 +61,7 @@ const SearchDonors = () => {
     });
 
     setNearestDonors(sortedDonors);
-  }, [recipientLatitude, recipientLongitude, recipientBloodGroup]);
+  }, [recipentData.recipientLatitude, recipentData.recipientLongitude, recipentData.recipientBloodGroup]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
@@ -49,13 +69,25 @@ const SearchDonors = () => {
 
   const handleRequestBlood = (donor) => {
     setRequestedDonor(donor);
-    // You can send request for blood donation here (e.g., API call)
-    // For now, we just simulate a request being sent with a timeout
-    setTimeout(() => {
-      setRequestedDonor(null);
-    }, 5000);
-  };
-
+  console.log(donor);
+  // You can send request for blood donation here (e.g., API call)
+  axios.post('http://localhost:5000/api/donor/view-recipient-requests', donor.id)
+    .then(response => {
+      console.log('Request sent successfully:', response.data);
+      setTimeout(() => {
+        setRequestedDonor(null);
+      }, 5000);
+    })
+    .catch(error => {
+      // Handle errors
+      console.error('Error sending request:', error);
+     
+    })
+    .finally(() => {
+     
+    
+    });
+  }
   const filteredDonors = nearestDonors.filter(donor =>
     donor.bloodGroup.toLowerCase().includes(searchQuery.toLowerCase())
   );
