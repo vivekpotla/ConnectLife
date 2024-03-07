@@ -290,13 +290,29 @@ function generateToken(donor) {
 //get all Posts 
 export const getAwarenessPosts = async (req, res) => {
   try {
-    const posts = await AwarenessPost.find().sort({ createdAt: -1 }); // Sort by createdAt field in descending order
+    const posts = await AwarenessPost.find()
+      .sort({ createdAt: -1 })
+      .populate({
+        path: 'authorNGO',
+        select: 'name imageURL' // Select fields for authorNGO
+      })
+      .populate({
+        path: 'comments.author',
+        select: 'name imageURL' // Select fields for comment authors
+      })
+      .populate({
+        path: 'comments.replies.author',
+        select: 'name imageURL' // Select fields for reply authors
+      });
+
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
 
 
 //adding comments to posts
@@ -389,6 +405,6 @@ export const updateDonorProfile = async (req, res) => {
     res.status(200).json({ message: 'Donor profile updated successfully', payload: donor });
   } catch (err) {
     console.error('Error updating donor profile:', err);
-    res.status(500).json({ message: 'Internal server error' });
-  }
+    res.status(500).json({ message: 'Internal server error' });
+  }
 };

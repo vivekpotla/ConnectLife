@@ -496,7 +496,7 @@ export const createAwarenessPost = async (req, res) => {
 export const replyToComment = async (req, res) => {
   try {
 
-    const { postId, commentIndex, content } = req.body;
+    const { postId, commentIndex, comment } = req.body;
     // Find the post by ID
     const post = await AwarenessPost.findById(postId);
     if (!post) {
@@ -509,7 +509,7 @@ export const replyToComment = async (req, res) => {
     // Add the reply to the comment
     post.comments[commentIndex].replies.push({
       author: req.body.ngoId,
-      content,
+      comment,
     });
     // Save the post
     await post.save();

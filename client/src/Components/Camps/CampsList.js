@@ -87,21 +87,6 @@ export const CampsList = () => {
 
   return (
     <div className='bg-gray-100 p-1'>
-      {/* <form className="max-w-md i mt-4" onSubmit={handleSubmit}>
-        <div className="flex">
-          <label htmlFor="search" className="mb-2 text-sm font-medium text-gray-900 sr-only">Camp</label>
-        </div>
-        <div className="relative w-full">
-          <input type="search" id="search" className="bg-gray-50 border border-gray-500 text-gray-900 text-sm 
-    rounded-lg block w-full ps-10 p-2.5"
-            placeholder="Enter Camp Name or Camp ID" required onChange={handleInputChange} />
-          <button type="submit" className="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white 
-    bg-red-700 rounded-e-lg border border-gray-500">
-            <MagnifyingGlassIcon className='h-5 w-5' />
-            <span className="sr-only">Search</span>
-          </button>
-        </div>
-      </form> */}
       <Typography variant='h5' className='font-semibold md:ml-10 ml-4 text-gray-700 text-center' >Blood Donation Camps</Typography>
       <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
         <div className='relative flex justify-end place-self-end md:mt-0 mt-3'>
