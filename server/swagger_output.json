@@ -853,7 +853,7 @@
                 "commentIndex": {
                   "example": "any"
                 },
-                "content": {
+                "comment": {
                   "example": "any"
                 }
               }
