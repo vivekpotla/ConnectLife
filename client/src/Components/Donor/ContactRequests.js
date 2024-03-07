@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
-
+import axios from 'axios';
 export default function ContactRequests() {
   const [requests, setRequests] = useState([
     { id: 1, recipientName: 'John Doe', bloodGroup: 'AB+', email: 'john.doe@example.com' },
@@ -10,6 +10,23 @@ export default function ContactRequests() {
     // Add more requests here
   ]);
   const userObj = JSON.parse(localStorage.getItem("user"));
+  useEffect(() => {
+    const getRecipientRequests = async () => {
+      try {
+        const response = await axios.post('http://localhost:5000/api/donor/view-recipient-requests', { donorId: userObj._id });
+        const [requestDetails]=response.data;
+        if(requestDetails!==undefined)
+          setRequests(requestDetails);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getRecipientRequests();
+  }, [userObj._id]); 
+  
+
+ 
+ 
   function canDonate(recipientBloodGroup) {
     const donorBloodGroup = userObj.bloodGroup;
     // Check compatibility rules

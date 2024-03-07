@@ -335,7 +335,9 @@ export const addCommentToPost = async (req, res) => {
 //viewing recipient requests for blood
 export const viewRequests = async (req, res) => {
   try {
-    const { donorId } = req.body;
+    // console.log(req.body._id)
+    const donorId = req.body._id;
+    console.log(donorId)
     const requests = await RequestDetails.find({ donor: donorId }).populate('recipient', 'name phoneNumber').exec();
     res.status(200).json(requests);
   } catch (error) {

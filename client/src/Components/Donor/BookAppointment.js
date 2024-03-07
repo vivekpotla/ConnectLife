@@ -13,13 +13,14 @@ const campDetails = {
   endDate: "2024-02-18",
   name: "NSS Camp"
 };
+
 const userObj = JSON.parse(localStorage.getItem("user"));
-console.log(userObj)
+console.log(userObj)  
 const donorDetails = {
-  name: userObj.name,
-  email: userObj.email,
-  phoneNumber: userObj.phoneNumber,
-  bloodGroup: userObj.bloodGroup
+  name: userObj?.name,
+  email: userObj?.email,
+  phoneNumber: userObj?.phoneNumber,
+  bloodGroup: userObj?.bloodGroup
 };
 export const BookAppointment = () => {
   const generateSlots = (details) => {
