@@ -10,21 +10,29 @@ const CampModal = ({ isOpen, onClose, slots }) => {
     const donorDetails =[ {
       name: 'John Doe',
       bloodGroup: 'O+',
+      status: 'Pending',
+      unitsDonated: 0,
       // Add other donor details if needed
     },
     {
       name: 'John Doe',
       bloodGroup: 'O+',
+      status: 'Pending',
+      unitsDonated: 0,
       // Add other donor details if needed
     },
     {
       name: 'John Doe',
       bloodGroup: 'O+',
+      status: 'Pending',
+      unitsDonated: 0,
       // Add other donor details if needed
     },
     {
       name: 'John Doe',
       bloodGroup: 'O+',
+      status: 'Pending',
+      unitsDonated: 0,
       // Add other donor details if needed
     }
   ]
