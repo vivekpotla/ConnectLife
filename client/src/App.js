@@ -23,7 +23,7 @@ import { PreviousCamps } from './Components/NGO/PreviousCamps.js';
 import { MyCamps } from './Components/Volunteer/MyCamps.js';
 import { UpdateDonorDetails } from './Components/Volunteer/UpdateDonorDetails.js';
 import { RecipientFaqs } from './Components/Recipient/RecipientFaqs.js';
-
+import BloodBanks from './Components/BloodBanks.js';
 function App() {
 
   const [userObj, setUserObj] = useState(null);
@@ -81,6 +81,7 @@ function App() {
             <Route path='/campdetails' element={<CampDetails />} />
             <Route path='/activeappointments' element={<ActiveAppoinments />} />
             <Route path='/editprofile' element={<EditProfile />} />
+            <Route path='/bloodbanks' element={<BloodBanks/>}/>
             {!isLoggedIn && AuthRoutes}
             {userObj?.userType === "ngo" && NgoRoutes}
             {userObj?.userType === "donor" && DonorRoutes}
