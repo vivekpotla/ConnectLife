@@ -20,6 +20,9 @@ import ChatBot from './Components/ChatBot/ChatBot.js';
 import { Faqs } from './Components/Donor/Faqs.js';
 import ContactRequests from './Components/Donor/ContactRequests.js';
 import { PreviousCamps } from './Components/NGO/PreviousCamps.js';
+import { MyCamps } from './Components/Volunteer/MyCamps.js';
+import { AddCampDetails } from './Components/Volunteer/AddCampDetails.js';
+import { UpdateDonorDetails } from './Components/Volunteer/UpdateDonorDetails.js';
 
 function App() {
 
@@ -54,6 +57,13 @@ function App() {
       <Route path='/faqs' element={<Faqs />} />
     </>
   )
+  const VolunteerRoutes = (
+    <>
+      <Route path='/volunteer/mycamps' element={<MyCamps />} />
+      <Route path='/volunteer/addcampdetails' element={<AddCampDetails />} />
+      <Route path="/volunteer/donordetails" element={<UpdateDonorDetails />} />
+    </>
+  )
 
   return (
     <BrowserRouter>
@@ -70,6 +80,7 @@ function App() {
             {!isLoggedIn && AuthRoutes}
             {userObj?.userType === "ngo" && NgoRoutes}
             {userObj?.userType === "donor" && DonorRoutes}
+            {userObj?.userType === "volunteer" && VolunteerRoutes}
           </Routes>
         </div>
         <div className="fixed bottom-0 right-[-10px]">

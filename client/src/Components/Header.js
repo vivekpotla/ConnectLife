@@ -219,7 +219,13 @@ const navListItems = [
         label: "Camps",
         icon: BuildingStorefrontIcon,
         link: "/camps",
-        users: ["ngo", "volunteer", "donor", "recipient"]
+        users: ["ngo", "donor", "recipient"]
+    },
+    {
+        label: "Join Camp",
+        icon: BuildingStorefrontIcon,
+        link: "/camps",
+        users: ["volunteer"]
     },
     {
         label: "New",
@@ -237,7 +243,7 @@ const navListItems = [
         label: "FAQs",
         icon: CodeBracketSquareIcon,
         link: "/faqs",
-        users: ["volunteer", "donor", "recipient", "all"]
+        users: [ "donor", "recipient", "all"]
     },
     {
         label: "My Posts",
@@ -251,6 +257,13 @@ const navListItems = [
         link: "/mycamps",
         users: ["ngo"]
     },
+    {
+        label: "My Camps",
+        icon: CodeBracketSquareIcon,
+        link: "/volunteer/mycamps",
+        users: ["volunteer"]
+    },
+    
 ];
 
 function NavList({ userObj }) {
