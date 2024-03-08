@@ -19,7 +19,7 @@ import { useSelector } from 'react-redux';
 import ChatBot from './Components/ChatBot/ChatBot.js';
 import { Faqs } from './Components/Donor/Faqs.js';
 import ContactRequests from './Components/Donor/ContactRequests.js';
-
+import { PreviousCamps } from './Components/NGO/PreviousCamps.js';
 
 function App() {
 
@@ -42,6 +42,7 @@ function App() {
     <>
       <Route path='/ngo' element={<NgoHomePage />} />
       <Route path='/myposts' element={<MyPosts />} />
+      <Route path='/mycamps' element={<PreviousCamps />} />
     </>
   )
 

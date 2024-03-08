@@ -1,8 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 import { Button } from '@material-tailwind/react'
-import Nss_logo from '../Images/Nss_logo.png'
-import BuildingStorefrontIcon from "@material-tailwind/react";
 import { MapPinIcon } from '@heroicons/react/24/solid'
 
 export default function CampCard({ camps }) {
@@ -31,11 +29,11 @@ export default function CampCard({ camps }) {
         <p className="text-l text-gray-700 dark:text-white">End Date : {endDate.toDateString()}</p>
         <p className="text-l text-gray-700 dark:text-white pb-5">Timings : {camps.startTime.slice(0, 5)} AM to {camps.endTime.slice(0, 5)} PM</p>
         <p className="text-sm text-gray-600 dark:text-white pb-3">{camps.donorsJoined} Donors have Joined us already!</p>
+        <Link to="/campdetails" state={{ camps }} >
         <Button size="md" variant="gradient" color='red' className="select-none rounded-lg block w-1/2">
-          <Link to="/campdetails" state={{ camps }} >
             View Camp Details
-          </Link>
         </Button>
+          </Link>
       </div>
     </div>
   );

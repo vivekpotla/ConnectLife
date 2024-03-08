@@ -237,7 +237,19 @@ const navListItems = [
         label: "FAQs",
         icon: CodeBracketSquareIcon,
         link: "/faqs",
-        users: ["ngo", "volunteer", "donor", "recipient", "all"]
+        users: ["volunteer", "donor", "recipient", "all"]
+    },
+    {
+        label: "My Posts",
+        icon: CodeBracketSquareIcon,
+        link: "/myposts",
+        users: ["ngo"]
+    },
+    {
+        label: "My Camps",
+        icon: CodeBracketSquareIcon,
+        link: "/mycamps",
+        users: ["ngo"]
     },
 ];
 
