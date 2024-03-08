@@ -4,7 +4,7 @@ import {
   AccordionHeader,
   AccordionBody,
 } from "@material-tailwind/react";
-import faqs from "./FaqsData";
+import RecipientFaqsData from "./RecipientFaqsData";
 
 function Icon({ id, open }) {
   return (
@@ -21,14 +21,14 @@ function Icon({ id, open }) {
   );
 }
 
-export function Faqs() {
+export function RecipientFaqs() {
   const [open, setOpen] = React.useState(0);
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
 
   return (
     <div className="p-6">
-      {faqs.map((faq) => (
+      {RecipientFaqsData.map((faq) => (
         <Accordion key={faq.id} open={open === faq.id} icon={<Icon id={faq.id} open={open} />}>
           <AccordionHeader onClick={() => handleOpen(faq.id)}>{faq.question}</AccordionHeader>
           <AccordionBody className='text-xl'>{faq.answer}</AccordionBody>

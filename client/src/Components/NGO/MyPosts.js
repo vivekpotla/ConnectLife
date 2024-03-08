@@ -87,7 +87,7 @@ function MyPosts() {
 
 
   return (
-    <div className='bg-gray-100 h-screen'>
+    <div className='bg-gray-100'>
 
       {isDeleted && <h5 className="text-xl mt-4 text-green-500 mb-4 text-center">Post successfully deleted!</h5>}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 place-items-center">
@@ -104,9 +104,9 @@ function MyPosts() {
               <Typography variant="h5" color="blue-gray" className="mb-2">
                 {post.title}
               </Typography>
-              <Typography>
+              <p className='line-clamp-3 cursor-pointer'>
                 {post.description}
-              </Typography>
+              </p>
             </CardBody>
             <CardFooter className="pt-0 flex">
               <Button variant='text' color='yellow' className='px-3' ripple onClick={() => handleEditPost(post)}><PencilSquareIcon className='h-5 w-5' /></Button>

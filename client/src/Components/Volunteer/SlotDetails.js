@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const CampModal = ({ isOpen, onClose, slots }) => {
+const SlotDetails = ({ isOpen, onClose, slots }) => {
   const navigate = useNavigate();
 
   const handleSlotClick = () => {
@@ -54,7 +54,7 @@ const CampModal = ({ isOpen, onClose, slots }) => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
             </svg>
           </button>
-          <div className="text-lg font-bold mb-2">Available Slots</div>
+          <div className="text-lg font-bold mb-2">Camp Slots</div>
           <div className="grid grid-cols-3 gap-4">
             {slots.map((slot, index) => (
               <div key={index} className="p-4 border border-gray-200 rounded-md cursor-pointer" onClick={handleSlotClick}>
@@ -68,4 +68,4 @@ const CampModal = ({ isOpen, onClose, slots }) => {
   );
 };
 
-export default CampModal;
+export default SlotDetails;

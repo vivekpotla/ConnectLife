@@ -17,12 +17,12 @@ import HomePage from './Components/Home/HomePage.js';
 import Login from './Components/SignUp/Login.js';
 import { useSelector } from 'react-redux';
 import ChatBot from './Components/ChatBot/ChatBot.js';
-import { Faqs } from './Components/Donor/Faqs.js';
+import { DonorFaqs} from './Components/Donor/DonorFaqs.js';
 import ContactRequests from './Components/Donor/ContactRequests.js';
 import { PreviousCamps } from './Components/NGO/PreviousCamps.js';
 import { MyCamps } from './Components/Volunteer/MyCamps.js';
-import { AddCampDetails } from './Components/Volunteer/AddCampDetails.js';
 import { UpdateDonorDetails } from './Components/Volunteer/UpdateDonorDetails.js';
+import { RecipientFaqs } from './Components/Recipient/RecipientFaqs.js';
 
 function App() {
 
@@ -54,14 +54,19 @@ function App() {
       <Route path='/bookappointment' element={<BookAppointment />} />
       <Route path='/receipt' element={<GenerateSlotReciept />} />
       <Route path='/contactrequests' element={<ContactRequests />} />
-      <Route path='/faqs' element={<Faqs />} />
+      <Route path='/donorfaqs' element={<DonorFaqs />} />
     </>
   )
   const VolunteerRoutes = (
     <>
       <Route path='/volunteer/mycamps' element={<MyCamps />} />
-      <Route path='/volunteer/addcampdetails' element={<AddCampDetails />} />
       <Route path="/volunteer/donordetails" element={<UpdateDonorDetails />} />
+    </>
+  )
+  const RecipientRoutes = (
+    <>
+      <Route path='/recipientfaqs' element={<RecipientFaqs />} />
+      <Route path='/searchdonors' element={<SearchDonors />} />
     </>
   )
 
@@ -76,11 +81,11 @@ function App() {
             <Route path='/campdetails' element={<CampDetails />} />
             <Route path='/activeappointments' element={<ActiveAppoinments />} />
             <Route path='/editprofile' element={<EditProfile />} />
-            <Route path='/searchdonors' element={<SearchDonors />} />
             {!isLoggedIn && AuthRoutes}
             {userObj?.userType === "ngo" && NgoRoutes}
             {userObj?.userType === "donor" && DonorRoutes}
             {userObj?.userType === "volunteer" && VolunteerRoutes}
+            {userObj?.userType === "recipient" && RecipientRoutes}
           </Routes>
         </div>
         <div className="fixed bottom-0 right-[-10px]">

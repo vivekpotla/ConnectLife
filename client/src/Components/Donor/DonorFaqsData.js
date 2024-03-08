@@ -1,4 +1,4 @@
-const faqs = [
+const DonorFaqsData = [
     {
       id: 1,
       question: "How often can I donate blood?",
@@ -76,5 +76,5 @@ const faqs = [
     },
   ];
   
-  export default faqs;
+  export default DonorFaqsData;
   

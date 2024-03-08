@@ -26,6 +26,7 @@ import {
     HomeIcon,
     BuildingStorefrontIcon,
     PlusCircleIcon,
+    MagnifyingGlassIcon
 } from "@heroicons/react/24/solid";
 import { ConnectlifeIcon } from "../Icons/ConnectlifeIcon";
 import { DonateBloodIcon } from "../Icons/DonateBloodIcon";
@@ -242,8 +243,20 @@ const navListItems = [
     {
         label: "FAQs",
         icon: CodeBracketSquareIcon,
-        link: "/faqs",
-        users: [ "donor", "recipient", "all"]
+        link: "/donorfaqs",
+        users: [ "donor", "all"]
+    },
+    {
+        label: "FAQs",
+        icon: CodeBracketSquareIcon,
+        link: "/recipientfaqs",
+        users: [  "recipient", "all"]
+    },
+    {
+        label: "Search Donors",
+        icon: MagnifyingGlassIcon,
+        link: "/searchdonors",
+        users: [  "recipient", "all"]
     },
     {
         label: "My Posts",

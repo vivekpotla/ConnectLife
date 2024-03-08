@@ -93,8 +93,9 @@ const SearchDonors = () => {
   );
 
   return (
-    <div className=" mx-auto p-4">
-      <form class="max-w-md mx-auto mt-4" onSubmit={handleSearch}>
+    <div className="m-10">
+      <div>
+    <form class="max-w-md mx-auto mt-4" onSubmit={handleSearch}>
     <div class="flex">
     <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only">donor</label>
     </div>
@@ -111,41 +112,48 @@ const SearchDonors = () => {
     </svg>
     <span class="sr-only">Search</span>
     </button>
+    </div>
+  </form>
   </div>
-</form>
-<div>
-        <div className="flex font-bold mb-2">
-          <div className="w-1/3">Name</div>
-          <div className="w-1/3">Blood Group</div>
-          <div className="w-1/3">Request</div>
-        </div>
-        {filteredDonors.map(donor => (
-          <div key={donor.id} className="flex items-center justify-between border-b border-gray-300 py-2">
-            <div className="w-1/3">{donor.name}</div>
-            <div className="w-1/3">{donor.bloodGroup}</div>
-            <div className="w-1/3">
-              <button
-                className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-                onClick={() => handleRequestBlood(donor)}
-              >
-                Request Blood
-              </button>
-            </div>
-          </div>
-        ))}
-      </div>
-      {requestedDonor && (
-        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mt-4" role="alert">
-          <strong className="font-bold">Request sent!</strong>
-          <span className="block sm:inline"> Your request has been sent to {requestedDonor.name}.</span>
-          <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => setRequestedDonor(null)}>
-            <svg className="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <title>Close</title>
-              <path fillRule="evenodd" d="M14.348 14.849a1 1 0 0 1-1.414 0L10 11.414l-2.93 2.435a1 1 0 1 1-1.236-1.562L8.768 10 5.835 7.07a1 1 0 0 1 1.236-1.562L10 8.586l2.93-2.436a1 1 0 1 1 1.236 1.562L11.232 10l2.116 2.849a1 1 0 0 1 0 1.414z" clipRule="evenodd"/>
-            </svg>
-          </span>
-        </div>
-      )}
+  <div className='mt-4'>
+  <table className="w-full">
+    <thead className="font-bold bg-gray-100">
+      <tr>
+        <th className="w-1/3 border py-2">Name</th>
+        <th className="w-1/3 border py-2">Blood Group</th>
+        <th className="w-1/3 border py-2">Request</th>
+      </tr>
+    </thead>
+    <tbody>
+      {filteredDonors.map(donor => (
+        <tr key={donor.id} className="border-b border-gray-900 text-center">
+          <td className="w-1/3 border py-2">{donor.name}</td>
+          <td className="w-1/3 border py-2">{donor.bloodGroup}</td>
+          <td className="w-1/3 border py-2">
+            <button
+              className="bg-red-500 hover:bg-red-700 text-white px-4 py-2 rounded"
+              onClick={() => handleRequestBlood(donor)}
+            >
+              Request Contact
+            </button>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+  {requestedDonor && (
+    <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mt-4" role="alert">
+      <strong className="font-bold">Request sent!</strong>
+      <span className="block sm:inline"> Your request has been sent to {requestedDonor.name}.</span>
+      <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => setRequestedDonor(null)}>
+        <svg className="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+          <title>Close</title>
+          <path fillRule="evenodd" d="M14.348 14.849a1 1 0 0 1-1.414 0L10 11.414l-2.93 2.435a1 1 0 1 1-1.236-1.562L8.768 10 5.835 7.07a1 1 0 0 1 1.236-1.562L10 8.586l2.93-2.436a1 1 0 1 1 1.236 1.562L11.232 10l2.116 2.849a1 1 0 0 1 0 1.414z" clipRule="evenodd"/>
+        </svg>
+      </span>
+    </div>
+  )}
+</div>
     </div>
   );
 };
