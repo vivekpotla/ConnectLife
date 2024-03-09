@@ -25,6 +25,7 @@ import { UpdateDonorDetails } from './Components/Volunteer/UpdateDonorDetails.js
 import { RecipientFaqs } from './Components/Recipient/RecipientFaqs.js';
 import BloodBanks from './Components/BloodBanks.js';
 import BloodDonationProcess from './Components/InformationPages/BloodDonationProcess.js';
+import BloodProcessing from './Components/InformationPages/BloodProcessing.js';
 function App() {
 
   const [userObj, setUserObj] = useState(null);
@@ -84,6 +85,7 @@ function App() {
             <Route path='/editprofile' element={<EditProfile />} />
             <Route path='/bloodbanks' element={<BloodBanks/>}/>
             <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
+            <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
             {!isLoggedIn && AuthRoutes}
             {userObj?.userType === "ngo" && NgoRoutes}
             {userObj?.userType === "donor" && DonorRoutes}

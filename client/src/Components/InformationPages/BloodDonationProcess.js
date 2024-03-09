@@ -47,7 +47,7 @@ const BloodDonationProcess = () => {
       <div className="mt-8 text-xl font-semibold text-center">
         <p>Your decision to donate blood can make a significant impact on the lives of others. Thank you for considering blood donation!</p>
         <Link to="/camps">
-          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">Donate Blood</button>
+          <button className="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-4 rounded mt-4">Schedule an Appointment</button>
         </Link>
       </div>
     </div>
