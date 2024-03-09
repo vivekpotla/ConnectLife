@@ -5,7 +5,6 @@ import {
   AccordionBody,
 } from "@material-tailwind/react";
 import DonorFaqsData from "./DonorFaqsData";
-
 function Icon({ id, open }) {
   return (
     <svg
@@ -21,13 +20,16 @@ function Icon({ id, open }) {
   );
 }
 
-export const DonorFaqs=()=> {
+export const DonorFaqs = () => {
   const [open, setOpen] = React.useState(0);
 
   const handleOpen = (value) => setOpen(open === value ? 0 : value);
 
   return (
     <div className="p-6">
+      {/* Add GIF here */}
+      <img src="./Images/DonorFaqsGif.gif" alt="DonorFaqsGif" className="mb-4" />
+
       {DonorFaqsData.map((faq) => (
         <Accordion key={faq.id} open={open === faq.id} icon={<Icon id={faq.id} open={open} />}>
           <AccordionHeader onClick={() => handleOpen(faq.id)}>{faq.question}</AccordionHeader>
@@ -36,4 +38,4 @@ export const DonorFaqs=()=> {
       ))}
     </div>
   );
-}
+};
