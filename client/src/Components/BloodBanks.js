@@ -108,7 +108,7 @@ function BloodBanks() {
               <Menu >
                 <MenuHandler>
                   <Link size="sm" className="bg-gray-100  text-black-500 flex items-center">
-                    {sortBy === 'distance' ? 'Distance' : 'Name'}
+                    {sortBy === 'distance' ? 'Nearest' : 'Name'}
                     <ChevronDownIcon className="h-4 w-4 ml-1"  strokeWidth={2}/>
                   </Link>
 
