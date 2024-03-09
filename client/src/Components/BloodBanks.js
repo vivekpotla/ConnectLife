@@ -10,7 +10,6 @@ function BloodBanks() {
   });
 
   useEffect(() => {
-    
     const BloodBanksData = async () => {
       try {
         const response = await fetch('https://api.data.gov.in/resource/e16c75b6-7ee6-4ade-8e1f-2cd3043ff4c9?api-key=579b464db66ec23bdd0000018212c43d93db4e0148d87744e2c8aa6c&format=json&offset=2375&limit=999');
@@ -19,22 +18,23 @@ function BloodBanks() {
         }
         const data = await response.json();
         const telanganaData = data.records.filter(record => record.state === "Telangana");
-       
 
-        const filteredBloodBanks =telanganaData.filter(record => {
+        let filteredBloodBanks = telanganaData.filter(record => {
           if (!searchDistrict) {
             return true; 
           } else {
             return record.district.toLowerCase() === searchDistrict.toLowerCase(); 
           }
         });
-        if(!searchDistrict)
-        {filteredBloodBanks = filteredBloodBanks.filter(record => {
-          const distance = calculateDistance(userLocation.latitude, userLocation.longitude, record.latitude, record.longitude);
-          console.log(distance);
-          return distance <= 20; 
-        });
+
+        // Apply nearest logic only when searchDistrict is empty
+        if (!searchDistrict) {
+          filteredBloodBanks = filteredBloodBanks.filter(record => {
+            const distance = calculateDistance(userLocation.latitude, userLocation.longitude, record.latitude, record.longitude);
+            return distance <= 20; 
+          });
         }
+
         const sortedBloodBanks = filteredBloodBanks.sort((a, b) => {
           const distanceA = calculateDistance(userLocation.latitude, userLocation.longitude, a.latitude, a.longitude);
           const distanceB = calculateDistance(userLocation.latitude, userLocation.longitude, b.latitude, b.longitude);
@@ -48,7 +48,8 @@ function BloodBanks() {
     };
 
     BloodBanksData();
-  }, [searchDistrict]); 
+  }, [searchDistrict]); // Trigger the effect when searchDistrict changes
+
   const calculateDistance = (lat1, lon1, lat2, lon2) => {
     const earthRadiusKm = 6371; 
     const dLat = degreesToRadians(lat2 - lat1);
