@@ -6,7 +6,7 @@ import MapComponent from '../MapComponent';
 export const CampDetails = () => {
   const locationLoc = useLocation();
   const campDetails = locationLoc.state.camps;
-
+  console.log(campDetails)
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
@@ -55,6 +55,7 @@ export const CampDetails = () => {
           setLocationAddress={(address) => console.log(address)} // Placeholder for setLocationAddress function
           latitude={campDetails.latitude}
           longitude={campDetails.longitude}
+          address={campDetails.location}
         />
       </div>
       {userObj && userObj.userType === 'donor' && <BookAppointment campDetails={campDetails} />}

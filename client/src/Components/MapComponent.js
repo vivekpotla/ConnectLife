@@ -3,14 +3,12 @@ import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-const MapComponent = ({ setLocationAddress, setMarker }) => {
+const MapComponent = ({ setLocationAddress, setMarker,address }) => {
     const setLocationAddressRef = useRef(setLocationAddress);
     const setMarkerRef = useRef(setMarker);
-
     useEffect(() => {
         setLocationAddressRef.current = setLocationAddress;
     }, [setLocationAddress]);
-
     useEffect(() => {
         setMarkerRef.current = setMarker;
     }, [setMarker]);
@@ -50,7 +48,7 @@ const MapComponent = ({ setLocationAddress, setMarker }) => {
 
         map.addControl(geocoder);
 
-        geocoder.query("VNR Vignana Jyothi Institute of Engineering & Technology Batchupally Nizampet (S.O.) Hyderabad")
+        geocoder.query(address)
 
         return () => {
             map.remove();
