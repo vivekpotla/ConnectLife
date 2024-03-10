@@ -14,9 +14,7 @@ const SearchDonors = () => {
   const [nearestDonors, setNearestDonors] = useState([]);
   const [donorData,setDonorData]=useState('');
   const [recipientData,setRecipientData]=useState({
-    recipientLatitude:0,
-    recipientLongitude:0,
-    recipientBloodGroup:'A+'
+
   })
   // // Recipient's details
   // const recipientLatitude = 17.1010;
@@ -27,32 +25,29 @@ const SearchDonors = () => {
     const recipentDetails = JSON.parse(localStorage.getItem('user'));
     return recipentDetails || {};
   };
-   
-
-  
 
   useEffect(() => {
     // Get recipent details from local storage
     const recipient = getRecipentDetailsFromLocalStorage();
-   
-    
     setRecipientData({
       recipientLatitude: recipient.livelocation.latitude,
       recipientLongitude: recipient.livelocation.longitude,
       recipientBloodGroup: recipient.bloodGroup
     });
     const getDonorsData = async () => {
-      try {
-        const donorList = await axios.post(`http://localhost:5000/api/recipient/get-nearest-donors`, {
-          recipientLatitude: recipientData.recipientLatitude,
-          recipientLongitude: recipientData.recipientLongitude,
-          bloodType: recipientData.recipientBloodGroup
-        });
-        console.log(donorList.status); // Log the status code
-        console.log(donorList.headers); // Log the response headers
-        console.log(donorList.data); // Log the response data
-      } catch (error) {
-        console.error(error);
+        try {
+          const donorList = await axios.post(`http://localhost:5000/api/recipient/get-nearest-donors`, {
+            recipientLatitude: recipient.livelocation.latitude,
+            recipientLongitude: recipient.livelocation.longitude,
+            bloodType: recipient.bloodGroup
+          });
+          console.log(donorList.status); // Log the status code
+          console.log(donorList.headers); // Log the response headers
+          console.log(donorList.data); // Log the response data
+          // Update nearest donors
+          setNearestDonors(donorList.data);
+        } catch (error) {
+          console.error(error);
       }
     }
     getDonorsData();
