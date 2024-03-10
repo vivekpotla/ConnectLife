@@ -47,8 +47,19 @@ const MapComponent = ({ setLocationAddress, setMarker,address }) => {
         });
 
         map.addControl(geocoder);
-
-        geocoder.query(address)
+        if(address)
+        {
+            const truncatedAddress = address.slice(0, 20);
+            geocoder.query(truncatedAddress);
+        }
+        else
+        {
+            const addressCollege="VNR Vignana Jyothi Institute of Engineering & Technology, VNR Vignana Jyothi Institute of Engineering & Technology Batchupally Nizampet (S.O.) Hyderabad- 500 090,Rangareddy Dt. Andhra P, Hyderabad, Telangana 500090, India";
+            const truncatedAddress = addressCollege.slice(0, 20);
+            geocoder.query(truncatedAddress)
+        }
+       
+       
 
         return () => {
             map.remove();
