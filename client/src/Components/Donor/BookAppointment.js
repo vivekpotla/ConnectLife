@@ -2,27 +2,17 @@ import React, { useState } from 'react'
 import { PreviousDonationsForm } from './PreviousDonationsForm';
 import { GenerateSlotReciept } from './GenerateSlotReciept';
 import { useNavigate, useOutlet } from 'react-router';
-
-const campDetails = {
-  startTime: '09:00', // Example start time
-  endTime: '18:00',   // Example end time
-  maxDonorsPerSlot: 4,
-  location: "At VNR Vignan Jyothi Eng. College,Bachupally, Pragathi Nagar,Nizampet,Telangana,500092",
-  description: "NSS Blood Donation Camp",
-  startDate: "2024-02-17",
-  endDate: "2024-02-18",
-  name: "NSS Camp"
-};
+import axios from 'axios';
 
 const userObj = JSON.parse(localStorage.getItem("user"));
-console.log(userObj)  
 const donorDetails = {
   name: userObj?.name,
   email: userObj?.email,
   phoneNumber: userObj?.phoneNumber,
   bloodGroup: userObj?.bloodGroup
 };
-export const BookAppointment = () => {
+export const BookAppointment = ({campDetails}) => {
+  
   const generateSlots = (details) => {
     const slots = [];
     let startTime = new Date(`01/01/2000 ${details.startTime}`);
@@ -44,51 +34,52 @@ export const BookAppointment = () => {
 
     return slots;
   };
-
   const [slots, setSlots] = useState(generateSlots(campDetails));
-  const [selectedSlot, setSelectedSlot] = useState(null);
+  const [selectedSlot, setSelectedSlot] = useState();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastDonationDate, setLastDonationDate] = useState('');
   const [bookingSuccess, setBookingSuccess] = useState(false);
 
   const navigate = useNavigate();
-
+  console.log(selectedSlot);
   const handleSlotClick = (slot) => {
+     // Log the clicked slot to ensure it's correct
     if (slot.bookedCount < slot.maxDonors) {
       // Slot is available, open modal
-      setSelectedSlot(slot);
+      setSelectedSlot(slot)
+      // Use functional update to ensure the correct slot is set
       setIsModalOpen(true);
     } else {
       console.log(`Slot ${slot.startTime} - ${slot.endTime} is fully booked`);
     }
   };
-
   const handleCloseModal = () => {
     setIsModalOpen(false);
     if (lastDonationDate !== '') {
       setBookingSuccess(true);
-      setSelectedSlot(null);
+      setSelectedSlot(null)
       setLastDonationDate('');
     }
   };
+  console.log(campDetails._id,campDetails.startDate,selectedSlot,userObj._id)
 
-  const handleConfirmBooking = () => {
-    const updatedSlots = slots.map(s => {
-      if (s.startTime === selectedSlot.startTime && s.endTime === selectedSlot.endTime) {
-        return {
-          ...s,
-          bookedCount: s.bookedCount + 1,
-        };
-      }
-      return s;
-    });
-    setSlots(updatedSlots);
-    console.log(`Booking confirmed for slot ${selectedSlot.startTime} - ${selectedSlot.endTime}`);
-    console.log(selectedSlot)
-    // Close the modal
-    handleCloseModal();
-    setBookingSuccess(true)
-    navigate('/receipt', { state: { campDetails, selectedSlot, donorDetails } })
+  const handleConfirmBooking = async() => {
+    try {
+      // Call backend to book appointment
+      const response = await axios.post('http://localhost:5000/api/donor/book-appointment', {
+        campId: campDetails._id, // Pass appropriate campId
+        date: campDetails.startDate, // Assuming date is available in selectedSlot
+        slot: selectedSlot, // Pass selectedSlot details
+        donorId: userObj._id // Pass donorId
+      });
+      console.log(response)
+      // If booking successful, set state and navigate to receipt page
+      setBookingSuccess(true);
+      navigate('/receipt', { state: { campDetails, selectedSlot, donorDetails } });
+    } catch (error) {
+      console.error('Error booking appointment:', error);
+      // Handle error
+    }
   };
 
   return (
