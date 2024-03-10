@@ -34,7 +34,8 @@ import { Link } from "react-router-dom";
 import { useLocation, useNavigate } from 'react-router';
 import { logout } from "../Redux/slices/userSlice";
 import { useDispatch } from "react-redux";
-
+import PagesImg from "../Components/Images/PagesImg.png"
+import NgoPagesImg from "../Components/Images/NgoPagesImg.png"
 // profile menu component
 const profileMenuItems = [
     {
@@ -140,38 +141,64 @@ function ProfileMenu({ userObj }) {
 // nav list menu
 const navListMenuItems = [
     {
-        title: "@material-tailwind/html",
+        title: "Blood Donation Process",
+        link: "/donationprocess",
         description:
-            "Learn how to use @material-tailwind/html, packed with rich components and widgets.",
+            "Embark on a life-saving journey: Understand the blood donation process at NGO camps.",
+        users: [ "donor", "recipient"]
     },
     {
-        title: "@material-tailwind/react",
+        title: "Blood Processing",
+        link: "/bloodprocessing",
         description:
-            "Learn how to use @material-tailwind/react, packed with rich components for React.",
+            "Behind the Scenes: Exploring Blood Processing After Donation at NGO Camps",
+            users: ["donor"]
     },
     {
         title: "Material Tailwind PRO",
+        link: "/bloodprocessing",
         description:
             "A complete set of UI Elements for building faster websites in less time.",
+            users: ["volunteer", "donor", "recipient"]
+    },
+    {
+        title: "My Posts",
+        link: "/myposts",
+        description:
+            "",
+            users: ["ngo"]
+    },
+    {
+        title: "My Camps",
+        link: "/mycamps",
+        description:
+            "",
+            users: ["ngo"]
     },
 ];
 
-function NavListMenu() {
+function NavListMenu({ userObj }) {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-
-    const renderItems = navListMenuItems.map(({ title, description }) => (
-        <Link key={title}>
-            <MenuItem>
-                <Typography variant="h6" color="blue-gray" className="mb-1">
-                    {title}
-                </Typography>
-                <Typography variant="small" color="gray" className="font-normal">
-                    {description}
-                </Typography>
-            </MenuItem>
-        </Link>
-    ));
-
+    const renderItems = navListMenuItems.map(({ title, description, link, users }) => {
+        if (users.includes(userObj?.userType) || users.includes("all")) {
+            return (
+                <Link to={link} key={title}>
+                    <MenuItem>
+                        <Typography variant="h6" color="red" className="mb-1">
+                            {title}
+                        </Typography>
+                        <Typography variant="small" color="gray" className="font-normal">
+                            {description}
+                        </Typography>
+                    </MenuItem>
+                </Link>
+            );
+        } else {
+            return null;
+        }
+    });
+    const menuTitle = userObj?.userType === "ngo" ? "Dashboard" : "All About Blood";
+    const isUserNGO = userObj?.userType === "ngo";
     return (
         <React.Fragment>
             <Menu allowHover open={isMenuOpen} handler={setIsMenuOpen}>
@@ -179,32 +206,34 @@ function NavListMenu() {
                     <Typography variant="small" className="font-normal">
                         <MenuItem className="hidden text-base items-center gap-2 font-medium text-blue-gray-900 lg:flex lg:rounded-full">
                             <Square3Stack3DIcon className="h-[18px] w-[18px] text-blue-gray-500" />{" "}
-                            Pages{" "}
+                            {menuTitle}{" "}
                             <ChevronDownIcon
                                 strokeWidth={2}
-                                className={`h-3 w-3 transition-transform ${isMenuOpen ? "rotate-180" : ""
-                                    }`}
+                                className={`h-3 w-3 transition-transform ${isMenuOpen ? "rotate-180" : ""}`}
                             />
                         </MenuItem>
                     </Typography>
                 </MenuHandler>
-                <MenuList className="hidden w-[36rem] grid-cols-7 gap-3 overflow-visible lg:grid">
+                <MenuList className="hidden w-auto grid-cols-7 gap-3 overflow-visible lg:grid">
                     <Card
-                        color="blue"
                         shadow={false}
                         variant="gradient"
                         className="col-span-3 grid h-full w-full place-items-center rounded-md"
                     >
-                        <RocketLaunchIcon strokeWidth={1} className="h-28 w-28" />
+                    {isUserNGO ? (
+                        <img src={NgoPagesImg} alt="PagesImg" className="h-full w-full" />
+                    ) : (
+                    <img src={PagesImg} alt="PagesImg" className="h-auto w-auto" />
+                    )}
                     </Card>
-                    <ul className="col-span-4 flex w-full flex-col gap-1">
+                    <ul className="col-span-4 flex w-auto justify-around flex-col gap-1">
                         {renderItems}
                     </ul>
                 </MenuList>
             </Menu>
             <MenuItem className="flex items-center gap-2 font-medium text-blue-gray-900 lg:hidden">
-                <Square3Stack3DIcon className="h-[18px] w-[18px] text-blue-gray-500" />{" "}
-                Pages{" "}
+                <Square3Stack3DIcon className="h-auto w-auto text-blue-gray-500" />{" "}
+                {menuTitle}{" "}
             </MenuItem>
             <ul className="ml-6 flex w-full flex-col gap-1 lg:hidden">
                 {renderItems}
@@ -212,7 +241,6 @@ function NavListMenu() {
         </React.Fragment>
     );
 }
-
 // nav list component
 const navListItems = [
     {
@@ -264,18 +292,6 @@ const navListItems = [
         users: [  "recipient", "all"]
     },
     {
-        label: "My Posts",
-        icon: CodeBracketSquareIcon,
-        link: "/myposts",
-        users: ["ngo"]
-    },
-    {
-        label: "My Camps",
-        icon: CodeBracketSquareIcon,
-        link: "/mycamps",
-        users: ["ngo"]
-    },
-    {
         label: "My Camps",
         icon: CodeBracketSquareIcon,
         link: "/volunteer/mycamps",
@@ -287,7 +303,6 @@ const navListItems = [
 function NavList({ userObj }) {
 
     const location = useLocation();
-
     return (
         <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
             {navListItems.map(({ label, icon, link, users }, key) => {
@@ -309,7 +324,7 @@ function NavList({ userObj }) {
                 else
                     return null
             })}
-            <NavListMenu />
+            <NavListMenu userObj={userObj} />
         </ul>
     );
 }

@@ -55,6 +55,7 @@ function MyPosts() {
       if (response.status === 200) {
         // Update the post in the state
         const updatedPosts = postsData.map(post => (post._id === editedPost._id ? editedPost : post));
+        setPosts(updatedPosts)
         setIsEdited(true); // Show edit success alert
         setTimeout(() => setIsEdited(false), 1500); // Close alert after 2 seconds
         setEditPost(null); // Clear editing state

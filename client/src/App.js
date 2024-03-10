@@ -59,6 +59,8 @@ function App() {
       <Route path='/receipt' element={<GenerateSlotReciept />} />
       <Route path='/contactrequests' element={<ContactRequests />} />
       <Route path='/donorfaqs' element={<DonorFaqs />} />
+      <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
+      <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
     </>
   )
   const VolunteerRoutes = (
@@ -86,8 +88,6 @@ function App() {
             <Route path='/activeappointments' element={<ActiveAppoinments />} />
             <Route path='/editprofile' element={<EditProfile />} />
             <Route path='/bloodbanks' element={<BloodBanks/>}/>
-            <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
-            <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
             <Route path='/createcamps' element={<CreateCamps/>}/>
             {!isLoggedIn && AuthRoutes}
             {userObj?.userType === "ngo" && NgoRoutes}
