@@ -4,10 +4,6 @@ import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons'
 import axios from 'axios';
 export default function ContactRequests() {
   const [requests, setRequests] = useState([
-    { id: 1, recipientName: 'John Doe', bloodGroup: 'AB+', email: 'john.doe@example.com' },
-    { id: 2, recipientName: 'Jane Smith', bloodGroup: 'O-', email: 'jane.smith@example.com' },
-    { id: 3, recipientName: 'Alice Johnson', bloodGroup: 'B+', email: 'alice.johnson@example.com' },
-    // Add more requests here
   ]);
   const userObj = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
@@ -126,7 +122,7 @@ export default function ContactRequests() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-400">
-              {requests.map((request, index) => (
+              {requests&& requests.map((request, index) => (
                 <tr key={index}>
                   <td className="px-6 py-4 whitespace-nowrap  w-[25%] text-center">{request.recipientName}</td>
                   <td className="px-6 py-4 whitespace-nowrap w-[25%] text-center">{request.bloodGroup}</td>

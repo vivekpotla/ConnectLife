@@ -27,23 +27,48 @@ const SearchDonors = () => {
     const recipentDetails = JSON.parse(localStorage.getItem('user'));
     return recipentDetails || {};
   };
-
+   
 
   
 
   useEffect(() => {
     // Get recipent details from local storage
     const recipient = getRecipentDetailsFromLocalStorage();
+   
+    
     setRecipientData({
       recipientLatitude: recipient.livelocation.latitude,
       recipientLongitude: recipient.livelocation.longitude,
       recipientBloodGroup: recipient.bloodGroup
     });
+    // const getDonorsData=async ()=>{
+    //   const donorList= await axios.post(`http://localhost:5000/api/recipient/get-nearest-donors`,{
+    //     recipientLatitude: recipentData.recipientLatitude,
+    //     recipientLongitude: recipentData.recipientLongitude,
+    //     bloodType: recipentData.recipientBloodGroup
+    //   })
+    //   console.log(donorList.data);
+    // }
+    const getDonorsData = async () => {
+      try {
+        const donorList = await axios.post(`http://localhost:5000/api/recipient/get-nearest-donors`, {
+          recipientLatitude: recipentData.recipientLatitude,
+          recipientLongitude: recipentData.recipientLongitude,
+          bloodType: recipentData.recipientBloodGroup
+        });
+        console.log(donorList.status); // Log the status code
+        console.log(donorList.headers); // Log the response headers
+        console.log(donorList.data); // Log the response data
+      } catch (error) {
+        console.error(error);
+      }
+    }
+    getDonorsData();
     // Calculate distances and prioritize by blood group
     const donorsWithDistances = donorsData.map(donor => {
       const distance = getDistance(recipentData.recipientLatitude, recipentData.recipientLongitude, donor.latitude, donor.longitude);
       return { ...donor, distance };
-    });
+    },[]);
 
     // Sort donors by blood group and then by distance
     const sortedDonors = donorsWithDistances.sort((a, b) => {
