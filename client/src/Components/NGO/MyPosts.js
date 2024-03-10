@@ -95,7 +95,7 @@ function MyPosts() {
     setDeletePostId(null); // Clear delete confirmation state
   };
   return (
-    <div className='bg-gray-100 h-full'>
+    <div className='bg-gray-100 h-auto p-4'>
       {/* Post deleted popup */}
       {isDeleted && (
         <div className="fixed z-10 inset-0 overflow-y-auto">

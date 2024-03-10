@@ -59,7 +59,7 @@ export const PreviousCamps = () => {
       <h1 className="text-3xl font-bold mb-4 text-center">Previous Camps</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {campsData
-          .filter(camp => isBefore(new Date(camp.endDate), new Date())) // Filter camps with endDate after today
+          .filter(camp => isBefore(new Date(camp.endDate), new Date()) && isBefore(new Date(camp.startDate), new Date())) // Filter camps with endDate after today
           .map((camp, index) => (
             <div key={index} className="bg-white rounded-lg shadow-md p-4 flex flex-col justify-between">
               <div>

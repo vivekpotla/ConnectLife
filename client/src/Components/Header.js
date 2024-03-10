@@ -40,27 +40,32 @@ const profileMenuItems = [
     {
         label: "My Profile",
         icon: UserCircleIcon,
-        link: ""
+        link: "",
+        users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
     {
         label: "Edit Profile",
         icon: Cog6ToothIcon,
-        link: "/editprofile"
+        link: "/editprofile",
+        users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
     {
         label: "Contact Requests",
         icon: InboxArrowDownIcon,
-        link: "/contactrequests"
+        link: "/contactrequests",
+        users: ["donor"]
     },
     {
         label: "Help",
         icon: LifebuoyIcon,
-        link: ''
+        link: '',
+        users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
     {
         label: "Sign Out",
         icon: PowerIcon,
-        link: '/'
+        link: '/',
+        users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
 ];
 
@@ -68,8 +73,7 @@ const profileMenuItems = [
 
 function ProfileMenu({ userObj }) {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
-    const naviate = useNavigate();
-
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     return (
@@ -89,43 +93,44 @@ function ProfileMenu({ userObj }) {
                     />
                     <ChevronDownIcon
                         strokeWidth={2.5}
-                        className={`h-3 w-3 transition-transform ${isMenuOpen ? "rotate-180" : ""
-                            }`}
+                        className={`h-3 w-3 transition-transform ${isMenuOpen ? "rotate-180" : ""}`}
                     />
                 </Button>
             </MenuHandler>
             <MenuList className="p-1">
-                {profileMenuItems.map(({ label, icon, link }, key) => {
+                {profileMenuItems.map(({ label, icon, link, users }, key) => {
                     const isLastItem = key === profileMenuItems.length - 1;
-                    return (
-                        <MenuItem
-                            key={label}
-                            onClick={() => {
-                                setIsMenuOpen(false);
-                                if (label === "Sign Out") {
-                                    let log = logout();
-                                    dispatch(log);
-                                }
-                                naviate(link);
-                            }}
-                            className={`flex items-center gap-2 rounded ${isLastItem
-                                ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10"
-                                : ""
-                                }`}
-                        >
-                            {React.createElement(icon, {
-                                className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
-                                strokeWidth: 2,
-                            })}
-                            <Typography
-                                variant="small"
-                                className="font-normal"
-                                color={isLastItem ? "red" : "inherit"}
+                    // Check if the current user type is allowed for this menu item
+                    if (users.includes(userObj?.userType) || users.includes("all")) {
+                        return (
+                            <MenuItem
+                                key={label}
+                                onClick={() => {
+                                    setIsMenuOpen(false);
+                                    if (label === "Sign Out") {
+                                        let log = logout();
+                                        dispatch(log);
+                                    }
+                                    navigate(link);
+                                }}
+                                className={`flex items-center gap-2 rounded ${isLastItem ? "hover:bg-red-500/10 focus:bg-red-500/10 active:bg-red-500/10" : ""}`}
                             >
-                                {label}
-                            </Typography>
-                        </MenuItem>
-                    );
+                                {React.createElement(icon, {
+                                    className: `h-4 w-4 ${isLastItem ? "text-red-500" : ""}`,
+                                    strokeWidth: 2,
+                                })}
+                                <Typography
+                                    variant="small"
+                                    className="font-normal"
+                                    color={isLastItem ? "red" : "inherit"}
+                                >
+                                    {label}
+                                </Typography>
+                            </MenuItem>
+                        );
+                    } else {
+                        return null;
+                    }
                 })}
             </MenuList>
         </Menu>
