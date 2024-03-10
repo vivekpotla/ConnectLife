@@ -50,7 +50,6 @@ const PostsLists = () => {
   useEffect(() => {
     const getPostData = async () => {
       await axios.get("http://localhost:5000/api/donor/get-all-posts").then((res) => {
-        console.log(res.data);
         setPostsData(res.data);
       }).catch((error) => {
         console.log(error);

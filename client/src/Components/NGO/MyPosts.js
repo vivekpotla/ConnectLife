@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react';
-import img from '../Images/Create_Post.png';
 import axios from 'axios';
+
 import {
   Card,
   CardBody,
@@ -16,32 +16,12 @@ import {
 } from '@heroicons/react/24/solid'
 
 function MyPosts() {
-  const [postsData, setPosts] = useState([
-    {
-      id: 1,
-      title: "Post 1",
-      description: "Description of Post 1",
-      image: img,
-    },
-    {
-      id: 2,
-      title: "Post 2",
-      description: "Description of Post 2",
-      image: img,
-    },
-    {
-      id: 3,
-      title: "Post 3",
-      description: "Description of Post 3",
-      image: img,
-    },
-  ]);
+  const [postsData, setPosts] = useState([]);
 
   useEffect(() => {
     const getPostData = async () => {
       await axios.post("http://localhost:5000/api/ngo/view-my-posts", { ngoId: JSON.parse(localStorage.getItem("user"))._id }).then((res) => {
         // Assuming res.data.payload contains the post data
-        console.log(res.data);
         setPosts(res.data);
       }).catch((error) => {
         console.log(error);
@@ -55,41 +35,128 @@ function MyPosts() {
   const [editPost, setEditPost] = useState(null); // Post being edited
   const [deletePostId, setDeletePostId] = useState(null); // Post ID to delete
   const [isDeleted, setIsDeleted] = useState(false);
+  const [isEdited, setIsEdited] = useState(false);
+
   const handleEditPost = (post) => {
     // Set the post being edited
     setEditPost(post);
   };
 
-  const handleSaveEdit = (editedPost) => {
-    // Update the post in the state
-    const updatedPosts = postsData.map(post => (post.id === editedPost.id ? editedPost : post));
-    setPosts(updatedPosts);
-    setEditPost(null); // Clear editing state
+ const handleSaveEdit = async (editedPost) => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/ngo/edit-delete-post", {
+        postId: editedPost._id,
+        type: 'edit',
+        title: editedPost.title,
+        description: editedPost.description,
+        ngoId: editedPost.authorNGO
+      });
+      
+      if (response.status === 200) {
+        // Update the post in the state
+        const updatedPosts = postsData.map(post => (post._id === editedPost._id ? editedPost : post));
+        setIsEdited(true); // Show edit success alert
+        setTimeout(() => setIsEdited(false), 1500); // Close alert after 2 seconds
+        setEditPost(null); // Clear editing state
+      }
+    } catch (error) {
+      console.error('Error editing post:', error);
+    }
+    setIsEdited(true);
   };
 
+  const confirmDelete = async () => {
+    try {
+      const response = await axios.post("http://localhost:5000/api/ngo/edit-delete-post", {
+        postId: deletePostId,
+        type: 'delete',
+        ngoId: JSON.parse(localStorage.getItem("user"))._id
+      });
+      
+      if (response.status === 200) {
+        // Remove the post from the state
+        const updatedPosts = postsData.filter(post => post._id !== deletePostId);
+        setPosts(updatedPosts);
+        setIsDeleted(true); // Show delete success alert
+        setTimeout(() => setIsDeleted(false), 1500); // Close alert after 2 seconds
+        setDeletePostId(null); // Clear delete confirmation state
+      }
+    } catch (error) {
+      console.error('Error deleting post:', error);
+    }
+  };
   const handleDeletePost = (postId) => {
     // Set the post ID to delete and show confirmation dialog
     setDeletePostId(postId);
-  };
-
-  const confirmDelete = () => {
-    // Remove the post from the state
-    const updatedPosts = postsData.filter(post => post.id !== deletePostId);
-    setPosts(updatedPosts);
-    setIsDeleted(true); // Set deletion flag
-    setDeletePostId(null); // Clear delete confirmation state
   };
 
   const cancelDelete = () => {
     // Cancel delete action
     setDeletePostId(null); // Clear delete confirmation state
   };
-
-
   return (
-    <div className='bg-gray-100'>
+    <div className='bg-gray-100 h-full'>
+      {/* Post deleted popup */}
+      {isDeleted && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity">
+              <div className="absolute inset-0 bg-gray-900 opacity-75"></div>
+            </div>
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <svg className="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">Post Deleted</h3>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">
+                        The post has been successfully deleted.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
-      {isDeleted && <h5 className="text-xl mt-4 text-green-500 mb-4 text-center">Post successfully deleted!</h5>}
+      {/* Post edited popup */}
+      {isEdited && (
+        <div className="fixed z-10 inset-0 overflow-y-auto">
+          <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
+            <div className="fixed inset-0 transition-opacity">
+              <div className="absolute inset-0 bg-gray-900 opacity-75"></div>
+            </div>
+            <span className="hidden sm:inline-block sm:align-middle sm:h-screen"></span>&#8203;
+            <div className="inline-block align-bottom bg-white rounded-lg text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full">
+              <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4">
+                <div className="sm:flex sm:items-start">
+                  <div className="mx-auto flex-shrink-0 flex items-center justify-center h-12 w-12 rounded-full bg-green-100 sm:mx-0 sm:h-10 sm:w-10">
+                    <svg className="h-6 w-6 text-green-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
+                    </svg>
+                  </div>
+                  <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900">Post Edited</h3>
+                    <div className="mt-2">
+                      <p className="text-sm text-gray-500">
+                        The post has been successfully edited.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 place-items-center">
         {postsData.map(post => (
           <Card className="mt-6 md:max-w-96 max-w-72">
@@ -117,30 +184,6 @@ function MyPosts() {
             )}
           </Card>
         ))}
-        {/* <div key={post._id} className="border border-gray-300 rounded-lg p-4 mb-4">
-            <h2 className="text-xl font-semibold mb-2">{post.title}</h2>
-            <p className="text-gray-600 mb-2">{post.description}</p>
-            <img src={post.imageURL} alt={post.title} className="w-full h-auto rounded-md mb-2" />
-            <div className="flex justify-between">
-              <button className="text-blue-500 hover:text-blue-700 mr-2 flex" onClick={() => handleEditPost(post)}>
-                Edit<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue ms-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z" />
-                </svg></button>
-              <button className="text-red-500 hover:text-red-700 flex" onClick={() => handleDeletePost(post.id)}>
-                Delete
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-blue ms-1 mt-1" viewBox="0 0 20 20" fill="currentColor">
-                  <path fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
-                    d="M1 3.5h12m-10.5 0h9v9a1 1 0 0 1-1 1h-7a1 1 0 0 1-1-1zm2 0V3a2.5 2.5 0 1 1 5 0v.5m-4 3.001v4.002m3-4.002v4.002" /></svg>
-              </button>
-            </div>
-
-
-            {editPost && editPost.id === post.id && (
-              <EditForm post={editPost} onSaveEdit={handleSaveEdit} onCancelEdit={() => setEditPost(null)} />
-            )}
-          </div> */}
-
-
         {deletePostId && (
           <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
             <div className="bg-white p-4 rounded-lg shadow-lg">
@@ -165,18 +208,34 @@ const EditForm = ({ post, onSaveEdit, onCancelEdit }) => {
     e.preventDefault();
     onSaveEdit({ ...post, title: editedTitle, description: editedDescription });
   };
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter') {
+      handleSubmit(e);
+    }
+  };
 
   return (
     <div className="fixed top-0 left-0 w-full h-full flex items-center justify-center bg-gray-800 bg-opacity-50">
       <div className="bg-white p-12 rounded-lg shadow-lg">
-        <form onSubmit={handleSubmit}>
-          <input type="text" value={editedTitle} onChange={(e) => setEditedTitle(e.target.value)} className='border rounded-lg mb-2 border-gray-500 p-2 w-full' />
-          <textarea value={editedDescription} onChange={(e) => setEditedDescription(e.target.value)} className='border rounded-lg  border-gray-500 p-2 w-full' />
-          <div className="flex justify-center">
-            <button type="button" onClick={onCancelEdit} className='bg-gray-300 rounded-lg m-2 p-2'>Cancel</button>
-            <button type="submit" className='bg-green-500 rounded-lg m-2 ps-2 pr-2'>Save</button>
-          </div>
-        </form>
+      <form onSubmit={handleSubmit}>
+  <input
+    type="text"
+    value={editedTitle}
+    onChange={(e) => setEditedTitle(e.target.value)}
+    onKeyPress={handleKeyPress}
+    className='border rounded-lg mb-2 border-gray-500 p-2 w-full'
+  />
+  <textarea
+    value={editedDescription}
+    onChange={(e) => setEditedDescription(e.target.value)}
+    onKeyPress={handleKeyPress}
+    className='border rounded-lg  border-gray-500 p-2 w-full'
+  />
+  <div className="flex justify-center">
+    <button type="button" onClick={onCancelEdit} className='bg-gray-300 rounded-lg m-2 p-2'>Cancel</button>
+    <button type="submit" className='bg-green-500 text-gray-100 rounded-lg m-2 ps-2 pr-2'>Save</button>
+  </div>
+</form>
       </div>
     </div>
   );
