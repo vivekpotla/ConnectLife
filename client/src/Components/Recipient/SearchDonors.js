@@ -13,7 +13,7 @@ const SearchDonors = () => {
   const [requestedDonor, setRequestedDonor] = useState(null);
   const [nearestDonors, setNearestDonors] = useState([]);
   const [donorData,setDonorData]=useState('');
-  const [recipentData,setRecipientData]=useState({
+  const [recipientData,setRecipientData]=useState({
     recipientLatitude:0,
     recipientLongitude:0,
     recipientBloodGroup:'A+'
@@ -41,20 +41,12 @@ const SearchDonors = () => {
       recipientLongitude: recipient.livelocation.longitude,
       recipientBloodGroup: recipient.bloodGroup
     });
-    // const getDonorsData=async ()=>{
-    //   const donorList= await axios.post(`http://localhost:5000/api/recipient/get-nearest-donors`,{
-    //     recipientLatitude: recipentData.recipientLatitude,
-    //     recipientLongitude: recipentData.recipientLongitude,
-    //     bloodType: recipentData.recipientBloodGroup
-    //   })
-    //   console.log(donorList.data);
-    // }
     const getDonorsData = async () => {
       try {
         const donorList = await axios.post(`http://localhost:5000/api/recipient/get-nearest-donors`, {
-          recipientLatitude: recipentData.recipientLatitude,
-          recipientLongitude: recipentData.recipientLongitude,
-          bloodType: recipentData.recipientBloodGroup
+          recipientLatitude: recipientData.recipientLatitude,
+          recipientLongitude: recipientData.recipientLongitude,
+          bloodType: recipientData.recipientBloodGroup
         });
         console.log(donorList.status); // Log the status code
         console.log(donorList.headers); // Log the response headers
@@ -66,19 +58,19 @@ const SearchDonors = () => {
     getDonorsData();
     // Calculate distances and prioritize by blood group
     const donorsWithDistances = donorsData.map(donor => {
-      const distance = getDistance(recipentData.recipientLatitude, recipentData.recipientLongitude, donor.latitude, donor.longitude);
+      const distance = getDistance(recipientData.recipientLatitude, recipientData.recipientLongitude, donor.latitude, donor.longitude);
       return { ...donor, distance };
     },[]);
 
     // Sort donors by blood group and then by distance
     const sortedDonors = donorsWithDistances.sort((a, b) => {
-      if (a.bloodGroup === recipentData.recipientBloodGroup) {
-        if (b.bloodGroup === recipentData.recipientBloodGroup) {
+      if (a.bloodGroup === recipientData.recipientBloodGroup) {
+        if (b.bloodGroup === recipientData.recipientBloodGroup) {
           return a.distance - b.distance;
         }
         return -1;
       }
-      if (b.bloodGroup === recipentData.recipientBloodGroup) {
+      if (b.bloodGroup === recipientData.recipientBloodGroup) {
         return 1;
       }
       // Add more conditions for other blood groups as needed
@@ -86,7 +78,7 @@ const SearchDonors = () => {
     });
 
     setNearestDonors(sortedDonors);
-  }, [recipentData.recipientLatitude, recipentData.recipientLongitude, recipentData.recipientBloodGroup]);
+  }, [recipientData.recipientLatitude, recipientData.recipientLongitude, recipientData.recipientBloodGroup]);
 
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
