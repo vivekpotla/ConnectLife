@@ -83,7 +83,7 @@ export const CampsList = () => {
       setSearchedCamps([]);
     }
 
-  }, [selectedFilter]);
+  }, [selectedFilter,query]);
 
   return (
     <div className='bg-gray-100 p-1'>

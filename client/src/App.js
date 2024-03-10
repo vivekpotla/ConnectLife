@@ -26,6 +26,7 @@ import { RecipientFaqs } from './Components/Recipient/RecipientFaqs.js';
 import BloodBanks from './Components/BloodBanks.js';
 import BloodDonationProcess from './Components/InformationPages/BloodDonationProcess.js';
 import BloodProcessing from './Components/InformationPages/BloodProcessing.js';
+import { CreateCamps } from './Components/Camps/CreateCamps.js';
 function App() {
 
   const [userObj, setUserObj] = useState(null);
@@ -48,6 +49,7 @@ function App() {
       <Route path='/ngo' element={<NgoHomePage />} />
       <Route path='/myposts' element={<MyPosts />} />
       <Route path='/mycamps' element={<PreviousCamps />} />
+     
     </>
   )
 
@@ -86,6 +88,7 @@ function App() {
             <Route path='/bloodbanks' element={<BloodBanks/>}/>
             <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
             <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
+            <Route path='/createcamps' element={<CreateCamps/>}/>
             {!isLoggedIn && AuthRoutes}
             {userObj?.userType === "ngo" && NgoRoutes}
             {userObj?.userType === "donor" && DonorRoutes}
