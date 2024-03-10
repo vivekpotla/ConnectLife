@@ -48,9 +48,7 @@ const SearchDonors = () => {
           recipientLongitude: recipientData.recipientLongitude,
           bloodType: recipientData.recipientBloodGroup
         });
-        console.log(donorList.status); // Log the status code
-        console.log(donorList.headers); // Log the response headers
-        console.log(donorList.data); // Log the response data
+       setDonorData(donorList.data);
       } catch (error) {
         console.error(error);
       }
