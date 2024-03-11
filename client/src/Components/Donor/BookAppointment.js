@@ -1,90 +1,74 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import { PreviousDonationsForm } from './PreviousDonationsForm';
 import { GenerateSlotReciept } from './GenerateSlotReciept';
-import { useNavigate, useOutlet } from 'react-router';
-import axios from 'axios';
+import { useNavigate } from 'react-router';
 
 const userObj = JSON.parse(localStorage.getItem("user"));
-const donorDetails = {
-  name: userObj?.name,
-  email: userObj?.email,
-  phoneNumber: userObj?.phoneNumber,
-  bloodGroup: userObj?.bloodGroup
-};
+
 export const BookAppointment = ({campDetails}) => {
-  
-  const generateSlots = (details) => {
-    const slots = [];
-    let startTime = new Date(`01/01/2000 ${details.startTime}`);
-    const endTime = new Date(`01/01/2000 ${details.endTime}`);
-    const maxDonorsPerSlot = details.maxDonorsPerSlot;
-    while (startTime < endTime) {
-      const endTimeSlot = new Date(startTime);
-      endTimeSlot.setHours(endTimeSlot.getHours() + 1);
-
-      slots.push({
-        startTime: startTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        endTime: endTimeSlot.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        bookedCount: 0,
-        maxDonors: maxDonorsPerSlot
-      });
-
-      startTime = endTimeSlot;
-    }
-
-    return slots;
-  };
-  const [slots, setSlots] = useState(generateSlots(campDetails));
-  const [selectedSlot, setSelectedSlot] = useState();
+  const [slots, setSlots] = useState([]);
+  const [selectedSlot, setSelectedSlot] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [lastDonationDate, setLastDonationDate] = useState('');
   const [bookingSuccess, setBookingSuccess] = useState(false);
-
   const navigate = useNavigate();
-  console.log(selectedSlot);
+
+  useEffect(() => {
+    const fetchSlots = async () => {
+      try {
+        const response = await axios.post('http://localhost:5000/api/donor/camp/getslots', { campId: campDetails._id });
+        if (!response.data) {
+          throw new Error('Failed to fetch slots');
+        }
+        const slotsData = Object.values(response.data).flatMap(slots => slots);
+        setSlots(slotsData);
+      } catch (error) {
+        console.error('Error fetching slots:', error.message);
+      }
+    };
+
+    if (campDetails) {
+      fetchSlots();
+    }
+  }, [campDetails]);
   const handleSlotClick = (slot) => {
-     // Log the clicked slot to ensure it's correct
-    if (slot.bookedCount < slot.maxDonors) {
-      // Slot is available, open modal
-      setSelectedSlot(slot)
-      // Use functional update to ensure the correct slot is set
+    if (slot.slotsLeft!=0) {
+      setSelectedSlot(slot);
       setIsModalOpen(true);
     } else {
       console.log(`Slot ${slot.startTime} - ${slot.endTime} is fully booked`);
     }
   };
+
   const handleCloseModal = () => {
     setIsModalOpen(false);
     if (lastDonationDate !== '') {
       setBookingSuccess(true);
-      setSelectedSlot(null)
+      setSelectedSlot(null);
       setLastDonationDate('');
     }
   };
-  console.log(campDetails._id,campDetails.startDate,selectedSlot,userObj._id)
 
   const handleConfirmBooking = async() => {
     try {
-      // Call backend to book appointment
+      console.log(selectedSlot._id)
       const response = await axios.post('http://localhost:5000/api/donor/book-appointment', {
-        campId: campDetails._id, // Pass appropriate campId
-        date: campDetails.startDate, // Assuming date is available in selectedSlot
-        slot: selectedSlot, // Pass selectedSlot details
-        donorId: userObj._id // Pass donorId
+        campId: campDetails._id,
+        date: campDetails.startDate,
+        slot: selectedSlot,
+        donorId: userObj._id
       });
-      console.log(response)
-      // If booking successful, set state and navigate to receipt page
       setBookingSuccess(true);
-      navigate('/receipt', { state: { campDetails, selectedSlot, donorDetails } });
+      navigate('/receipt', { state: { campDetails, selectedSlot, donorDetails: userObj } });
     } catch (error) {
       console.error('Error booking appointment:', error);
-      // Handle error
     }
   };
 
   return (
     <>
-   <h1 className="text-2xl font-bold text-center">Book Slot</h1>
+      <h1 className="text-2xl font-bold text-center">Book Slot</h1>
       {/* Legend */}
       <div className="flex justify-center mt-16 m-4">
         <div className=" inline-block mr-4">
@@ -97,28 +81,25 @@ export const BookAppointment = ({campDetails}) => {
         </div>
       </div>
       {/* Grid */}
-      <div class="flex  justify-center">
-        <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 grid-rows-3 gap-3">
+      <div className="flex  justify-center">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 grid-rows-3 gap-3">
           {slots.map((slot, index) => (
             <div
               key={index}
               onClick={() => handleSlotClick(slot)}
-              className={`p-2 border border-gray-300 rounded cursor-pointer ${slot.bookedCount < slot.maxDonors ? 'bg-green-400 border-2 border-green-700 hover:bg-green-300' :
+              className={`p-2 border border-gray-300 rounded cursor-pointer ${slot.slotsLeft!=0 ? 'bg-green-400 border-2 border-green-700 hover:bg-green-300' :
                   'bg-red-400 border-2 border-red-700 hover:bg-red-300'
                 } hover:scale-90 hover:ring-2 hover:ring-green-500 hover:ring-opacity-50`}
             >
-              {/* <p>Slot {index + 1}</p> */}
               <p>{slot.startTime} - {slot.endTime}</p>
-              {/* <p>{slot.maxDonors-slot.bookedCount} more slots available!</p> */}
             </div>
           ))}
         </div>
-        {/* Modal */}
-        <PreviousDonationsForm isOpen={isModalOpen} onClose={handleCloseModal} onConfirm={handleConfirmBooking} />
-        {bookingSuccess && (
-          <GenerateSlotReciept campDetails={campDetails} selectedSlot={selectedSlot} donorDetails={donorDetails} />
-        )}
       </div>
+      <PreviousDonationsForm isOpen={isModalOpen} onClose={handleCloseModal} onConfirm={handleConfirmBooking} />
+      {bookingSuccess && (
+        <GenerateSlotReciept campDetails={campDetails} selectedSlot={selectedSlot} donorDetails={userObj} />
+      )}
     </>
   );
 };
