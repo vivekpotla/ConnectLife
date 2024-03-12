@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import 'mapbox-gl/dist/mapbox-gl.css';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Routes, Route } from 'react-router-dom';
 import { Header } from './Components/Header';
 import { NgoHomePage } from './Components/NGO/NgoHomePage';
 import { CampsList } from './Components/Camps/CampsList.js';
@@ -101,7 +101,7 @@ function App() {
         <div className="fixed bottom-0 right-[-10px]">
           <ChatBot />
         </div>
-        {userObj && userObj.userType!='ngo' && <LocationUpdater/>}
+        {userObj && userObj.userType!=='ngo' && <LocationUpdater/>}
       </div>
      
    

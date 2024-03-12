@@ -64,7 +64,7 @@ export const CampsList = () => {
 
     if (selectedFilter === "Location") {
       getNearestCampsData();
-    } else if (selectedFilter == "Name") {
+    } else if (selectedFilter === "Name") {
       const data = campsData.sort((a, b) => {
         // Sort alphabetically by 'name' property
         if (a.name < b.name) {
@@ -77,7 +77,7 @@ export const CampsList = () => {
       });
 
       setSearchedCamps(data);
-    } else if (selectedFilter == "Search") {
+    } else if (selectedFilter === "Search") {
       getSearchedCampsData(query);
     } else {
       setSearchedCamps([]);
