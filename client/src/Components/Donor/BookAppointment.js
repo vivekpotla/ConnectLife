@@ -62,7 +62,6 @@ export const BookAppointment = ({ campDetails }) => {
       setSelectedSlot(slot);
       setIsModalOpen(true);
     } else {
-      console.log(`Slot ${slot.startTime} - ${slot.endTime} is fully booked`);
       setUnavailableSlotAlertVisible(true);
     }
   };
