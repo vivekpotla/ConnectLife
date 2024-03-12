@@ -54,7 +54,7 @@ const profileMenuItems = [
     {
         label: "Help",
         icon: LifebuoyIcon,
-        link: '',
+        link: '/help',
         users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
     {
