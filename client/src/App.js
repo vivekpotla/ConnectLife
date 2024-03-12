@@ -71,6 +71,7 @@ function App() {
     <>
       <Route path='/volunteer/mycamps' element={<MyCamps />} />
       <Route path="/volunteer/donordetails" element={<UpdateDonorDetails />} />
+      <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
     </>
   )
   const RecipientRoutes = (
@@ -79,6 +80,8 @@ function App() {
       <Route path='/searchdonors' element={<SearchDonors />} />
       <Route path='/viewrequests' element={<ViewRequests />} />
       <Route path='/bloodbanks' element={<BloodBanks/>}/>
+      <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
+      <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
     </>
   )
 
