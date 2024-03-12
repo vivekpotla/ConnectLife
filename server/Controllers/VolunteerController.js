@@ -163,7 +163,7 @@ export const joinCamp = async (req, res) => {
 
     // Check if the volunteer is already joined to the camp
     if (camp.volunteers.includes(volunteerId)) {
-      return res.status(400).json({ message: 'Volunteer is already joined to the camp' });
+      return res.json({ message: 'Volunteer is already joined to the camp' });
     }
     // Add the volunteer to the camp's list of volunteers
     camp.volunteers.push(volunteerId);

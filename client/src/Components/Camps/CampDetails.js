@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router';
 import { BookAppointment } from '../Donor/BookAppointment';
-import MapComponent from '../MapComponent';
-
+import MapComponent from '../MapComponent'
+import axios from 'axios';
 export const CampDetails = () => {
   const locationLoc = useLocation();
   const campDetails = locationLoc.state.camps;
@@ -20,11 +20,19 @@ export const CampDetails = () => {
   };
 
   const [marker, setMarker] = useState({ latitude: campDetails.latitude, longitude: campDetails.longitude });
-
+  async function joinCamp() {
+    if (userObj && userObj.userType === 'volunteer') {
+      let volunteerId= userObj._id;
+      let campId= campDetails._id;
+     // /join-camp
+     let response=  await axios.post('http://localhost:5000/api/volunteer/join-camp', {volunteerId, campId});
+     console.log(response)
+    }
+  }
   const renderJoinButton = () => {
     if (userObj && userObj.userType === 'volunteer') {
       return (
-        <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Join Camp</button>
+        <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" onClick={()=>{joinCamp()}}>Join Camp</button>
       );
     }
     return null;
