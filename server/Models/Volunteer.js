@@ -25,8 +25,17 @@ const volunteerSchema = new Schema({
     postalCode: { type: String, required: true }
   },
   livelocation: {
-    latitude: { type: Number, default: 0 },
-    longitude: { type: Number, default: 0 }
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      default:[0,0]
+    },
+    
   },
   campsParticipated: [{ type: Schema.Types.ObjectId, ref: 'Camp' }]
 });

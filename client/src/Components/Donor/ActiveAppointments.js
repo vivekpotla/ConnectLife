@@ -28,7 +28,7 @@ export default function ActiveAppointments() {
 
         
         const response = await axios.get(`http://localhost:5000/api/donor/appointments/${donorId}`);
-
+        console.log("Appointmerns", response.data)
         
         const { activeAppointments, previousAppointments } = response.data;
 

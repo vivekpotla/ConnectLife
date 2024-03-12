@@ -58,10 +58,18 @@ const recipientSchema = new Schema({
       required: true
     }
   },
-  livelocation:{
-    latitude: { type: Number, default: 0 },
-    longitude: { type: Number, default: 0 }
+  livelocation: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      default:[0,0]
+    }
   }
 });
-
+recipientSchema.index({ livelocation: '2dsphere' });
 export default mongoose.model('Recipient', recipientSchema);
