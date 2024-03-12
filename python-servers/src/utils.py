@@ -3,8 +3,6 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain_openai import OpenAI
 from langchain import LLMChain
 from tqdm import tqdm
-from dotenv import load_dotenv
-import os
 
 OPENAI_KEY = ""
 
