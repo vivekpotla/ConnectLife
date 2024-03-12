@@ -114,7 +114,6 @@ export const getDonorAppointments = async (req, res) => {
     // Separate appointments based on donated status
     const donatedAppointments = appointments.filter(appointment => appointment.donated);
     const notDonatedAppointments = appointments.filter(appointment => !appointment.donated);
-
     // Send separated appointments in the response
     res.json({ donatedAppointments, notDonatedAppointments });
   } catch (err) {
