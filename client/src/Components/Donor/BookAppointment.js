@@ -4,25 +4,28 @@ import { PreviousDonationsForm } from './PreviousDonationsForm';
 import { GenerateSlotReciept } from './GenerateSlotReciept';
 import { useNavigate } from 'react-router';
 
-const userObj = JSON.parse(localStorage.getItem("user"));
+const userObj = JSON.parse(localStorage.getItem('user'));
 
-export const BookAppointment = ({campDetails}) => {
-  const [slots, setSlots] = useState([]);
+export const BookAppointment = ({ campDetails }) => {
+  const [showDatesPopup, setShowDatesPopup] = useState(false); // New state variable
+  const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [lastDonationDate, setLastDonationDate] = useState('');
+  const [slots, setSlots] = useState({});
   const [bookingSuccess, setBookingSuccess] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [unavailableSlotAlertVisible, setUnavailableSlotAlertVisible] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchSlots = async () => {
       try {
-        const response = await axios.post('http://localhost:5000/api/donor/camp/getslots', { campId: campDetails._id });
+        const response = await axios.post('http://localhost:5000/api/donor/camp/getslots', {
+          campId: campDetails._id,
+        });
         if (!response.data) {
           throw new Error('Failed to fetch slots');
         }
-        const slotsData = Object.values(response.data).flatMap(slots => slots);
-        setSlots(slotsData);
+        setSlots(response.data);
       } catch (error) {
         console.error('Error fetching slots:', error.message);
       }
@@ -32,74 +35,129 @@ export const BookAppointment = ({campDetails}) => {
       fetchSlots();
     }
   }, [campDetails]);
+
+  const handleDateClick = (date) => {
+    const formattedDate = date.toISOString().split('T')[0];
+    setSelectedDate(formattedDate);
+    console.log(formattedDate);
+    setShowDatesPopup(false);
+  };
+
   const handleSlotClick = (slot) => {
-    if (slot.slotsLeft!=0) {
+    if (slot.slotsLeft !== 0) {
       setSelectedSlot(slot);
       setIsModalOpen(true);
     } else {
       console.log(`Slot ${slot.startTime} - ${slot.endTime} is fully booked`);
+      setUnavailableSlotAlertVisible(true);
     }
   };
 
-  const handleCloseModal = () => {
-    setIsModalOpen(false);
-    if (lastDonationDate !== '') {
-      setBookingSuccess(true);
-      setSelectedSlot(null);
-      setLastDonationDate('');
-    }
-  };
-
-  const handleConfirmBooking = async() => {
+  const handleConfirmBooking = async () => {
     try {
-      console.log(selectedSlot._id)
+      console.log(selectedSlot._id);
       const response = await axios.post('http://localhost:5000/api/donor/book-appointment', {
         campId: campDetails._id,
-        date: campDetails.startDate,
+        date: selectedDate,
         slot: selectedSlot,
-        donorId: userObj._id
+        donorId: userObj._id,
       });
       setBookingSuccess(true);
-      navigate('/receipt', { state: { campDetails, selectedSlot, donorDetails: userObj } });
     } catch (error) {
       console.error('Error booking appointment:', error);
     }
   };
 
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCloseUnavailableSlotAlert = () => {
+    setUnavailableSlotAlertVisible(false);
+  };
+
+  const handleCloseAlert = () => {
+    navigate('/receipt', { state: { campDetails, selectedSlot, donorDetails: userObj } });
+  };
   return (
-    <>
-      <h1 className="text-2xl font-bold text-center">Book Slot</h1>
-      {/* Legend */}
-      <div className="flex justify-center mt-16 m-4">
-        <div className=" inline-block mr-4">
-          <div className="w-4 h-4 bg-green-500 rounded-full inline-block mr-2"></div>
-          <span className="text-sm">Slot Available</span>
-        </div>
-        <div className="inline-block">
-          <div className="w-4 h-4 bg-red-500 rounded-full inline-block mr-2"></div>
-          <span className="text-sm">Slot not Available</span>
-        </div>
-      </div>
-      {/* Grid */}
-      <div className="flex  justify-center">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 grid-rows-3 gap-3">
-          {slots.map((slot, index) => (
-            <div
-              key={index}
-              onClick={() => handleSlotClick(slot)}
-              className={`p-2 border border-gray-300 rounded cursor-pointer ${slot.slotsLeft!=0 ? 'bg-green-400 border-2 border-green-700 hover:bg-green-300' :
-                  'bg-red-400 border-2 border-red-700 hover:bg-red-300'
-                } hover:scale-90 hover:ring-2 hover:ring-green-500 hover:ring-opacity-50`}
-            >
-              <p>{slot.startTime} - {slot.endTime}</p>
+    <div className="container mx-auto p-4">
+      <button
+        onClick={() => setShowDatesPopup(true)} // Show dates popup on button click
+        className="flex justify-center bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-4 mx-auto"
+      >
+        Book Appointment
+      </button>
+
+      {showDatesPopup && ( // Show dates popup only if showDatesPopup is true
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+          <div className="bg-white rounded-lg p-6 max-w-md">
+          <h1 className='text-xl font-semibold mb-2 text-center'>Select Date</h1>
+          <div className={`grid grid-cols-${Object.keys(slots).length > 2 ? 3 : Object.keys(slots).length}`}>
+              {Object.keys(slots).map((dateString, index) => {
+                const date = new Date(dateString);
+                const options = { weekday: 'short', month: 'short', day: 'numeric' };
+                const formattedDate = date.toLocaleDateString('en-US', options);
+                return (
+                  <div
+                  key={index}
+                  onClick={() => handleDateClick(date)}
+                  className={`pt-6 pb-6 p-2 border border-gray-300  cursor-pointer hover:bg-blue-100`}
+                >
+                    <p className="text-center">{formattedDate}</p>
+                  </div>
+                );
+              })}
             </div>
-          ))}
+          </div>
         </div>
-      </div>
-      <PreviousDonationsForm isOpen={isModalOpen} onClose={handleCloseModal} onConfirm={handleConfirmBooking} />
-      {bookingSuccess && (
-        <GenerateSlotReciept campDetails={campDetails} selectedSlot={selectedSlot} donorDetails={userObj} />
       )}
-    </>
+
+      {selectedDate && (
+        <div className="mt-4">
+          <h2 className="text-lg font-bold mb-2">Slots for {selectedDate}</h2>
+          <div className="grid grid-cols-7 gap-2">
+            {slots[selectedDate]?.map((slot, index) => (
+              <div
+                key={index}
+                onClick={() => handleSlotClick(slot)}
+                className={`p-2 border border-gray-300 rounded cursor-pointer ${
+                  slot.slotsLeft !== 0
+                    ? 'bg-green-400 border-2 border-green-700 hover:bg-green-300 hover:ring-green-500 transition delay-100'
+                    : 'bg-red-400 border-2 border-red-700 hover:bg-red-300 hover:ring-red-500 transition delay-100'
+                } hover:scale-90 hover:ring-opacity-50`}
+              >
+                <p>{slot.startTime} - {slot.endTime}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
+      <PreviousDonationsForm isOpen={isModalOpen} onClose={handleCloseModal} onConfirm={handleConfirmBooking} />
+
+      {bookingSuccess && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-8 max-w-md">
+            <p className="text-xl font-semibold mb-4">Booking successful!</p>
+            <p>You will now be redirected to the receipt page.</p>
+            <button onClick={handleCloseAlert} className="mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+
+      {unavailableSlotAlertVisible && (
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-8 max-w-md">
+            <p className="text-xl font-semibold mb-4">Slot not available!</p>
+            <p>Please select another slot.</p>
+            <button onClick={handleCloseUnavailableSlotAlert} className="mt-4 bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">
+              OK
+            </button>
+          </div>
+        </div>
+      )}
+    </div>
   );
 };

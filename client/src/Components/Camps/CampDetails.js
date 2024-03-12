@@ -6,7 +6,6 @@ import MapComponent from '../MapComponent';
 export const CampDetails = () => {
   const locationLoc = useLocation();
   const campDetails = locationLoc.state.camps;
-  console.log(campDetails)
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
@@ -49,16 +48,16 @@ export const CampDetails = () => {
           <p className="mb-5"><span className="font-bold">Timings:</span> {formatTime(campDetails.startTime)} to {formatTime(campDetails.endTime)}</p>
         </div>
       </div>
-      <div className='mr-10 mb-10 ml-10'>
+      {userObj && userObj.userType === 'donor' && <BookAppointment campDetails={campDetails} />}
+      <div className=''>
         <MapComponent
           setMarker={setMarker}
-          setLocationAddress={(address) => console.log(address)} // Placeholder for setLocationAddress function
+          setLocationAddress={(address) => (address)} // Placeholder for setLocationAddress function
           latitude={campDetails.latitude}
           longitude={campDetails.longitude}
           address={campDetails.location}
         />
       </div>
-      {userObj && userObj.userType === 'donor' && <BookAppointment campDetails={campDetails} />}
     </>
   );
 }
