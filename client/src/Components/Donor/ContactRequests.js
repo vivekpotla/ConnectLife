@@ -128,10 +128,10 @@ export default function ContactRequests() {
                   <td className="px-6 py-4 whitespace-nowrap w-[25%] text-center">{request.recipient.bloodGroup}</td>
                   <td className="px-6 py-4 whitespace-nowrap w-[25%] text-center">{canDonate(request.bloodGroup) ? 'Yes' : 'No'}</td>
                   <td className="px-6 py-4 whitespace-nowrap flex text-center justify-center">
-                    <button onClick={() => handleApprove(request.id, request.recipientName)} className="text-green-500 hover:text-green-700 focus:outline-none" title="Approve">
+                    <button onClick={() => handleApprove(request.id, request.recipient.name)} className="text-green-500 hover:text-green-700 focus:outline-none" title="Approve">
                       <FontAwesomeIcon icon={faCheckCircle} className="text-2xl"/>
                     </button>
-                    <button onClick={() => handleReject(request.id, request.recipientName)} className="text-red-500 hover:text-red-700 focus:outline-none ml-2" title="Reject">
+                    <button onClick={() => handleReject(request.id, request.recipient.name)} className="text-red-500 hover:text-red-700 focus:outline-none ml-2" title="Reject">
                       <FontAwesomeIcon icon={faTimesCircle} className="text-2xl"/>
                     </button>
                   </td>
