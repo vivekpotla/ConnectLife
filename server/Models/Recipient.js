@@ -66,7 +66,8 @@ const recipientSchema = new Schema({
     },
     coordinates: {
       type: [Number],
-      required: true
+      required: true,
+      default:[0,0]
     }
   }
 });
