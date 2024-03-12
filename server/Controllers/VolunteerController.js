@@ -42,7 +42,7 @@ export const registerVolunteer = async (req, res) => {
     // hash the password
     const hashedPassword = bcrypt.hashSync(password);
 
-    const volunteer = new Volunteer({
+    const volunteer = await Volunteer.create({
       name,
       email,
       password: hashedPassword,

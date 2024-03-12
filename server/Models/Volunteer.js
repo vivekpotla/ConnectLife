@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const { Schema, model } = mongoose;
+const { Schema } = mongoose;
 
 const volunteerSchema = new Schema({
   name: { type: String, required: true },
@@ -31,6 +31,5 @@ const volunteerSchema = new Schema({
   campsParticipated: [{ type: Schema.Types.ObjectId, ref: 'Camp' }]
 });
 
-const Volunteer = model('Volunteer', volunteerSchema);
-
-export default Volunteer;
+volunteerSchema.index({ livelocation: '2dsphere' });
+export default mongoose.model('Volunteer', volunteerSchema);;
