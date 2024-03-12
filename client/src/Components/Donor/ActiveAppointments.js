@@ -21,7 +21,6 @@ export default function ActiveAppointments() {
         const donorId = user._id;
         const response = await axios.get(`http://localhost:5000/api/donor/appointments/${donorId}`);
         const { notDonatedAppointments, donatedAppointments } = response.data;
-        
         setActiveAppointments(notDonatedAppointments || []);
         setPreviousAppointments(donatedAppointments || []);
         setLoading(false);

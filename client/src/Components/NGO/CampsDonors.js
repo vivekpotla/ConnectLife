@@ -43,7 +43,7 @@ export const CampsDonors = ({ show, handleClose, donors }) => {
                   <tr key={index}>
                     <td className="px-6 py-4 whitespace-nowrap text-center">{donor.name}</td>
                     <td className="px-6 py-4 whitespace-nowrap text-center">{donor.bloodGroup}</td>
-                    <td className="px-6 py-4 whitespace-nowrap text-center">{donor.unitsDonated}</td>
+                    <td className="px-6 py-4 whitespace-nowrap text-center">{donor.quantity}</td>
                   </tr>
                 ))}
               </tbody>

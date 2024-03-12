@@ -5,6 +5,13 @@ import { CampsBloodUnits } from './CampsBloodUnits';
 import axios from 'axios';
 
 export const PreviousCamps = () => {
+  
+  const [campsData, setCampsData] = useState([]);
+  const [showDonorsModal, setShowDonorsModal] = useState(false);
+  const [showBloodUnitsModal, setShowBloodUnitsModal] = useState(false);
+  const [selectedCampDonors, setSelectedCampDonors] = useState([]);
+  const [selectedCampBloodUnits, setSelectedCampBloodUnits] = useState([]);
+
   useEffect(() => {  
     const fetchCampsData = async () => {
       try {
@@ -18,16 +25,10 @@ export const PreviousCamps = () => {
     };
     fetchCampsData();
   }, []);
-
-  const [campsData, setCampsData] = useState([]);
-  const [showDonorsModal, setShowDonorsModal] = useState(false);
-  const [showBloodUnitsModal, setShowBloodUnitsModal] = useState(false);
-  const [selectedCampDonors, setSelectedCampDonors] = useState([]);
-  const [selectedCampBloodUnits, setSelectedCampBloodUnits] = useState([]);
-
   const handleViewDonors = async (campId) => {
     try {
       const response = await axios.post("http://localhost:5000/api/ngo/get-donors-in-camp", {campId});
+      console.log(response)
       if (response.status === 200) {
         setSelectedCampDonors(response.data.donated); // assuming the response has 'donated' field for donors who donated
         setShowDonorsModal(true);
@@ -36,7 +37,7 @@ export const PreviousCamps = () => {
       console.error('Error fetching donors:', error);
     }
   };
-
+  console.log(selectedCampDonors)
   const handleViewBloodUnits =  async (campId) => {
     try {
       const response = await axios.post("http://localhost:5000/api/ngo/get-donors-in-camp", {campId});
@@ -53,10 +54,10 @@ export const PreviousCamps = () => {
     setShowDonorsModal(false);
     setShowBloodUnitsModal(false);
   };
-
   return (
     <div className="container mx-auto py-8">
-      <h1 className="text-3xl font-bold mb-4 text-center">Previous Camps</h1>
+    <h1 className="text-3xl font-bold mb-4 text-center">Previous Camps</h1>
+    {campsData ? ( // Check if campsData is not null
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
         {campsData
           .filter(camp => isBefore(new Date(camp.endDate), new Date()) && isBefore(new Date(camp.startDate), new Date())) // Filter camps with endDate after today
@@ -75,8 +76,11 @@ export const PreviousCamps = () => {
             </div>
           ))}
       </div>
-      <CampsDonors show={showDonorsModal} handleClose={handleCloseModal} donors={selectedCampDonors} />
-      <CampsBloodUnits show={showBloodUnitsModal} handleClose={handleCloseModal} donors={selectedCampBloodUnits} />
-    </div>
-  );
-};
+    ) : (
+      <div>Loading...</div>
+    )}
+    <CampsDonors show={showDonorsModal} handleClose={handleCloseModal} donors={selectedCampDonors} />
+    <CampsBloodUnits show={showBloodUnitsModal} handleClose={handleCloseModal} donors={selectedCampBloodUnits} />
+  </div>
+);
+}
