@@ -46,10 +46,25 @@ export const CampDetails = () => {
           <p className="mb-5"><span className="font-bold">Start Date:</span> {formatDate(campDetails.startDate)}</p>
           <p className="mb-5"><span className="font-bold">End Date:</span> {formatDate(campDetails.endDate)}</p>
           <p className="mb-5"><span className="font-bold">Timings:</span> {formatTime(campDetails.startTime)} to {formatTime(campDetails.endTime)}</p>
+          <div>
+            {/* NGO Information to be imporvised +++++++++++++++++++++++++++++++++++ */}
+            <div>Organized by {campDetails.ngo.name}</div>
+            <img src={campDetails.ngo.imageURL} className='object-cover h-20 w-20'/>
+            <div>mail: {campDetails.ngo.email}</div>
+            <div>NGO cell: +91 {campDetails.ngo.phoneNumber}</div>
+            {/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
+          </div>
         </div>
       </div>
       {userObj && userObj.userType === 'donor' && <BookAppointment campDetails={campDetails} />}
       <div className=''>
+
+        {/* Create a button which redirects to google maps to get directions to that location */}
+        <p className='text-center'>Navigate in maps : {campDetails.geolocation.coordinates[0]},{campDetails.geolocation.coordinates[1]} </p>
+        {/* window.open("https://maps.google.com?q="+your_lat+","+your_lng ); */}
+
+
+
         <MapComponent
           setMarker={setMarker}
           setLocationAddress={(address) => (address)} // Placeholder for setLocationAddress function

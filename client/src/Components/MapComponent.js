@@ -67,7 +67,7 @@ const MapComponent = ({ setLocationAddress, setMarker,address }) => {
     }, []);
 
     return (
-        <div id="map" style={{ height: "72vh", borderRadius: "10px" }} className='w-full' />
+        <div id="map" style={{ height: "72vh", borderRadius: "10px"  , width:"75%", marginBottom:"60px"}} className='w-50 mx-auto' />
     );
 };
 

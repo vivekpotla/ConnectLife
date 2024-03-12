@@ -79,7 +79,7 @@ function App() {
   )
 
   return (
-    <BrowserRouter>
+  
       <div className="h-dvh overflow-hidden">
         <Header />
         <div className='h-dvh overflow-scroll pb-10'>
@@ -101,9 +101,10 @@ function App() {
         <div className="fixed bottom-0 right-[-10px]">
           <ChatBot />
         </div>
+        {userObj && userObj.userType!='ngo' && <LocationUpdater/>}
       </div>
-      {userObj && <LocationUpdater/>}
-    </BrowserRouter>
+     
+   
   );
 }
 

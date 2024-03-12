@@ -4,7 +4,6 @@ import { Button } from '@material-tailwind/react'
 import { MapPinIcon } from '@heroicons/react/24/solid'
 
 export default function CampCard({ camps }) {
-
   const startDate = new Date(camps.startDate);
   const endDate = new Date(camps.endDate);
   return (
@@ -18,6 +17,13 @@ export default function CampCard({ camps }) {
           <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{camps.name}</h5>
         </div>
         <div className='text-gray-600'>{camps.description}</div>
+
+        {/* NGO Information to be imporvised +++++++++++++++++++++++++++++++++++ */}
+        <div>Organized by {camps.ngo.name}</div>
+        <img src={camps.ngo.imageURL} />
+        <div>mail: {camps.ngo.email}</div>
+        <div>NGO cell: +91 {camps.ngo.phoneNumber}</div>
+ {/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
         <div className="flex items-start gap-2 py-3">
           <div>
             <MapPinIcon className="w-5 text-blue-gray-500 mt-0.5 fill-red-300" />
