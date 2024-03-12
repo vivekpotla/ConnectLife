@@ -21,7 +21,7 @@ const NGORegistration = () => {
             .oneOf([Yup.ref("password")], "Passwords must match"), // use Yup.ref to refer to the password field value
         phoneNumber: Yup.string()
             .required("Phone number is required")
-            .max(10, "Phone number must be 10 digits long"),
+            .matches(/^\d{10}$/, "Phone number must be 10 digits"),
         description: Yup.string().required("Description is required"),
         address: Yup.object().shape({
             street: Yup.string().required("Street is required"),

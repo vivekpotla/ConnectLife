@@ -77,6 +77,7 @@ function App() {
       <Route path='/recipientfaqs' element={<RecipientFaqs />} />
       <Route path='/searchdonors' element={<SearchDonors />} />
       <Route path='/viewrequests' element={<ViewRequests />} />
+      <Route path='/bloodbanks' element={<BloodBanks/>}/>
     </>
   )
 
@@ -91,7 +92,6 @@ function App() {
             <Route path='/campdetails' element={<CampDetails />} />
             <Route path='/activeappointments' element={<ActiveAppoinments />} />
             <Route path='/editprofile' element={<EditProfile />} />
-            <Route path='/bloodbanks' element={<BloodBanks/>}/>
             <Route path='/createcamps' element={<CreateCamps/>}/>
             {!isLoggedIn && AuthRoutes}
             {userObj?.userType === "ngo" && NgoRoutes}
