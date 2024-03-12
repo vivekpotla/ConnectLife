@@ -10,7 +10,6 @@ export const JoinCamp = ({ campDetails }) => {
     // Check if the volunteer has already joined the camp whenever campDetails changes
     if (userObj && userObj.userType === 'volunteer') {
       const joined = campDetails.volunteers.some(volunteer => volunteer === userObj._id);
-      console.log(joined)
       setIsJoined(joined);
     }
   }, [campDetails, userObj]);

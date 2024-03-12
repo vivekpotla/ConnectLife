@@ -1,47 +1,28 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const SlotDetails = ({ isOpen, onClose, slots }) => {
   const navigate = useNavigate();
-
-  const handleSlotClick = () => {
+  const [selectedDate, setSelectedDate] = useState(null);
+  console.log(slots)
+  const handleSlotClick = (slot) => {
     // Here you can fetch donor details based on the slot and navigate to another page
     // For now, I'll keep it static
-    const donorDetails =[ {
-      name: 'John Doe',
-      bloodGroup: 'O+',
-      status: 'Pending',
-      unitsDonated: 0,
+    const donorDetails = slot.donors.map(donor => ({
+      name: donor.name,
+      bloodGroup: donor.bloodGroup,
+      status: donor.status,
+      unitsDonated: donor.unitsDonated,
       // Add other donor details if needed
-    },
-    {
-      name: 'John Doe',
-      bloodGroup: 'O+',
-      status: 'Pending',
-      unitsDonated: 0,
-      // Add other donor details if needed
-    },
-    {
-      name: 'John Doe',
-      bloodGroup: 'O+',
-      status: 'Pending',
-      unitsDonated: 0,
-      // Add other donor details if needed
-    },
-    {
-      name: 'John Doe',
-      bloodGroup: 'O+',
-      status: 'Pending',
-      unitsDonated: 0,
-      // Add other donor details if needed
-    }
-  ]
-    console.log(donorDetails)
+    }));
     // Navigate to the donor details page
     navigate("/volunteer/donordetails", { state: { donorDetails } });
-     // Close the modal after navigating
-     onClose();
+    // Close the modal after navigating
+    onClose();
+  };
 
+  const handleDateClick = (date) => {
+    setSelectedDate(date);
   };
 
   return (
@@ -55,10 +36,29 @@ const SlotDetails = ({ isOpen, onClose, slots }) => {
             </svg>
           </button>
           <div className="text-lg font-bold mb-2">Camp Slots</div>
-          <div className="grid grid-cols-3 gap-4">
-            {slots.map((slot, index) => (
-              <div key={index} className="p-4 border border-gray-200 rounded-md cursor-pointer" onClick={handleSlotClick}>
-                {slot}
+          {/* Render date selection */}
+          <div className="flex justify-center">
+            {Object.keys(slots).map(dateString => (
+              <button
+                key={dateString}
+                className={`mx-2 py-2 px-4 rounded ${
+                  selectedDate === dateString ? 'bg-blue-500 text-white' : 'border text-gray-700'
+                }`}
+                onClick={() => handleDateClick(dateString)}
+              >
+                {dateString}
+              </button>
+            ))}
+          </div>
+          {/* Render slots for selected date */}
+          <div className="grid grid-cols-3 gap-2 mt-4">
+            {selectedDate && slots[selectedDate]?.map((slot, index) => (
+              <div
+                key={index}
+                className="p-4 border border-gray-200 rounded-md cursor-pointer text-center"
+                onClick={() => handleSlotClick(slot)}
+              >
+                {`${slot.startTime}-${slot.endTime}`} {/* Render slot time range */}
               </div>
             ))}
           </div>
