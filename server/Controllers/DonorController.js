@@ -433,7 +433,7 @@ export const updateLiveLocation=async(req,res)=>{
       default:
         return res.status(400).json({ message: 'Invalid user type' });
     }
-
+ 
     const user = await modelToUpdate.findByIdAndUpdate(userId, { livelocation: { latitude, longitude } });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });

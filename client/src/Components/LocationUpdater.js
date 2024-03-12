@@ -29,7 +29,7 @@ const LocationUpdater = () => {
       }
     };
     updateLocation();
-    const interval = setInterval(updateLocation,5*1000); //milli sec
+    const interval = setInterval(updateLocation,60*1000); //milli sec
 
     // Clean up function to clear the interval when component unmounts
     return () => clearInterval(interval);
