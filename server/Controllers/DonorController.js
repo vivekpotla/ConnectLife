@@ -109,7 +109,7 @@ export const getDonorAppointments = async (req, res) => {
     const donorId = req.params.donorId;
 
     // Find all appointments for the donor and populate camp details
-    const appointments = await Appointment.find({ donor: donorId }).populate('camp', 'name location');
+    const appointments = await Appointment.find({ donor: donorId }).populate('camp', 'name location').populate('slot', 'date startTime endTime');
 
     // Separate appointments based on donated status
     const donatedAppointments = appointments.filter(appointment => appointment.donated);
@@ -438,7 +438,12 @@ export const updateLiveLocation=async(req,res)=>{
         return res.status(400).json({ message: 'Invalid user type' });
     }
 
-    const user = await modelToUpdate.findByIdAndUpdate(userId, { livelocation: { latitude, longitude } });
+    const user = await modelToUpdate.findByIdAndUpdate(userId, {
+      livelocation: {
+        type: 'Point',
+        coordinates: [longitude, latitude] // Assuming longitude comes before latitude
+      }
+    });
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
