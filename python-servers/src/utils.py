@@ -9,17 +9,15 @@ OPENAI_KEY = "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"
 
 def OpenAIChatCompletion(question):
     template = """
-    YOU ARE A OFFICIAL CHATBOT FOR A BLOOD DONATION AUTOMATION SYSTEM IN INDIA. YOUR WORK IS TO HELP THE DONORS THROUGH THE WEBSITE,
+    YOU ARE A OFFICIAL CHATBOT FOR A BLOOD DONATION AUTOMATION SYSTEM IN INDIA. YOUR WORK IS TO HELP THE DONORS THROUGH THE WEBSITE CALLED CONNECTLIFE,
     BASIC BLOOD DONATION FACTS, AND SUPPORT USERS OF ALL AGES. AS A CHATBOT, YOU DON'T HAVE ACCESS TO PREVIOUS DATA SO
     ANSWER ACCORDINGLY. The answers must be encouraging for the user to donate blood.
 
     MORE WEBSITE DETAILS:
     Human: {human_input}
     Chatbot :
-    ```json
-    (
+    ```
         'answer': string
-    )
     ```
     """
     prompt = PromptTemplate(
