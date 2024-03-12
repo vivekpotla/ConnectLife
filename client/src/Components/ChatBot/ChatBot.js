@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import {
     Button,
     SpeedDial,
@@ -7,15 +7,20 @@ import {
     SpeedDialAction,
     Drawer,
     Typography,
-    IconButton
+    IconButton,
+    Input,
+    Spinner
 } from "@material-tailwind/react";
 import {
     HomeIcon,
     CogIcon,
-    LockClosedIcon
+    LockClosedIcon,
+    XMarkIcon
 } from "@heroicons/react/24/outline";
 import Lottie from "lottie-react";
 import Bot from '../../Icons/Animation - 1709051490247.json';
+import { PaperAirplaneIcon } from '@heroicons/react/24/solid';
+import axios from 'axios';
 
 const ChatBot = () => {
 
@@ -25,6 +30,43 @@ const ChatBot = () => {
     const closeDrawerRight = () => setOpenRight(false);
 
     const [closeSpeedDial, setCloseSpeedDial] = useState(false);
+
+    const [quest, setQuest] = useState("");
+
+    const [chat, setChat] = useState([]);
+    const listRef = useRef(null);
+
+    useEffect(() => {
+        if (listRef.current) {
+            listRef.current.scrollTop = listRef.current.scrollHeight;
+        }
+    }, [chat]);
+
+
+    const handleSendQuestion = async () => {
+        const newQuestion = quest.trim();
+        if (newQuestion) {
+            const newChat = [...chat, { question: newQuestion, answer: "" }];
+            setChat(newChat);
+            try {
+                setQuest("");
+                await axios.get(`http://localhost:4000/chatbot?question=${encodeURIComponent(newQuestion)}`).then((response) => {
+                    console.log(response.data);
+                    const res = response.data;
+                    const newAnswer = res || "Sorry, I couldn't find an answer.";
+                    const updatedChat = [...newChat];
+                    updatedChat[newChat.length - 1].answer = newAnswer;
+                    setChat(updatedChat);
+                    setQuest("");
+                }).catch((error) => {
+                    console.log(error);
+                });
+
+            } catch (error) {
+                console.error("Error fetching chatbot response:", error);
+            }
+        }
+    };
 
     return (
         <div>
@@ -57,43 +99,72 @@ const ChatBot = () => {
                 placement="right"
                 open={openRight}
                 onClose={closeDrawerRight}
-                className="p-4"
+                className="p-4 bg-gray-50"
+                size={400}
             >
                 <div className="mb-6 flex items-center justify-between">
                     <Typography variant="h5" color="blue-gray">
-                        Material Tailwind
+                        ConnectLife Helper
                     </Typography>
                     <IconButton
                         variant="text"
                         color="blue-gray"
                         onClick={closeDrawerRight}
                     >
-                        <svg
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="none"
-                            viewBox="0 0 24 24"
-                            strokeWidth={2}
-                            stroke="currentColor"
-                            className="h-5 w-5"
-                        >
-                            <path
-                                strokeLinecap="round"
-                                strokeLinejoin="round"
-                                d="M6 18L18 6M6 6l12 12"
-                            />
-                        </svg>
+                        <XMarkIcon className="h-5 w-5" />
                     </IconButton>
                 </div>
-                <Typography color="gray" className="mb-8 pr-4 font-normal">
-                    Material Tailwind features multiple React and HTML components, all
-                    written with Tailwind CSS classes and Material Design guidelines.
-                </Typography>
-                <div className="flex gap-2">
-                    <Button size="sm" variant="outlined">
-                        Documentation
-                    </Button>
-                    <Button size="sm">Get Started</Button>
+
+                <div className="mb-4 px-1 font-normal h-[80%] overflow-auto text-sm" ref={listRef}>
+                    <div className='bg-blue-gray-100 place-self-start px-2 py-1.5 max-w-[16vw] rounded-xl rounded-tl-sm'>
+                        Hello, How can I help you?
+                    </div>
+                    {chat.map((val, index) => (
+                        <div key={index} className='flex flex-col gap-2 py-4 border-b'>
+                            <div className='bg-green-100 place-self-end px-2 py-1.5 ml-5 rounded-xl rounded-tr-sm'>
+                                <div className='font-semibold text-gray-700 text-xs'>You :</div>
+                                <div className='pl-1'>
+                                    {val.question}
+                                </div>
+                            </div>
+                            <div className='bg-blue-gray-100 place-self-start px-2 py-1.5 mr-5 rounded-xl rounded-tl-sm'>
+                                <div className='font-semibold text-gray-700 text-xs'>Bot :</div>
+                                {val.answer ?
+                                    <div className='pl-1'>
+                                        {val.answer}
+                                    </div> :
+                                    <div className='place-items-center px-5 py-1.5'>
+                                        <Spinner color='gray' className='h-4 w-4' />
+                                    </div>
+                                }
+                            </div>
+                        </div>
+                    ))}
                 </div>
+
+                <div className="relative">
+                    <Input
+                        type="text"
+                        placeholder="Type Anything"
+                        value={quest}
+                        onChange={(e) => setQuest(e.target.value)}
+                        className="!border pr-14 !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-2 ring-transparent focus:ring-gray-900/10"
+                        labelProps={{
+                            className: "hidden",
+                        }}
+                        containerProps={{ className: "w-full" }}
+                        autoFocus={true}
+                    />
+                    <Button
+                        size="sm"
+                        disabled={!quest}
+                        onClick={handleSendQuestion}
+                        className="!absolute right-1 top-1 rounded bg-red-900 px-3 py-1.5"
+                    >
+                        <PaperAirplaneIcon className='h-5 w-5' />
+                    </Button>
+                </div>
+
             </Drawer>
         </div>
     )
