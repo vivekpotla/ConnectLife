@@ -6,9 +6,7 @@ from tqdm import tqdm
 from dotenv import load_dotenv
 import os
 
-load_dotenv()
-
-OPENAI_KEY = os.getenv("API_KEY")
+OPENAI_KEY = ""
 
 
 def OpenAIChatCompletion(question):
