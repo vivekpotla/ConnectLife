@@ -163,15 +163,12 @@ export const createBloodDonationCamp = async (req, res) => {
       currentDate.setDate(currentDate.getDate() + i);
 
       const startHour = parseInt(startTime.split(':')[0]);
-      console.log("Start ", startHour)
       const endHour = parseInt(endTime.split(':')[0]);
-      console.log("End ", endHour)
       for (let j = startHour; j < endHour; j++) {
         const slotStartTime = `${j}:00`;
         const slotEndTime = `${j + 1}:00`;
 
         for (let k = 0; k < 1; k++) {
-          console.log("Slot created")
           await Slot.create({
             camp: newCamp._id,
             date: currentDate,
