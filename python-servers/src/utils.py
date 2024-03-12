@@ -3,8 +3,12 @@ from langchain_community.chat_models import ChatOpenAI
 from langchain_openai import OpenAI
 from langchain import LLMChain
 from tqdm import tqdm
+from dotenv import load_dotenv
+import os
 
-OPENAI_KEY = "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"
+load_dotenv()
+
+OPENAI_KEY = os.getenv("API_KEY")
 
 
 def OpenAIChatCompletion(question):
