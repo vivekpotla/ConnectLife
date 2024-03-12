@@ -5,11 +5,11 @@ const SearchDonors = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [requestedDonor, setRequestedDonor] = useState("");
   const [nearestDonors, setNearestDonors] = useState([]);
-  const [donorData,setDonorData]=useState('');
   const [recipientData,setRecipientData]=useState({})
   const [userLatitude,setUserLatitude]= useState(0)
   const [userLongitude,setUserLongitude]= useState(0)
   const [errorMsg, setErrorMsg] =useState("")
+  const [requestedDonorName, setRequestedDonorName] = useState('');
 
 
   //getting browser location
@@ -84,35 +84,33 @@ const SearchDonors = () => {
   };
 
   const handleRequestBlood = (donor) => {
-  setRequestedDonor(donor);
-  console.log(donor)
-  axios.post('http://localhost:5000/api/recipient/create-request', {donorId:donor._id, recipientId:recipientData._id })
-    .then(response => {
-      if(response.status==201){
-      console.log('Request sent successfully', response.data);
-       setTimeout (() => {
-          setRequestedDonor("");
-        }, 5000);
-    }
-    else if(response.status==200){
-      console.log('Request already sent bro');
-      setErrorMsg("error")
-      setTimeout (() => {
-        setErrorMsg("");
-      }, 5000);
-    }
-    })
-    .catch(error => {
-      console.error('Error sending request:', error);
-     
-    })
-  }
-
-
+    axios.post('http://localhost:5000/api/recipient/create-request', { donorId: donor._id, recipientId: recipientData._id })
+      .then(response => {
+        if (response.status === 201) {
+          console.log('Request sent successfully', response.data);
+          setRequestedDonor(donor); // Update requestedDonor state only after successful request
+          setRequestedDonorName(donor.name);
+          setTimeout(() => {
+            setRequestedDonor(null); // Clear requestedDonor state after 5 seconds
+          }, 5000);
+        } else if (response.status === 200) {
+          console.log('Request already sent bro');
+          setRequestedDonorName(donor.name);
+          setErrorMsg("error");
+          setTimeout(() => {
+            setErrorMsg(null); // Clear errorMsg state after 5 seconds
+          }, 5000);
+        }
+      })
+      .catch(error => {
+        console.error('Error sending request:', error);
+      });
+  };
 
   const filteredDonors = nearestDonors.filter(donor =>
     donor.bloodGroup.toLowerCase().includes(searchQuery.toLowerCase())
   );
+  const alertDonorName=requestedDonor;
 
   return (
     <div className="m-10">
@@ -166,28 +164,16 @@ const SearchDonors = () => {
         </tbody>
       </table>
       }
-      {requestedDonor!=="" && errorMsg==="" && (
+{requestedDonor && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mt-5 p-3 text-center w-75" role="alert">
           <strong className="font-bold">Request sent!</strong>
-          <span className="block sm:inline"> Your request has been sent to <strong className="font-bold">{requestedDonor.name}</strong>. Check your request status in MyRequests Page</span>
-          <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => setRequestedDonor("")}>
-            <svg className="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <title>Close</title>
-              <path fillRule="evenodd" d="M14.348 14.849a1 1 0 0 1-1.414 0L10 11.414l-2.93 2.435a1 1 0 1 1-1.236-1.562L8.768 10 5.835 7.07a1 1 0 0 1 1.236-1.562L10 8.586l2.93-2.436a1 1 0 1 1 1.236 1.562L11.232 10l2.116 2.849a1 1 0 0 1 0 1.414z" clipRule="evenodd"/>
-            </svg>
-          </span>
+          <span className="block sm:inline"> Your request has been sent to <strong className="font-bold">{requestedDonorName}</strong>. Check your request status in MyRequests Page</span>
         </div>
       )}
-        {requestedDonor!=="" && errorMsg!=="" && (
+      {errorMsg && (
         <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mt-5 p-3 text-center w-75" role="alert">
           <strong className="font-bold">Request already sent!</strong>
-          <span className="block sm:inline"> Your request has already been sent to <strong className="font-bold">{requestedDonor.name}</strong>. Check your request status in MyRequests Page</span>
-          <span className="absolute top-0 bottom-0 right-0 px-4 py-3" onClick={() => setRequestedDonor("")}>
-            <svg className="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
-              <title>Close</title>
-              <path fillRule="evenodd" d="M14.348 14.849a1 1 0 0 1-1.414 0L10 11.414l-2.93 2.435a1 1 0 1 1-1.236-1.562L8.768 10 5.835 7.07a1 1 0 0 1 1.236-1.562L10 8.586l2.93-2.436a1 1 0 1 1 1.236 1.562L11.232 10l2.116 2.849a1 1 0 0 1 0 1.414z" clipRule="evenodd"/>
-            </svg>
-          </span>
+          <span className="block sm:inline"> Your request has already been sent to <strong className="font-bold">{requestedDonorName}</strong>. Check your request status in MyRequests Page</span>
         </div>
       )}
     </div>

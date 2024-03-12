@@ -37,7 +37,6 @@ export const PreviousCamps = () => {
       console.error('Error fetching donors:', error);
     }
   };
-  console.log(selectedCampDonors)
   const handleViewBloodUnits =  async (campId) => {
     try {
       const response = await axios.post("http://localhost:5000/api/ngo/get-donors-in-camp", {campId});

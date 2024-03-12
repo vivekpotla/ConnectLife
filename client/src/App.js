@@ -28,6 +28,7 @@ import BloodDonationProcess from './Components/InformationPages/BloodDonationPro
 import BloodProcessing from './Components/InformationPages/BloodProcessing.js';
 import { CreateCamps } from './Components/Camps/CreateCamps.js';
 import LocationUpdater from './Components/LocationUpdater.js';
+import ViewRequests from './Components/Recipient/ViewRequests.js';
 
 function App() {
 
@@ -75,6 +76,7 @@ function App() {
     <>
       <Route path='/recipientfaqs' element={<RecipientFaqs />} />
       <Route path='/searchdonors' element={<SearchDonors />} />
+      <Route path='/viewrequests' element={<ViewRequests />} />
     </>
   )
 

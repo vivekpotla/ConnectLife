@@ -22,11 +22,12 @@ import {
     LifebuoyIcon,
     PowerIcon,
     RocketLaunchIcon,
+    MagnifyingGlassIcon,
     Bars2Icon,
     HomeIcon,
     BuildingStorefrontIcon,
     PlusCircleIcon,
-    MagnifyingGlassIcon
+    EyeIcon
 } from "@heroicons/react/24/solid";
 import { ConnectlifeIcon } from "../Icons/ConnectlifeIcon";
 import { DonateBloodIcon } from "../Icons/DonateBloodIcon";
@@ -289,7 +290,13 @@ const navListItems = [
         label: "Search Donors",
         icon: MagnifyingGlassIcon,
         link: "/searchdonors",
-        users: [  "recipient", "all"]
+        users: [  "recipient"]
+    },
+    {
+        label: "View Requests",
+        icon: EyeIcon,
+        link: "/viewrequests",
+        users: [  "recipient",]
     },
     {
         label: "My Camps",
