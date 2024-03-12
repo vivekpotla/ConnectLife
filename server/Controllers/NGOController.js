@@ -528,35 +528,16 @@ export const editOrDeletePost = async (req, res) => {
     if (type === 'edit') {
       const { title, description } = req.body;
 
-      let newImageURL = null;
-      let path = req.files.image.path
-      const timestamp = Date.now(); // Get current timestamp
-      const public_id = `posts/${req.body.ngoId}_${timestamp}`;
-      await cloudinary.uploader.upload(path, {
-        public_id: public_id,
-        width: 500,
-        height: 300
-      })
-        .then((result) => {
-          newImageURL = result.secure_url;
-          console.log(newImageURL)
-        })
-        .catch((error) => {
-          console.log("image upload error")
-          console.error(error);
-        });
-      console.log("NOW", newImageURL)
-
-
       const updatedPost = await AwarenessPost.findOneAndUpdate(
         { _id: postId, authorNGO: req.body.ngoId },
-        { title, description, imageURL: newImageURL },
+        { title, description },
         { new: true }
       );
 
       if (!updatedPost) {
         return res.status(404).json({ message: 'Post not found or you are not authorized to edit it' });
       }
+
       console.log("successful", updatedPost);
       return res.status(200).json(updatedPost);
     } else if (type === 'delete') {

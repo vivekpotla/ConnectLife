@@ -80,7 +80,7 @@ export const loginRecipient = async (req, res) => {
 export const findNearestDonors = async (req, res) => {
   try {
     const { recipientLatitude, recipientLongitude, bloodType } = req.body;
-
+    console.log("Request Body:", req.body);
     // Find the nearest donors within a specified radius (e.g., 10 kilometers)
     const nearestDonors = await Donor.find({
       livelocation: {
@@ -94,12 +94,14 @@ export const findNearestDonors = async (req, res) => {
       },
       bloodType
     });
+    console.log("Nearest Donors:", nearestDonors);
     res.status(200).json(nearestDonors);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 // Create a new request from recipient to donor
 export const createRequest = async (req, res) => {

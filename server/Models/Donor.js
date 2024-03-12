@@ -68,4 +68,7 @@ const donorSchema = new Schema({
   }]
 });
 
+// Create 2dsphere index on livelocation field
+donorSchema.index({ livelocation: '2dsphere' });
+
 export default mongoose.model('Donor', donorSchema);

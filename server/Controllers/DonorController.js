@@ -124,19 +124,20 @@ export const getDonorAppointments = async (req, res) => {
 //book appointment slot
 export const bookAppointment = async (req, res) => {
   try {
-
     const { campId, date, slot, donorId } = req.body;
-    let donor = Donor.find({ _id: donorId })
+    
+    // Find the donor by ID
+    const donor = await Donor.findById(donorId);
+    if (!donor) {
+      return res.status(404).json({ message: 'Donor not found' });
+    }
+
     // Check if the slot is available
     const { isSlotAvailable, slotId } = await isSlotAvailableForDate(campId, date, slot);
     if (!isSlotAvailable) {
       return res.status(400).json({ message: 'Slot is not available' });
     }
 
-
-    console.log("slotID", slotId.toString())
-    console.log("DonorID", donorId)
-    console.log("camp", campId)
     // Create appointment
     const appointment = await Appointment.create({
       donor: donorId,
@@ -145,13 +146,16 @@ export const bookAppointment = async (req, res) => {
       slot: slotId.toString(),
       bloodGroup: donor.bloodGroup
     });
+
     // Decrement slotsLeft for the booked slot
     await Slot.findOneAndUpdate(
       { camp: campId, date: new Date(date), startTime: slot.startTime, endTime: slot.endTime },
-      { $inc: { slotsLeft: -1 }, $push: { donors: donorId } } // Decrement slotsLeft by 1
-
+      { $inc: { slotsLeft: -1 }, $push: { donors: donorId } }
     );
+
+    // Update donor's previousAppointments
     await Donor.findByIdAndUpdate(donorId, { $push: { previousAppointments: appointment._id } });
+
     res.json(appointment);
   } catch (err) {
     console.error(err);
@@ -237,32 +241,38 @@ export const getAllSlotsForCamp = async (req, res) => {
 
 
 
-async function isSlotAvailableForDate(campId, date, slot) {
+async function isSlotAvailableForDate(campId, formattedDate, slot) {
   try {
+    console.log("Query Parameters:", {
+      camp: campId,
+      date: formattedDate,
+      startTime: slot.startTime,
+      endTime: slot.endTime
+    });
     // Find the camp
-    console.log(slot)
     const camp = await Camp.findById(campId);
     if (!camp) {
-      console.log("camp ledhu")
       return { isSlotAvailable: false, slotId: null };
     }
 
     // Check if the slot is within the camp's operational hours
     const { startTime, endTime } = camp;
     if (slot.startTime < startTime || slot.endTime > endTime) {
-      console.log("false")
+      console.log("not proper hrs")
       return { isSlotAvailable: false, slotId: null };
     }
-    let dt = new Date(date);
+
     // Find the slot for the given date and time
     const slotInfo = await Slot.findOne({
       camp: campId,
-      date: dt,
+      date: formattedDate,
       startTime: slot.startTime,
       endTime: slot.endTime
     });
+    console.log("Slot Query Result:", slotInfo);
+
     if (!slotInfo) {
-      console.log("slot eh ledhu")
+      console.log("no slots found")
       return { isSlotAvailable: false, slotId: null }; // Slot not found for the given date and time
     }
 
@@ -270,7 +280,7 @@ async function isSlotAvailableForDate(campId, date, slot) {
     if (slotInfo.slotsLeft > 0) {
       return { isSlotAvailable: true, slotId: slotInfo._id }; // Slot is available
     } else {
-      console.log("slot full")
+      console.log("no slots left")
       return { isSlotAvailable: false, slotId: null }; // No available slots left
     }
   } catch (error) {
@@ -335,11 +345,10 @@ export const addCommentToPost = async (req, res) => {
 //viewing recipient requests for blood
 export const viewRequests = async (req, res) => {
   try {
-    // console.log(req.body._id)
-    const donorId = req.body._id;
-    console.log(donorId)
+    const donorId = req.body.donorId;
     const requests = await RequestDetails.find({ donor: donorId }).populate('recipient', 'name phoneNumber').exec();
     res.status(200).json(requests);
+    console.log(requests)
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

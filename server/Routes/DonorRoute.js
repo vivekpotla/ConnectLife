@@ -30,5 +30,5 @@ donorrouter.get('/get-all-posts', getAwarenessPosts);
 donorrouter.post('/add-comments', addCommentToPost);
 donorrouter.post('/view-recipient-requests', viewRequests);
 donorrouter.post('/update-requests', updateRequestStatus);
-donorrouter.post('/updateDonorProfile',updateDonorProfile);
+donorrouter.post('/updateDonorProfile/:donorId',updateDonorProfile);
 export default donorrouter;
