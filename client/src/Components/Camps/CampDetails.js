@@ -1,17 +1,25 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { BookAppointment } from '../Donor/BookAppointment';
 import MapComponent from '../MapComponent'
-import axios from 'axios';
+import { JoinCamp } from '../Volunteer/JoinCamp';
+
 export const CampDetails = () => {
   const locationLoc = useLocation();
-  const campDetails = locationLoc.state.camps;
+  const [campDetails, setCampDetails] = useState(locationLoc.state.camps);
+
+  useEffect(() => {
+    // Update campDetails whenever locationLoc.state.camps changes
+    setCampDetails(locationLoc.state.camps);
+  }, [locationLoc.state.camps]);
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
   };
 
   const userObj = JSON.parse(localStorage.getItem("user"));
+
   const formatTime = (timeString) => {
     const [hours, minutes] = timeString.split(':');
     const formattedHours = parseInt(hours) % 12 || 12;
@@ -20,23 +28,6 @@ export const CampDetails = () => {
   };
 
   const [marker, setMarker] = useState({ latitude: campDetails.latitude, longitude: campDetails.longitude });
-  async function joinCamp() {
-    if (userObj && userObj.userType === 'volunteer') {
-      let volunteerId= userObj._id;
-      let campId= campDetails._id;
-     // /join-camp
-     let response=  await axios.post('http://localhost:5000/api/volunteer/join-camp', {volunteerId, campId});
-     alert(response.data.message)
-    }
-  }
-  const renderJoinButton = () => {
-    if (userObj && userObj.userType === 'volunteer') {
-      return (
-        <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" onClick={()=>{joinCamp()}}>Join Camp</button>
-      );
-    }
-    return null;
-  };
 
   return (
     <>
@@ -47,7 +38,6 @@ export const CampDetails = () => {
         <div className="lg:w-2/3 lg:pl-8">
           <div className='flex flex-wrap justify-between mr-10'>
             <h1 className="text-4xl font-bold mb-4 text-gray-800">Camp Details</h1>
-            {renderJoinButton()}
           </div>
           <p className="mb-5 text-gray-700"><span className="font-bold">Location:</span> {campDetails.location}</p>
           <p className="mb-5 text-gray-700"><span className="font-bold">Description:</span> {campDetails.description}</p>
@@ -64,6 +54,7 @@ export const CampDetails = () => {
           </div>
         </div>
       </div>
+      {userObj && userObj.userType === 'volunteer' && <JoinCamp campDetails={campDetails} />}
       {userObj && userObj.userType === 'donor' && <BookAppointment campDetails={campDetails} />}
       <div className='mb-8'>
         {/* Create a button which redirects to google maps to get directions to that location */}
