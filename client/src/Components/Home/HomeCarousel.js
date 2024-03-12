@@ -24,22 +24,22 @@ const HomeCarousel = () => {
                 )}
             >
                 <img
-                    src="https://images.unsplash.com/photo-1497436072909-60f360e1d4b1?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2560&q=80"
+                    src="https://t3.ftcdn.net/jpg/06/49/51/66/240_F_649516614_IoDWpGxsjFcaGxB42aCTFUJH3APc8P1r.jpg"
                     alt="image1"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://images.unsplash.com/photo-1493246507139-91e8fad9978e?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2940&q=80"
+                    src="https://t3.ftcdn.net/jpg/06/06/44/38/240_F_606443804_jYagxn3GcTCUAY02Zac0Tb9Dj30vd6UF.jpg"
                     alt="image2"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://images.unsplash.com/photo-1518623489648-a173ef7824f3?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=2762&q=80"
+                    src="https://t3.ftcdn.net/jpg/06/02/58/12/240_F_602581280_pAXoal2kLdulVv72ib7zVHhh2QlKEPUr.jpg"
                     alt="image3"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://images.pexels.com/photos/612891/pexels-photo-612891.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    src="https://t3.ftcdn.net/jpg/06/02/58/12/240_F_602581280_pAXoal2kLdulVv72ib7zVHhh2QlKEPUr.jpg"
                     alt="image3"
                     className="h-full w-full object-cover"
                 />
