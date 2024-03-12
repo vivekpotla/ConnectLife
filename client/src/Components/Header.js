@@ -42,12 +42,6 @@ const profileMenuItems = [
     {
         label: "My Profile",
         icon: UserCircleIcon,
-        link: "",
-        users: ["ngo", "volunteer", "donor", "recipient", "all"]
-    },
-    {
-        label: "Edit Profile",
-        icon: Cog6ToothIcon,
         link: "/editprofile",
         users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
