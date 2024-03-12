@@ -88,12 +88,12 @@ export const findNearestDonors = async (req, res) => {
             type: 'Point',
             coordinates: [recipientLongitude, recipientLatitude] // Note: MongoDB uses [longitude, latitude] order
           },
-          $maxDistance: 2000 // 10 kilometers in meters
+          $maxDistance: 25000 // 10 kilometers in meters
         }
       },
-      bloodGroup:bloodType
-    });
-    console.log("Nearest Donors:", nearestDonors);
+      //bloodGroup:bloodType
+    })
+    // .select('name _id bloodGroup');;
     res.status(200).json(nearestDonors);
   } catch (err) {
     console.error(err);
@@ -106,11 +106,19 @@ export const findNearestDonors = async (req, res) => {
 export const createRequest = async (req, res) => {
   try {
     const { recipientId, donorId } = req.body;
+    const existingRequest = await RequestDetails.findOne({ recipient: recipientId, donor: donorId });
+    
+    if (existingRequest) {
+      // If a request already exists, respond with a message indicating that the request has already been made
+      return res.status(200).json({ message: 'A request from this recipient to this donor already exists.' });
+    }
+
+    
     const request = await RequestDetails.create({ recipient: recipientId, donor: donorId });
-    res.status(201).json(request);
+    return res.status(201).json(request);
   } catch (error) {
     console.error(error);
-    res.status(500).json({ message: 'Internal server error' });
+    return res.status(500).json({ message: 'Internal server error' });
   }
 };
 
