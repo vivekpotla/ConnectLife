@@ -1,4 +1,6 @@
 import Donor from '../Models/Donor.js';
+import Recipient from '../Models/Recipient.js';
+import Volunteer from '../Models/Volunteer.js';
 import Appointment from '../Models/Appointment.js';
 import Camp from '../Models/Camp.js';
 import Slot from '../Models/Slot.js';
@@ -419,3 +421,34 @@ export const updateDonorProfile = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+export const updateLiveLocation=async(req,res)=>{
+  try {
+    const { userType,userId, latitude, longitude } = req.body;
+    
+    let modelToUpdate;
+
+    // Determine the model based on the user type
+    switch (userType) {
+      case 'donor':
+        modelToUpdate = Donor;
+        break;
+      case 'recipient':
+        modelToUpdate = Recipient;
+        break;
+      case 'volunteer':
+        modelToUpdate = Volunteer;
+        break;
+      default:
+        return res.status(400).json({ message: 'Invalid user type' });
+    }
+
+    const user = await modelToUpdate.findByIdAndUpdate(userId, { livelocation: { latitude, longitude } });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: `Location updated successfully for ${userType} with ID ${userId}` });
+  } catch (error) {
+    console.error('Error updating locations:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+;}

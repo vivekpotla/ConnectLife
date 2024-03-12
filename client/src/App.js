@@ -27,6 +27,8 @@ import BloodBanks from './Components/BloodBanks.js';
 import BloodDonationProcess from './Components/InformationPages/BloodDonationProcess.js';
 import BloodProcessing from './Components/InformationPages/BloodProcessing.js';
 import { CreateCamps } from './Components/Camps/CreateCamps.js';
+import LocationUpdater from './Components/LocationUpdater.js';
+
 function App() {
 
   const [userObj, setUserObj] = useState(null);
@@ -100,6 +102,7 @@ function App() {
           <ChatBot />
         </div>
       </div>
+      {userObj && <LocationUpdater/>}
     </BrowserRouter>
   );
 }
