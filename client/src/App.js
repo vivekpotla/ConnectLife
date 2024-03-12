@@ -29,6 +29,7 @@ import BloodProcessing from './Components/InformationPages/BloodProcessing.js';
 import { CreateCamps } from './Components/Camps/CreateCamps.js';
 import LocationUpdater from './Components/LocationUpdater.js';
 import ViewRequests from './Components/Recipient/ViewRequests.js';
+import Help from './Components/Profile/Help.js';
 
 function App() {
 
@@ -77,6 +78,7 @@ function App() {
       <Route path='/recipientfaqs' element={<RecipientFaqs />} />
       <Route path='/searchdonors' element={<SearchDonors />} />
       <Route path='/viewrequests' element={<ViewRequests />} />
+      <Route path='/bloodbanks' element={<BloodBanks/>}/>
     </>
   )
 
@@ -91,6 +93,7 @@ function App() {
             <Route path='/campdetails' element={<CampDetails />} />
             <Route path='/activeappointments' element={<ActiveAppoinments />} />
             <Route path='/editprofile' element={<EditProfile />} />
+            <Route path='/help' element={<Help />} />
             <Route path='/bloodbanks' element={<BloodBanks/>}/>
             <Route path='/createcamps' element={<CreateCamps/>}/>
             {!isLoggedIn && AuthRoutes}
