@@ -100,7 +100,7 @@ const ChatBot = () => {
                 open={openRight}
                 onClose={closeDrawerRight}
                 className="p-4 bg-gray-50"
-                size={400}
+                size={600}
             >
                 <div className="mb-6 flex items-center justify-between">
                     <Typography variant="h5" color="blue-gray">
