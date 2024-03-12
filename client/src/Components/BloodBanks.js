@@ -98,93 +98,95 @@ function BloodBanks() {
 
   return (
     <div className="mx-auto">
-    <div className='bg-gray-100'>
-      <h2 className="text-xl font-bold mb-4 pt-2 text-gray-700 text-center">Blood Banks in Telangana</h2>
-      <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
-        <div className='relative flex md:mt-0 mt-3 mb-3'>
-          <div className="relative inline-block rounded-md">
-            <div className="flex  bg-gray-100 p-1 rounded-md items-center">
-              <AdjustmentsHorizontalIcon  className="h-[18px] w-[18px] text-blue-gray-500 mr-1"  />
-              <Menu >
-                <MenuHandler>
-                  <Link size="sm" className="bg-gray-100  text-black-500 flex items-center">
-                    {sortBy === 'distance' ? 'Nearest' : 'Name'}
-                    <ChevronDownIcon className="h-4 w-4 ml-1"  strokeWidth={2}/>
-                  </Link>
+      <div className='bg-gray-100'>
+        <h2 className="text-xl font-bold mb-4 pt-2 text-gray-700 text-center">Blood Banks in Telangana</h2>
+        <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
+          <div className='relative flex md:mt-0 mt-3 mb-3'>
+            <div className="relative inline-block rounded-md">
+              <div className="flex  bg-gray-100 p-1 rounded-md items-center">
+                <AdjustmentsHorizontalIcon className="h-[18px] w-[18px] text-blue-gray-500 mr-1" />
+                <Menu >
+                  <MenuHandler>
+                    <Link size="sm" className="bg-gray-100  text-black-500 flex items-center">
+                      {sortBy === 'distance' ? 'Nearest' : 'Name'}
+                      <ChevronDownIcon className="h-4 w-4 ml-1" strokeWidth={2} />
+                    </Link>
 
-                </MenuHandler>
-                <MenuList className="absolute left-0 z-50 mt-2 py-1">
-                  <MenuItem onClick={() => handleSortChange('distance')} className="block px-4 py-2 hover:bg-blue-gray-100 cursor-pointer">
-                    <Typography variant="h6" color="blue-gray" className="">
-                      Nearest
-                    </Typography>
-                    <Typography variant="small" color="gray" className="font-normal">
-                     Sort by distance
-                    </Typography></MenuItem>
-                  <MenuItem onClick={() => handleSortChange('name')} className="block px-4 py-2 hover:bg-blue-gray-100 cursor-pointer">
-                    <Typography variant="h6" color="blue-gray" className="">
-                      Name
-                    </Typography>
-                    <Typography variant="small" color="gray" className="font-normal">
-                      Sort by name
-                    </Typography>
-                  </MenuItem>
-                </MenuList>
-              </Menu>
+                  </MenuHandler>
+                  <MenuList className="absolute left-0 z-50 mt-2 py-1">
+                    <MenuItem onClick={() => handleSortChange('distance')} className="block px-4 py-2 hover:bg-blue-gray-100 cursor-pointer">
+                      <Typography variant="h6" color="blue-gray" className="">
+                        Nearest
+                      </Typography>
+                      <Typography variant="small" color="gray" className="font-normal">
+                        Sort by distance
+                      </Typography></MenuItem>
+                    <MenuItem onClick={() => handleSortChange('name')} className="block px-4 py-2 hover:bg-blue-gray-100 cursor-pointer">
+                      <Typography variant="h6" color="blue-gray" className="">
+                        Name
+                      </Typography>
+                      <Typography variant="small" color="gray" className="font-normal">
+                        Sort by name
+                      </Typography>
+                    </MenuItem>
+                  </MenuList>
+                </Menu>
+              </div>
+            </div>
+            <div className="relative flex md:mt-0 mt-3 mb-3">
+              <Input
+                type="text"
+                id="districtSearch"
+                name="districtSearch"
+                value={searchDistrict}
+                onChange={handleSearch}
+                placeholder="Enter district name"
+                className="!border !border-gray-300  bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-2 ring-transparent focus:ring-gray-900/10"
+                labelProps={{
+                  className: "hidden",
+                }}
+                containerProps={{ className: "max-w-[300px] min-w-[100px]" }}
+              />
+              <Button
+                size="sm" 
+                type="submit"
+                className="!absolute right-1 top-1 rounded bg-red-900 pl-3 py-1.5">
+                <MagnifyingGlassIcon className='h-5 w-5' />
+              </Button>
             </div>
           </div>
-          <Input
-            type="text"
-            id="districtSearch"
-            name="districtSearch"
-            value={searchDistrict}
-            onChange={handleSearch}
-            placeholder="Enter district name"
-            className="!border !border-gray-300 pr-14 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-2 ring-transparent focus:ring-gray-900/10 ms-3"
-            labelProps={{
-              className: "hidden",
-            }}
-            containerProps={{ className: "max-w-[300px] min-w-[100px]" }}
-          />
-          <Button
-            size="sm"
-            type="submit"
-            className="!absolute right-1 top-1 rounded bg-red-900 px-3 py-1.5">
-            <MagnifyingGlassIcon className='h-5 w-5 ' />
-          </Button>
         </div>
+
       </div>
 
-</div>
 
 
 
 
 
+      <div className='container mx-auto mb-10 '>
 
-<div className='container mx-auto mb-10 '>
-
-      <table className="table-auto w-full mt-3 border border-black-100">
-        <thead className='bg-gray-100'>
-          <tr >
-            <th className="px-4 py-2">Name</th>
-            <th className="px-4 py-2">District</th>
-            <th className="px-4 py-2">Address</th>
-            <th className="px-4 py-2">Contact</th>
-          </tr>
-        </thead>
-        <tbody>
-          {telanganaBloodBanks.map((bank, index) => (
-            <tr key={index} className={index % 2 !== 0 ? 'bg-gray-100 hover:bg-blue-gray-100' : 'bg-white hover:bg-blue-gray-100' }>
-              <td className="border px-4 py-2">{bank.h_name}</td>
-              <td className="border px-4 py-2">{bank.district}</td>
-              <td className="border px-4 py-2">{bank.address}</td>
-              <td className="border px-4 py-2">{bank.contact}</td>
+        <table className="table-auto w-full mt-3 border border-black-100">
+          <thead className='bg-gray-100'>
+            <tr >
+              <th className="px-4 py-2">Name</th>
+              <th className="px-4 py-2">District</th>
+              <th className="px-4 py-2">Address</th>
+              <th className="px-4 py-2">Contact</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+          </thead>
+          <tbody>
+            {telanganaBloodBanks.map((bank, index) => (
+              <tr key={index} className={index % 2 !== 0 ? 'bg-gray-100 hover:bg-blue-gray-100' : 'bg-white hover:bg-blue-gray-100'}>
+                <td className="border px-4 py-2">{bank.h_name}</td>
+                <td className="border px-4 py-2">{bank.district}</td>
+                <td className="border px-4 py-2">{bank.address}</td>
+                <td className="border px-4 py-2">{bank.contact}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }
