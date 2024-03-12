@@ -26,7 +26,7 @@ export const CampDetails = () => {
       let campId= campDetails._id;
      // /join-camp
      let response=  await axios.post('http://localhost:5000/api/volunteer/join-camp', {volunteerId, campId});
-     console.log(response)
+     alert(response.data.message)
     }
   }
   const renderJoinButton = () => {
