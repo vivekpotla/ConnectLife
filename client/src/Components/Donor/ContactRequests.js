@@ -3,16 +3,16 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 export default function ContactRequests() {
-  const [requests, setRequests] = useState([
-  ]);
+  const [requests, setRequests] = useState([]);
   const userObj = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     const getRecipientRequests = async () => {
       try {
         const response = await axios.post('http://localhost:5000/api/donor/view-recipient-requests', { donorId: userObj._id });
-        const [requestDetails]=response.data;
+        const requestDetails=response.data;
         if(requestDetails!==undefined)
           setRequests(requestDetails);
+        console.log("req details" ,requestDetails)
       } catch (error) {
         console.log(error);
       }
@@ -122,16 +122,16 @@ export default function ContactRequests() {
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-400">
-              {requests&& requests.map((request, index) => (
+              {requests.length!=0 && requests.map((request, index) => (
                 <tr key={index}>
-                  <td className="px-6 py-4 whitespace-nowrap  w-[25%] text-center">{request.recipientName}</td>
-                  <td className="px-6 py-4 whitespace-nowrap w-[25%] text-center">{request.bloodGroup}</td>
+                  <td className="px-6 py-4 whitespace-nowrap  w-[25%] text-center">{request.recipient.name}</td>
+                  <td className="px-6 py-4 whitespace-nowrap w-[25%] text-center">{request.recipient.bloodGroup}</td>
                   <td className="px-6 py-4 whitespace-nowrap w-[25%] text-center">{canDonate(request.bloodGroup) ? 'Yes' : 'No'}</td>
                   <td className="px-6 py-4 whitespace-nowrap flex text-center justify-center">
-                    <button onClick={() => handleApprove(request.id, request.recipientName)} className="text-green-500 hover:text-green-700 focus:outline-none" title="Approve">
+                    <button onClick={() => handleApprove(request.id, request.recipient.name)} className="text-green-500 hover:text-green-700 focus:outline-none" title="Approve">
                       <FontAwesomeIcon icon={faCheckCircle} className="text-2xl"/>
                     </button>
-                    <button onClick={() => handleReject(request.id, request.recipientName)} className="text-red-500 hover:text-red-700 focus:outline-none ml-2" title="Reject">
+                    <button onClick={() => handleReject(request.id, request.recipient.name)} className="text-red-500 hover:text-red-700 focus:outline-none ml-2" title="Reject">
                       <FontAwesomeIcon icon={faTimesCircle} className="text-2xl"/>
                     </button>
                   </td>

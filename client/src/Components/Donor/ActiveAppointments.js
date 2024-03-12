@@ -51,7 +51,7 @@ export default function ActiveAppointments() {
 
   return (
     <div className='ml-16 mr-16'>
-      <h1 className="text-2xl font-bold mb-10 mt-4 text-center">Active Appointments</h1>
+      <h1 className="text-2xl font-bold mb-10 mt-5  text-center ">Active Appointments</h1>
       <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
         {activeAppointments.length > 0 ? (
           activeAppointments.map((appointment, index) => (
