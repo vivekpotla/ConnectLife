@@ -26,7 +26,7 @@ export const BookAppointment = ({ campDetails }) => {
           throw new Error('Failed to fetch slots');
         }
         setSlots(response.data);
-        console.log(slots)
+        console.log(response.data)
       } catch (error) {
         console.error('Error fetching slots:', error.message);
       }
