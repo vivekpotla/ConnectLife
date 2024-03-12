@@ -12,7 +12,6 @@ export default function ContactRequests() {
         const requestDetails=response.data;
         if(requestDetails!==undefined)
           setRequests(requestDetails);
-        console.log("req details" ,requestDetails)
       } catch (error) {
         console.log(error);
       }
@@ -48,13 +47,33 @@ export default function ContactRequests() {
   }
 
 
-  const handleApprove = (id, recipientName) => {
+  const handleApprove =async (id, recipientName) => {
+    let selectedReq = requests.filter(request => request.id === id)
     setRequests(requests.filter(request => request.id !== id));
+    let reqId = selectedReq[0]._id
+
+    //API call to accept the request 
+    try{
+    let resp= await axios.post('http://localhost:5000/api/donor/update-requests', { requestId: reqId , status:"accepted"});
+    }
+    catch(err)
+    {
+      console.log(err)
+    }
     displayAlert(`Approved request from ${recipientName}`, 'success');
   };
 
-  const handleReject = (id, recipientName) => {
+  const handleReject = async(id, recipientName) => {
+    let selectedReq = requests.filter(request => request.id === id)
     setRequests(requests.filter(request => request.id !== id));
+    let reqId = selectedReq[0]._id
+    try{
+      let resp= await axios.post('http://localhost:5000/api/donor/update-requests', { requestId: reqId , status:"rejected"});
+      }
+      catch(err)
+      {
+        console.log(err)
+      }
     displayAlert(`Rejected request from ${recipientName}`, 'error');
   };
 
@@ -110,8 +129,10 @@ export default function ContactRequests() {
   return (
     <div className="flex justify-center">
       <div className="w-full">
-        <h1 className="text-xl font-bold m-4 text-center">Contact Requests</h1>
+        <h1 className="text-2xl font-bold m-4 text-center">Contact Requests</h1>
         <div className="overflow-x-auto">
+
+          {requests.length!=0 ? 
         <table className="min-w-full divide-y divide-gray-400 border border-collapse border-gray-400">
             <thead className="bg-gray-50">
               <tr>
@@ -139,6 +160,10 @@ export default function ContactRequests() {
               ))}
             </tbody>
           </table>
+
+          :
+          <div className='text-center text-l font-semibold'>No pending requests</div>
+          }
         </div>
       </div>
       <div id="alertContainer" className="fixed top-4 right-4 z-50">

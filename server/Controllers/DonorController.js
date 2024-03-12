@@ -343,7 +343,7 @@ export const addCommentToPost = async (req, res) => {
 export const viewRequests = async (req, res) => {
   try {
     const donorId = req.body.donorId;
-    const requests = await RequestDetails.find({ donor: donorId }).populate('recipient', 'name phoneNumber bloodGroup').exec();
+    const requests = await RequestDetails.find({ donor: donorId ,status:"pending"}).populate('recipient', 'name phoneNumber bloodGroup').exec();
     res.status(200).json(requests);
     console.log(requests)
   } catch (error) {
