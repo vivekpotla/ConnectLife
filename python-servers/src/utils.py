@@ -4,7 +4,7 @@ from langchain_openai import OpenAI
 from langchain import LLMChain
 from tqdm import tqdm
 
-OPENAI_KEY = ""
+OPENAI_KEY = "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"
 
 
 def OpenAIChatCompletion(question):
@@ -15,7 +15,7 @@ def OpenAIChatCompletion(question):
 
     MORE WEBSITE DETAILS:
     Human: {human_input}
-    Chatbot ANSWER JSON FORMAT:
+    Chatbot :
     ```json
     (
         'answer': string
