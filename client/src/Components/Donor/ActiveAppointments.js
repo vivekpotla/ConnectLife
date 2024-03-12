@@ -3,19 +3,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faCircleXmark } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 export default function ActiveAppointments() {
-  const [appointments] = useState([
-    { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
-    { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
-    { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
-    { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
-    { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
-    { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
-    { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
-    { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
-    { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
-    { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
-    // Add more appointments here
-  ]);
+  // const [appointments] = useState([
+  //   { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
+  //   { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
+  //   { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
+  //   { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
+  //   { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
+  //   { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
+  //   { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
+  //   { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
+  //   { name: "Active Appointment 1", location: "Hyderabad", date: "2024-03-15", time: "9:00-10:00", status: "not donated" },
+  //   { name: "Previous 1", location: "Bangalore", date: "2024-03-10", unitsDonated: 2, status: "donated" },
+  //   // Add more appointments here
+  // ]);
   const [activeAppointments,setActiveAppointments]=useState([]);
   const [previousAppointments,setPreviousAppointments]=useState([]);
   const [error,setError]=useState([]);
@@ -25,13 +25,10 @@ export default function ActiveAppointments() {
   
         const user = JSON.parse(localStorage.getItem("user"));
         const donorId = user._id;
-
-        
-        const response = await axios.get(`http://localhost:5000/api/donor/appointments/${donorId}`);
-
-        
-        const { activeAppointments, previousAppointments } = response.data;
-
+        const response = await axios.get(`http://localhost:5000/api/donor/appointments/${donorId}`);  
+        const activeAppointments=response.data.notDonatedAppointments;
+        const previousAppointments=response.data.donatedAppointments;
+        console.log(activeAppointments)
         if (activeAppointments !== undefined) {
           setActiveAppointments(activeAppointments);
         }
@@ -55,7 +52,7 @@ export default function ActiveAppointments() {
       <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
       {activeAppointments.length > 0 ? (
   activeAppointments.map((appointment, index) => (
-    appointment.status === "not donated" && (
+    appointment.donated === false && (
       <div key={index} className="w-full md:w-1/2 lg:w-1/3 xl:w-1/3 px-4 mb-4">
         <div className="card bg-white shadow-md rounded-lg overflow-hidden">
           <div className="card-header bg-gray-200 text-gray-700 font-semibold uppercase p-3">
@@ -64,16 +61,16 @@ export default function ActiveAppointments() {
           <div className="card-body flex justify-between p-5">
             <div>
               <div className="mb-2">
-                <strong className="font-semibold">Name:</strong> {appointment.name}
+                <strong className="font-semibold">Name:</strong> {appointment.camp.name}
               </div>
-              <div className="mb-2">
-                <strong className="font-semibold">Location:</strong> {appointment.location}
+              <div className="mb-2  line-clamp-1">
+                <strong className="font-semibold">Location:</strong> {appointment.camp.location}
               </div>
               <div className="mb-2">
                 <strong className="font-semibold">Date:</strong> {appointment.date}
               </div>
               <div className="mb-2">
-                <strong className="font-semibold">Time:</strong> {appointment.time}
+                <strong className="font-semibold">Time:</strong> {appointment.slot}
               </div>
             </div>
             <div>

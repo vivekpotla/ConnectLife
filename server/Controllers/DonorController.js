@@ -109,12 +109,10 @@ export const getDonorAppointments = async (req, res) => {
     const donorId = req.params.donorId;
 
     // Find all appointments for the donor and populate camp details
-    const appointments = await Appointment.find({ donor: donorId }).populate('camp', 'name location');
-
+    const appointments = await Appointment.find({ donor: donorId }).populate('camp', 'name location').populate('slot','date startTime endTime');
     // Separate appointments based on donated status
     const donatedAppointments = appointments.filter(appointment => appointment.donated);
     const notDonatedAppointments = appointments.filter(appointment => !appointment.donated);
-
     // Send separated appointments in the response
     res.json({ donatedAppointments, notDonatedAppointments });
   } catch (err) {
