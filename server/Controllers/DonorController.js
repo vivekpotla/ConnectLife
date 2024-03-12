@@ -214,16 +214,13 @@ export const findNearestCamps = async (req, res) => {
 export const getAllSlotsForCamp = async (req, res) => {
   try {
     const { campId } = req.body;
-
     // Find the camp by ID
     const camp = await Camp.findById(campId);
     if (!camp) {
       return res.status(404).json({ message: 'Camp not found' });
     }
-
     // Find all slots for the camp
     const slots = await Slot.find({ camp: campId });
-
     // Group slots by date
     const slotsByDate = {};
     slots.forEach(slot => {
@@ -233,7 +230,6 @@ export const getAllSlotsForCamp = async (req, res) => {
       }
       slotsByDate[date].push(slot);
     });
-
     res.status(200).json(slotsByDate);
   } catch (err) {
     console.error(err);
