@@ -80,7 +80,6 @@ export const loginRecipient = async (req, res) => {
 export const findNearestDonors = async (req, res) => {
   try {
     const { recipientLatitude, recipientLongitude, bloodType } = req.body;
-
     // Find the nearest donors within a specified radius (e.g., 10 kilometers)
     const nearestDonors = await Donor.find({
       livelocation: {
@@ -89,17 +88,19 @@ export const findNearestDonors = async (req, res) => {
             type: 'Point',
             coordinates: [recipientLongitude, recipientLatitude] // Note: MongoDB uses [longitude, latitude] order
           },
-          $maxDistance: 10000 // 10 kilometers in meters
+          $maxDistance: 2000 // 10 kilometers in meters
         }
       },
-      bloodType
+      bloodGroup:bloodType
     });
+    console.log("Nearest Donors:", nearestDonors);
     res.status(200).json(nearestDonors);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
 
 // Create a new request from recipient to donor
 export const createRequest = async (req, res) => {

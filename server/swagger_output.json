@@ -185,7 +185,7 @@
         }
       }
     },
-    "/api/donor/camps/{query}": {
+    "/api/donor/search-camps/{query}": {
       "get": {
         "description": "",
         "parameters": [
@@ -331,7 +331,7 @@
             "schema": {
               "type": "object",
               "properties": {
-                "donorId": {
+                "_id": {
                   "example": "any"
                 }
               }
@@ -371,6 +371,90 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/donor/updateDonorProfile": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "example": "any"
+                },
+                "email": {
+                  "example": "any"
+                },
+                "phoneNumber": {
+                  "example": "any"
+                },
+                "address": {
+                  "example": "any"
+                },
+                "bloodGroup": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/donor/updateLiveLocation": {
+      "post": {
+        "description": "",
+        "parameters": [
+          {
+            "name": "body",
+            "in": "body",
+            "schema": {
+              "type": "object",
+              "properties": {
+                "userType": {
+                  "example": "any"
+                },
+                "userId": {
+                  "example": "any"
+                },
+                "latitude": {
+                  "example": "any"
+                },
+                "longitude": {
+                  "example": "any"
+                }
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "404": {
+            "description": "Not Found"
           },
           "500": {
             "description": "Internal Server Error"
@@ -811,13 +895,29 @@
                 "commentIndex": {
                   "example": "any"
                 },
-                "content": {
+                "comment": {
                   "example": "any"
                 }
               }
             }
           }
         ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "500": {
+            "description": "Internal Server Error"
+          }
+        }
+      }
+    },
+    "/api/ngo/view-all-camps": {
+      "get": {
+        "description": "",
         "responses": {
           "200": {
             "description": "OK"
@@ -866,6 +966,9 @@
         "responses": {
           "200": {
             "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request"
           },
           "500": {
             "description": "Internal Server Error"

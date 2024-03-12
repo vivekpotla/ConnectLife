@@ -112,6 +112,7 @@ export const createBloodDonationCamp = async (req, res) => {
 
     let path = req?.files?.image?.path
     let imageURL = null
+    
     if (path) {
       const timestamp = Date.now(); // Get current timestamp
       const public_id = `camps/${ngoId}_${timestamp}`;
@@ -162,15 +163,12 @@ export const createBloodDonationCamp = async (req, res) => {
       currentDate.setDate(currentDate.getDate() + i);
 
       const startHour = parseInt(startTime.split(':')[0]);
-      console.log("Start ", startHour)
       const endHour = parseInt(endTime.split(':')[0]);
-      console.log("End ", endHour)
       for (let j = startHour; j < endHour; j++) {
         const slotStartTime = `${j}:00`;
         const slotEndTime = `${j + 1}:00`;
 
         for (let k = 0; k < 1; k++) {
-          console.log("Slot created")
           await Slot.create({
             camp: newCamp._id,
             date: currentDate,
@@ -465,7 +463,7 @@ export const createAwarenessPost = async (req, res) => {
     //const  form_data = req.body;
     let { ngoId, description, title } = req.body
     let imageURL = null;
-    let path = req.files.image.path
+    let path = req?.files?.image?.path
     const timestamp = Date.now(); // Get current timestamp
     const public_id = `posts/${ngoId}_${timestamp}`;
     await cloudinary.uploader.upload(path, {
@@ -495,7 +493,7 @@ export const createAwarenessPost = async (req, res) => {
 export const replyToComment = async (req, res) => {
   try {
 
-    const { postId, commentIndex, content } = req.body;
+    const { postId, commentIndex, comment } = req.body;
     // Find the post by ID
     const post = await AwarenessPost.findById(postId);
     if (!post) {
@@ -508,7 +506,7 @@ export const replyToComment = async (req, res) => {
     // Add the reply to the comment
     post.comments[commentIndex].replies.push({
       author: req.body.ngoId,
-      content,
+      comment,
     });
     // Save the post
     await post.save();
@@ -527,35 +525,16 @@ export const editOrDeletePost = async (req, res) => {
     if (type === 'edit') {
       const { title, description } = req.body;
 
-      let newImageURL = null;
-      let path = req.files.image.path
-      const timestamp = Date.now(); // Get current timestamp
-      const public_id = `posts/${req.body.ngoId}_${timestamp}`;
-      await cloudinary.uploader.upload(path, {
-        public_id: public_id,
-        width: 500,
-        height: 300
-      })
-        .then((result) => {
-          newImageURL = result.secure_url;
-          console.log(newImageURL)
-        })
-        .catch((error) => {
-          console.log("image upload error")
-          console.error(error);
-        });
-      console.log("NOW", newImageURL)
-
-
       const updatedPost = await AwarenessPost.findOneAndUpdate(
         { _id: postId, authorNGO: req.body.ngoId },
-        { title, description, imageURL: newImageURL },
+        { title, description },
         { new: true }
       );
 
       if (!updatedPost) {
         return res.status(404).json({ message: 'Post not found or you are not authorized to edit it' });
       }
+
       console.log("successful", updatedPost);
       return res.status(200).json(updatedPost);
     } else if (type === 'delete') {
@@ -579,10 +558,28 @@ export const editOrDeletePost = async (req, res) => {
 //view all posts by an NGO
 export const viewAllPosts = async (req, res) => {
   try {
-    const posts = await AwarenessPost.find({ author: req.body.ngoId });
+    const posts = await AwarenessPost.find({ authorNGO: req.body.ngoId });
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// view all camps by their creation time
+export const viewAllCamps = async (req, res) => {
+  try {
+    // Retrieve all camps from the database sorted by creation time
+    const camps = await Camp.find().sort({ createdAt: 'desc' }).populate('ngo', 'name email imageURL phoneNumber address');;
+    // Check if there are no camps found
+    if (!camps || camps.length === 0) {
+      return res.status(404).json({ message: 'No camps found' });
+    }
+
+    // Return the list of camps
+    res.status(200).json(camps);
+  } catch (error) {
+    console.error('Error viewing all camps:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };

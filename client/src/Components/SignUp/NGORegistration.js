@@ -57,8 +57,9 @@ const NGORegistration = () => {
     }
 
     const onSubmit = async (data) => {
+        console.log('jfjjf')
         try {
-            setLoading(false);
+            setLoading(true);
             const formData = new FormData();
             // Append each form field to the FormData object
             formData.append('name', data.name);

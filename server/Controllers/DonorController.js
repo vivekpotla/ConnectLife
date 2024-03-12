@@ -1,4 +1,6 @@
 import Donor from '../Models/Donor.js';
+import Recipient from '../Models/Recipient.js';
+import Volunteer from '../Models/Volunteer.js';
 import Appointment from '../Models/Appointment.js';
 import Camp from '../Models/Camp.js';
 import Slot from '../Models/Slot.js';
@@ -107,7 +109,7 @@ export const getDonorAppointments = async (req, res) => {
     const donorId = req.params.donorId;
 
     // Find all appointments for the donor and populate camp details
-    const appointments = await Appointment.find({ donor: donorId }).populate('camp', 'name location');
+    const appointments = await Appointment.find({ donor: donorId }).populate('camp', 'name location').populate('slot', 'date startTime endTime');
 
     // Separate appointments based on donated status
     const donatedAppointments = appointments.filter(appointment => appointment.donated);
@@ -124,19 +126,20 @@ export const getDonorAppointments = async (req, res) => {
 //book appointment slot
 export const bookAppointment = async (req, res) => {
   try {
-
     const { campId, date, slot, donorId } = req.body;
-    let donor = Donor.find({ _id: donorId })
+    
+    // Find the donor by ID
+    const donor = await Donor.findById(donorId);
+    if (!donor) {
+      return res.status(404).json({ message: 'Donor not found' });
+    }
+
     // Check if the slot is available
     const { isSlotAvailable, slotId } = await isSlotAvailableForDate(campId, date, slot);
     if (!isSlotAvailable) {
       return res.status(400).json({ message: 'Slot is not available' });
     }
 
-
-    console.log("slotID", slotId.toString())
-    console.log("DonorID", donorId)
-    console.log("camp", campId)
     // Create appointment
     const appointment = await Appointment.create({
       donor: donorId,
@@ -145,13 +148,16 @@ export const bookAppointment = async (req, res) => {
       slot: slotId.toString(),
       bloodGroup: donor.bloodGroup
     });
+
     // Decrement slotsLeft for the booked slot
     await Slot.findOneAndUpdate(
       { camp: campId, date: new Date(date), startTime: slot.startTime, endTime: slot.endTime },
-      { $inc: { slotsLeft: -1 }, $push: { donors: donorId } } // Decrement slotsLeft by 1
-
+      { $inc: { slotsLeft: -1 }, $push: { donors: donorId } }
     );
+
+    // Update donor's previousAppointments
     await Donor.findByIdAndUpdate(donorId, { $push: { previousAppointments: appointment._id } });
+
     res.json(appointment);
   } catch (err) {
     console.error(err);
@@ -165,8 +171,8 @@ export const searchBloodDonationCamps = async (req, res) => {
     const query = req.params.query;
     const camps = await Camp.find({
       $or: [
-        { _id: query },
-        { name: { $regex: new RegExp(query, 'i') } }
+        { name: { $regex: new RegExp(query, 'i') } }, // Search by name
+        { location: { $regex: new RegExp(query, 'i') } } // Search by location
       ]
     });
     res.json(camps);
@@ -176,6 +182,9 @@ export const searchBloodDonationCamps = async (req, res) => {
   }
 };
 
+
+Camp.collection.createIndex({ geolocation: '2dsphere' });
+
 //search camps by location (nearest)
 export const findNearestCamps = async (req, res) => {
   try {
@@ -183,13 +192,13 @@ export const findNearestCamps = async (req, res) => {
 
     // Find the nearest camps within a specified radius (e.g., 10 kilometers)
     const nearestCamps = await Camp.find({
-      location: {
+      geolocation: {
         $near: {
           $geometry: {
             type: 'Point',
             coordinates: [longitude, latitude] // Note: MongoDB uses [longitude, latitude] order
           },
-          $maxDistance: 10000 // 10 kilometers in meters
+          $maxDistance: 50000 // 10 kilometers in meters
         }
       }
     });
@@ -205,16 +214,13 @@ export const findNearestCamps = async (req, res) => {
 export const getAllSlotsForCamp = async (req, res) => {
   try {
     const { campId } = req.body;
-
     // Find the camp by ID
     const camp = await Camp.findById(campId);
     if (!camp) {
       return res.status(404).json({ message: 'Camp not found' });
     }
-
     // Find all slots for the camp
     const slots = await Slot.find({ camp: campId });
-
     // Group slots by date
     const slotsByDate = {};
     slots.forEach(slot => {
@@ -224,7 +230,6 @@ export const getAllSlotsForCamp = async (req, res) => {
       }
       slotsByDate[date].push(slot);
     });
-
     res.status(200).json(slotsByDate);
   } catch (err) {
     console.error(err);
@@ -234,32 +239,38 @@ export const getAllSlotsForCamp = async (req, res) => {
 
 
 
-async function isSlotAvailableForDate(campId, date, slot) {
+async function isSlotAvailableForDate(campId, formattedDate, slot) {
   try {
+    console.log("Query Parameters:", {
+      camp: campId,
+      date: formattedDate,
+      startTime: slot.startTime,
+      endTime: slot.endTime
+    });
     // Find the camp
-    console.log(slot)
     const camp = await Camp.findById(campId);
     if (!camp) {
-      console.log("camp ledhu")
       return { isSlotAvailable: false, slotId: null };
     }
 
     // Check if the slot is within the camp's operational hours
     const { startTime, endTime } = camp;
     if (slot.startTime < startTime || slot.endTime > endTime) {
-      console.log("false")
+      console.log("not proper hrs")
       return { isSlotAvailable: false, slotId: null };
     }
-    let dt = new Date(date);
+
     // Find the slot for the given date and time
     const slotInfo = await Slot.findOne({
       camp: campId,
-      date: dt,
+      date: formattedDate,
       startTime: slot.startTime,
       endTime: slot.endTime
     });
+    console.log("Slot Query Result:", slotInfo);
+
     if (!slotInfo) {
-      console.log("slot eh ledhu")
+      console.log("no slots found")
       return { isSlotAvailable: false, slotId: null }; // Slot not found for the given date and time
     }
 
@@ -267,7 +278,7 @@ async function isSlotAvailableForDate(campId, date, slot) {
     if (slotInfo.slotsLeft > 0) {
       return { isSlotAvailable: true, slotId: slotInfo._id }; // Slot is available
     } else {
-      console.log("slot full")
+      console.log("no slots left")
       return { isSlotAvailable: false, slotId: null }; // No available slots left
     }
   } catch (error) {
@@ -287,13 +298,29 @@ function generateToken(donor) {
 //get all Posts 
 export const getAwarenessPosts = async (req, res) => {
   try {
-    const posts = await AwarenessPost.find().sort({ createdAt: -1 }); // Sort by createdAt field in descending order
+    const posts = await AwarenessPost.find()
+      .sort({ createdAt: -1 })
+      .populate({
+        path: 'authorNGO',
+        select: 'name imageURL' // Select fields for authorNGO
+      })
+      .populate({
+        path: 'comments.author',
+        select: 'name imageURL' // Select fields for comment authors
+      })
+      .populate({
+        path: 'comments.replies.author',
+        select: 'name imageURL' // Select fields for reply authors
+      });
+
     res.status(200).json(posts);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
 
 
 //adding comments to posts
@@ -316,9 +343,10 @@ export const addCommentToPost = async (req, res) => {
 //viewing recipient requests for blood
 export const viewRequests = async (req, res) => {
   try {
-    const { donorId } = req.body;
+    const donorId = req.body.donorId;
     const requests = await RequestDetails.find({ donor: donorId }).populate('recipient', 'name phoneNumber').exec();
     res.status(200).json(requests);
+    console.log(requests)
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });
@@ -336,3 +364,92 @@ export const updateRequestStatus = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+//update donor profile
+export const updateDonorProfile = async (req, res) => {
+  try {
+    const { donorId } = req.params; // Assuming donorId is passed as a parameter
+    const { name, email, phoneNumber, address, bloodGroup } = req.body;
+
+    // Find the donor by ID
+    let donor = await Donor.findById(donorId);
+    if (!donor) {
+      return res.status(404).json({ message: 'Donor not found' });
+    }
+
+    // Update donor fields
+    donor.name = name || donor.name;
+    donor.email = email || donor.email;
+    donor.phoneNumber = phoneNumber || donor.phoneNumber;
+    donor.address = address || donor.address;
+    donor.bloodGroup = bloodGroup || donor.bloodGroup;
+
+    // Check if the profile image is being updated
+    if (req?.files?.image) {
+      const path = req.files.image.path;
+      const timestamp = Date.now(); // Get current timestamp
+      const public_id = `users/${name}_${timestamp}`;
+
+      // Upload the new profile image to cloudinary
+      let imageURL = null;
+      await cloudinary.uploader.upload(path, {
+        public_id: public_id,
+        width: 500,
+        height: 300
+      })
+        .then((result) => {
+          imageURL = result.secure_url;
+        })
+        .catch((error) => {
+          console.log("Image upload error:", error);
+        });
+
+      // Update the imageURL field in the donor document
+      donor.imageURL = imageURL;
+    }
+
+    // Save the updated donor document
+    donor = await donor.save();
+
+    res.status(200).json({ message: 'Donor profile updated successfully', payload: donor });
+  } catch (err) {
+    console.error('Error updating donor profile:', err);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+};
+export const updateLiveLocation=async(req,res)=>{
+  try {
+    const { userType,userId, latitude, longitude } = req.body;
+    
+    let modelToUpdate;
+
+    // Determine the model based on the user type
+    switch (userType) {
+      case 'donor':
+        modelToUpdate = Donor;
+        break;
+      case 'recipient':
+        modelToUpdate = Recipient;
+        break;
+      case 'volunteer':
+        modelToUpdate = Volunteer;
+        break;
+      default:
+        return res.status(400).json({ message: 'Invalid user type' });
+    }
+
+    const user = await modelToUpdate.findByIdAndUpdate(userId, {
+      livelocation: {
+        type: 'Point',
+        coordinates: [longitude, latitude] // Assuming longitude comes before latitude
+      }
+    });
+    if (!user) {
+      return res.status(404).json({ message: 'User not found' });
+    }
+    res.status(200).json({ message: `Location updated successfully for ${userType} with ID ${userId}` });
+  } catch (error) {
+    console.error('Error updating locations:', error);
+    res.status(500).json({ message: 'Internal server error' });
+  }
+;}

@@ -58,14 +58,25 @@ const donorSchema = new Schema({
       required: true
     }
   },
-  livelocation:{
-    latitude: { type: Number, default: 0 },
-    longitude: { type: Number, default: 0 }
+  livelocation: {
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      default:[0,0]
+    }
   },
   previousAppointments: [{
     type: Schema.Types.ObjectId,
     ref: 'Appointment'
   }]
 });
+
+// Create 2dsphere index on livelocation field
+donorSchema.index({ livelocation: '2dsphere' });
 
 export default mongoose.model('Donor', donorSchema);

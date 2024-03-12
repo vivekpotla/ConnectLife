@@ -1,105 +1,202 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import CampCard from './CampCard';
-import { SearchIcon } from '@heroicons/react/outline';
+import axios from 'axios';
+import {
+  MagnifyingGlassIcon,
+  ChevronDownIcon,
+  AdjustmentsHorizontalIcon
+} from '@heroicons/react/24/solid';
+import { Link } from 'react-router-dom'
+import { Button, Input, Typography, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react';
+
+
 export const CampsList = () => {
   const [query, setQuery] = useState('');
-  const [filteredCamps, setFilteredCamps] = useState([]);
 
-  const campsData = [
-    {
-      location: "Hyderabad",
-      description: "NSS Blood Donation Camp",
-      startDate: "2024-02-17",
-      endDate: "2024-02-18",
-      donorsJoined: "4",
-      startTime: "09:00",
-      endTime: "18:00",
-      longitude: "17.64333",
-      latitude: "76.666",
-      name:"NSS1 Camp"
-    },
-    {
-      location: "Hyderabad",
-      description: "NSS Blood Donation Camp",
-      startDate: "2024-02-17",
-      endDate: "2024-02-18",
-      donorsJoined: "4",
-      startTime: "09:00",
-      endTime: "18:00",
-      longitude: "17.64333",
-      latitude: "76.666",
-      name:"NSS2 Camp"
-    },
-    {
-      location: "Hyderabad",
-      description: "Red Cross Blood Donation Camp",
-      startDate: "2024-02-17",
-      endDate: "2024-02-18",
-      donorsJoined: "4",
-      startTime: "09:00",
-      endTime: "18:00",
-      longitude: "17.64333",
-      latitude: "76.666",
-      name:"Red1 Camp"
-    },
-    {
-      location: "Hyderabad",
-      description: "Red Cross Blood Donation Camp",
-      startDate: "2024-02-17",
-      endDate: "2024-02-18",
-      donorsJoined: "4",
-      startTime: "09:00",
-      endTime: "18:00",
-      longitude: "17.64333",
-      latitude: "76.666",
-      name:"Red2 Camp"
-    },
-    // Add more camp objects as needed
-  ];
-  const handleInputChange = (e) => {
-    const inputValue = e.target.value.toLowerCase().trim(); // Trim any leading or trailing whitespace
-    console.log(inputValue);
-    setQuery(inputValue);
-    const filtered = campsData.filter(camp => {
-      const indexOfBlood = camp.name.toLowerCase().indexOf('blood');
-      const campNameUntilBlood = indexOfBlood !== -1 ? camp.name.toLowerCase().substring(0, indexOfBlood).trim() : camp.name.toLowerCase().trim();
-      return campNameUntilBlood.startsWith(inputValue);
-    });
-    setFilteredCamps(filtered);
-    console.log(filtered)
-  };
-  const handleSubmit = (e) => {
-    e.preventDefault(); // Prevent the default form submission behavior
-    // Add any form submission logic here
-  };
+  const [selectedFilter, setSelectedFilter] = useState("Latest");
+  const [searchedCamps, setSearchedCamps] = useState([]);
+
+  const [campsData, setCampsData] = useState([]);
+
+  useEffect(() => {
+    const getCampsData = async () => {
+      await axios.get('http://localhost:5000/api/ngo/view-all-camps').then((res) => {
+        setCampsData(res.data);
+      }).catch((error) => {
+        console.error(error);
+      });
+    }
+
+    getCampsData();
+  }, [])
+
+  useEffect(() => {
+
+    const getSearchedCampsData = async (val) => {
+      await axios.get(`http://localhost:5000/api/donor/search-camps/${val}`).then((res) => {
+        setSearchedCamps(res.data);
+      }).catch((error) => {
+        console.log(error);
+      });
+    }
+
+    const getNearestCampsData = async () => {
+      try {
+        // Get latitude and longitude using browser geolocation API
+        navigator.geolocation.getCurrentPosition(async (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+          // Make API call with latitude and longitude
+
+          await axios.post('http://localhost:5000/api/donor/nearestcamps', {
+            latitude,
+            longitude
+          }).then((res) => {
+            setSearchedCamps(res.data);
+          }).catch((error) => {
+            console.log(error);
+          });
+        });
+      } catch (error) {
+        console.error('Error fetching camps data:', error);
+      }
+    };
+
+    if (selectedFilter === "Location") {
+      getNearestCampsData();
+    } else if (selectedFilter === "Name") {
+      const data = campsData.sort((a, b) => {
+        // Sort alphabetically by 'name' property
+        if (a.name < b.name) {
+          return -1;
+        }
+        if (a.name > b.name) {
+          return 1;
+        }
+        return 0;
+      });
+
+      setSearchedCamps(data);
+    } else if (selectedFilter === "Search") {
+      getSearchedCampsData(query);
+    } else {
+      setSearchedCamps([]);
+    }
+
+  }, [selectedFilter,query]);
+
   return (
-    <div>
-    <form class="max-w-md mx-auto mt-4" onSubmit={handleSubmit}>
-    <div class="flex">
-    <label for="search" class="mb-2 text-sm font-medium text-gray-900 sr-only dark:text-white">Camp</label>
-    </div>
-    <div class="relative w-full">
-    <input type="search" id="search" class="bg-gray-50 border border-gray-500 text-gray-900 text-sm 
-    rounded-lg block w-full ps-10 p-2.5" 
-    placeholder="Enter Camp Name or Camp ID" required onChange={handleInputChange}/>
-    <button type="submit" class="absolute top-0 end-0 h-full p-2.5 text-sm font-medium text-white 
-    bg-red-700 rounded-e-lg border">
-    <svg class="w-4 h-4" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" 
-    viewBox="0 0 20 20">
-    <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-    d="m19 19-4-4m0-7A7 7 0 1 1 1 8a7 7 0 0 1 14 0Z"/>
-    </svg>
-    <span class="sr-only">Search</span>
-    </button>
-  </div>
-</form>
-      <div className="flex flex-wrap justify-center gap-2">
-        {query ? filteredCamps.map((camp, index) => (
-          <CampCard key={index} camps={camp} />
-        )) : campsData.map((camp, index) => (
-          <CampCard key={index} camps={camp} />
-        ))}
+    <div className='bg-gray-100 p-1'>
+      <Typography variant='h5' className='font-semibold md:ml-10 ml-4 text-gray-700 text-center' >Blood Donation Camps</Typography>
+      <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
+        <div className='relative flex justify-end place-self-end md:mt-0 mt-3'>
+          <ListMenu selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
+          <Input
+            type="text"
+            placeholder='search by name or location'
+            value={query}
+            onChange={(val) => {
+              setQuery(val.target.value);
+            }}
+          className="!border !border-gray-300 pr-14 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-2 ring-transparent focus:ring-gray-900/10"
+          labelProps={{
+            className: "hidden",
+          }}
+          containerProps={{ className: "max-w-[300px] min-w-[100px]" }}
+          />
+          <Button
+            size="sm"
+            disabled={!query}
+            onClick={() => {
+              setSelectedFilter("");
+              setSelectedFilter("Search");
+            }}
+            className="!absolute right-1 top-1 rounded bg-red-900 px-3 py-1.5"
+          >
+            <MagnifyingGlassIcon className='h-5 w-5' />
+          </Button>
+        </div>
+      </div>
+      {searchedCamps.length !== 0 && <div>
+        <Typography variant='h6' className='md:ml-10 ml-3 mt-2 text-yellow-600 text-center'>Showing Search Results:</Typography>
+        <div className="flex flex-wrap justify-center">
+          {searchedCamps.map((camp, index) => (
+            <CampCard key={index} camps={camp} />
+          ))}
+        </div>
+      </div>}
+      <div>
+        {searchedCamps.length !== 0 &&
+          <Typography variant='h6' className='md:ml-10 ml-3 mt-2 text-yellow-600 text-center'>Latest Camps:</Typography>
+        }
+        <div className="flex flex-wrap justify-center">
+          {campsData.map((camp, index) => (
+            <CampCard key={index} camps={camp} />
+          ))}
+        </div>
       </div>
     </div>
+  );
+}
+
+
+// nav list menu
+const navListMenuItems = [
+  {
+    title: "Latest",
+    description:
+      "View Latest Camps ",
+  },
+  {
+    title: "Name",
+    description:
+      "Sort by Name",
+  },
+  {
+    title: "Location",
+    description:
+      "Find Nearest Camps",
+  },
+];
+
+function ListMenu({ selectedFilter, setSelectedFilter }) {
+  const [isMenuOpen, setIsMenuOpen] = React.useState(false);
+
+  const renderItems = navListMenuItems.map(({ title, description }) => (
+    <Link key={title} onClick={() => setSelectedFilter(title)}>
+      <MenuItem className={selectedFilter === title ? 'py-1 px-1 bg-blue-gray-50' : "py-1 px-1"}>
+        <Typography variant="h6" color="blue-gray" className="">
+          {title}
+        </Typography>
+        <Typography variant="small" color="gray" className="font-normal">
+          {description}
+        </Typography>
+      </MenuItem>
+    </Link>
+  ));
+
+  return (
+    <React.Fragment>
+      <Menu allowHover open={isMenuOpen} handler={setIsMenuOpen}>
+        <MenuHandler>
+          <Typography variant="small" className="font-normal">
+            <MenuItem className="text-base items-center gap-2 font-medium text-blue-gray-900 flex rounded-full">
+              <AdjustmentsHorizontalIcon className="h-[18px] w-[18px] text-blue-gray-500" />{" "}
+              {selectedFilter}
+              <ChevronDownIcon
+                strokeWidth={2}
+                className={`h-3 w-3 transition-transform ${isMenuOpen ? "rotate-180" : ""
+                  }`}
+              />
+            </MenuItem>
+          </Typography>
+        </MenuHandler>
+        <MenuList className="w-[80px] gap-2 overflow-visible">
+          <ul className="flex w-full flex-col gap-0.5">
+            {renderItems}
+          </ul>
+        </MenuList>
+      </Menu>
+    </React.Fragment>
   );
 }

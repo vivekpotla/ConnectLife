@@ -3,9 +3,9 @@ import mongoose from "mongoose";
 import cors from "cors";
 import dotenv from 'dotenv';
 import path from 'path';
-import donorrouter from "./routes/DonorRoute.js";
+import donorrouter from "./Routes/DonorRoute.js"; 
 import ngoroute from "./routes/NGORoute.js";
-import volunteerroute from "./routes/VolunteerRoute.js";
+import volunteerroute from "./Routes/VolunteerRoute.js"
 import recipientroute from "./Routes/RecipientRoute.js";
 import swaggerUi from 'swagger-ui-express';
 import { createRequire } from "module";

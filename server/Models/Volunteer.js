@@ -1,6 +1,6 @@
 import mongoose from 'mongoose';
 
-const { Schema, model } = mongoose;
+const { Schema } = mongoose;
 
 const volunteerSchema = new Schema({
   name: { type: String, required: true },
@@ -25,12 +25,20 @@ const volunteerSchema = new Schema({
     postalCode: { type: String, required: true }
   },
   livelocation: {
-    latitude: { type: Number, default: 0 },
-    longitude: { type: Number, default: 0 }
+    type: {
+      type: String,
+      enum: ['Point'],
+      default: 'Point'
+    },
+    coordinates: {
+      type: [Number],
+      required: true,
+      default:[0,0]
+    },
+    
   },
   campsParticipated: [{ type: Schema.Types.ObjectId, ref: 'Camp' }]
 });
 
-const Volunteer = model('Volunteer', volunteerSchema);
-
-export default Volunteer;
+volunteerSchema.index({ livelocation: '2dsphere' });
+export default mongoose.model('Volunteer', volunteerSchema);;
