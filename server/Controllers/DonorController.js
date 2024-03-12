@@ -114,7 +114,6 @@ export const getDonorAppointments = async (req, res) => {
     // Separate appointments based on donated status
     const donatedAppointments = appointments.filter(appointment => appointment.donated);
     const notDonatedAppointments = appointments.filter(appointment => !appointment.donated);
-
     // Send separated appointments in the response
     res.json({ donatedAppointments, notDonatedAppointments });
   } catch (err) {
@@ -344,7 +343,7 @@ export const addCommentToPost = async (req, res) => {
 export const viewRequests = async (req, res) => {
   try {
     const donorId = req.body.donorId;
-    const requests = await RequestDetails.find({ donor: donorId }).populate('recipient', 'name phoneNumber').exec();
+    const requests = await RequestDetails.find({ donor: donorId ,status:"pending"}).populate('recipient', 'name phoneNumber bloodGroup').exec();
     res.status(200).json(requests);
     console.log(requests)
   } catch (error) {

@@ -236,10 +236,8 @@ export const checkBloodQuantity = async (req, res) => {
 export const getDonorsInCamp = async (req, res) => {
   try {
     const { campId } = req.body;
-
     // Find appointments where camp ID matches
-    const appointments = await Appointment.find({ camp: campId }).populate('donor', 'name email phoneNumber donated');
-
+    const appointments = await Appointment.find({ camp: campId }).populate('donor', 'name email phoneNumber donated bloodGroup');
     // Extract donor details from appointments
     const donors = {
       donated: [],
@@ -247,17 +245,21 @@ export const getDonorsInCamp = async (req, res) => {
     };
 
     for (const appointment of appointments) {
-      const donorDetails = {
-        donorId: appointment.donor._id,
-        name: appointment.donor.name,
-        email: appointment.donor.email,
-        phoneNumber: appointment.donor.phoneNumber
-      };
-
-      if (appointment.donated) {
-        donors.donated.push(donorDetails);
-      } else {
-        donors.notDonated.push(donorDetails);
+      if (appointment.donor && appointment.donor._id) {
+        const donorDetails = {
+          donorId: appointment.donor._id,
+          name: appointment.donor.name,
+          email: appointment.donor.email,
+          phoneNumber: appointment.donor.phoneNumber,
+          bloodGroup: appointment.donor.bloodGroup,
+          quantity: appointment.quantity
+        };
+    
+        if (appointment.donated) {
+          donors.donated.push(donorDetails);
+        } else {
+          donors.notDonated.push(donorDetails);
+        }
       }
     }
 

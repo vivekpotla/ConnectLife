@@ -22,11 +22,12 @@ import {
     LifebuoyIcon,
     PowerIcon,
     RocketLaunchIcon,
+    MagnifyingGlassIcon,
     Bars2Icon,
     HomeIcon,
     BuildingStorefrontIcon,
     PlusCircleIcon,
-    MagnifyingGlassIcon
+    EyeIcon
 } from "@heroicons/react/24/solid";
 import { ConnectlifeIcon } from "../Icons/ConnectlifeIcon";
 import { DonateBloodIcon } from "../Icons/DonateBloodIcon";
@@ -36,17 +37,11 @@ import { logout } from "../Redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import PagesImg from "../Components/Images/PagesImg.png"
 import NgoPagesImg from "../Components/Images/NgoPagesImg.png"
-// profile menu component
+
 const profileMenuItems = [
     {
         label: "My Profile",
         icon: UserCircleIcon,
-        link: "",
-        users: ["ngo", "volunteer", "donor", "recipient", "all"]
-    },
-    {
-        label: "Edit Profile",
-        icon: Cog6ToothIcon,
         link: "/editprofile",
         users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
@@ -59,7 +54,7 @@ const profileMenuItems = [
     {
         label: "Help",
         icon: LifebuoyIcon,
-        link: '',
+        link: '/help',
         users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
     {
@@ -69,8 +64,6 @@ const profileMenuItems = [
         users: ["ngo", "volunteer", "donor", "recipient", "all"]
     },
 ];
-
-// const userObj = JSON.parse(localStorage.getItem("user"));
 
 function ProfileMenu({ userObj }) {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
@@ -101,7 +94,6 @@ function ProfileMenu({ userObj }) {
             <MenuList className="p-1">
                 {profileMenuItems.map(({ label, icon, link, users }, key) => {
                     const isLastItem = key === profileMenuItems.length - 1;
-                    // Check if the current user type is allowed for this menu item
                     if (users.includes(userObj?.userType) || users.includes("all")) {
                         return (
                             <MenuItem
@@ -138,42 +130,36 @@ function ProfileMenu({ userObj }) {
     );
 }
 
-// nav list menu
 const navListMenuItems = [
     {
         title: "Blood Donation Process",
         link: "/donationprocess",
-        description:
-            "Embark on a life-saving journey: Understand the blood donation process at NGO camps.",
-        users: [ "donor", "recipient"]
+        description: "Embark on a life-saving journey: Understand the blood donation process at NGO camps.",
+        users: ["donor", "recipient"]
     },
     {
         title: "Blood Processing",
         link: "/bloodprocessing",
-        description:
-            "Behind the Scenes: Exploring Blood Processing After Donation at NGO Camps",
-            users: ["donor"]
+        description: "Behind the Scenes: Exploring Blood Processing After Donation at NGO Camps",
+        users: ["donor","recipient","volunteer"]
     },
     {
         title: "Material Tailwind PRO",
         link: "/bloodprocessing",
-        description:
-            "A complete set of UI Elements for building faster websites in less time.",
-            users: ["volunteer", "donor", "recipient"]
+        description: "A complete set of UI Elements for building faster websites in less time.",
+        users: ["volunteer", "donor", "recipient"]
     },
     {
         title: "My Posts",
         link: "/myposts",
-        description:
-            "",
-            users: ["ngo"]
+        description: "",
+        users: ["ngo"]
     },
     {
         title: "My Camps",
         link: "/mycamps",
-        description:
-            "",
-            users: ["ngo"]
+        description: "",
+        users: ["ngo"]
     },
 ];
 
@@ -241,7 +227,7 @@ function NavListMenu({ userObj }) {
         </React.Fragment>
     );
 }
-// nav list component
+
 const navListItems = [
     {
         label: "Home",
@@ -289,7 +275,13 @@ const navListItems = [
         label: "Search Donors",
         icon: MagnifyingGlassIcon,
         link: "/searchdonors",
-        users: [  "recipient", "all"]
+        users: [  "recipient"]
+    },
+    {
+        label: "View Requests",
+        icon: EyeIcon,
+        link: "/viewrequests",
+        users: [  "recipient",]
     },
     {
         label: "My Camps",
@@ -297,16 +289,20 @@ const navListItems = [
         link: "/volunteer/mycamps",
         users: ["volunteer"]
     },
-    
+    {
+        label: "Blood Banks",
+        icon: BuildingStorefrontIcon, // You can change this icon to an appropriate one
+        link: "/bloodbanks",
+        users: ["donor", "recipient"]
+    },
 ];
 
 function NavList({ userObj }) {
-
     const location = useLocation();
     return (
         <ul className="mt-2 mb-4 flex flex-col gap-2 lg:mb-0 lg:mt-0 lg:flex-row lg:items-center">
             {navListItems.map(({ label, icon, link, users }, key) => {
-                if (users.includes(userObj?.userType) || "all" === users[4])
+                if (users.includes(userObj?.userType) || "all" === users[4]) {
                     return (
                         <Link to={link} key={label}>
                             <Typography
@@ -320,9 +316,10 @@ function NavList({ userObj }) {
                                 </MenuItem>
                             </Typography>
                         </Link>
-                    )
-                else
-                    return null
+                    );
+                } else {
+                    return null;
+                }
             })}
             <NavListMenu userObj={userObj} />
         </ul>
@@ -331,13 +328,9 @@ function NavList({ userObj }) {
 
 export function Header() {
     const [isNavOpen, setIsNavOpen] = React.useState(false);
-
     const toggleIsNavOpen = () => setIsNavOpen((cur) => !cur);
-
     const [userObj, setUserObj] = useState(null);
-
     const navigate = useNavigate();
-
     useEffect(() => {
         window.addEventListener(
             "resize",

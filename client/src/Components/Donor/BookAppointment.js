@@ -7,13 +7,15 @@ import { useNavigate } from 'react-router';
 const userObj = JSON.parse(localStorage.getItem('user'));
 
 export const BookAppointment = ({ campDetails }) => {
-  const [showDatesPopup, setShowDatesPopup] = useState(false); // New state variable
+  const [showDatesPopup, setShowDatesPopup] = useState(false);
   const [selectedDate, setSelectedDate] = useState(null);
   const [selectedSlot, setSelectedSlot] = useState(null);
   const [slots, setSlots] = useState({});
   const [bookingSuccess, setBookingSuccess] = useState(false);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [unavailableSlotAlertVisible, setUnavailableSlotAlertVisible] = useState(false);
+  const [alreadyBooked, setAlreadyBooked] = useState(false); // Updated state
+  const [loading, setLoading] = useState(true); // Loading state
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -26,21 +28,32 @@ export const BookAppointment = ({ campDetails }) => {
           throw new Error('Failed to fetch slots');
         }
         setSlots(response.data);
-        console.log(response.data)
       } catch (error) {
         console.error('Error fetching slots:', error.message);
       }
     };
 
+    const checkAlreadyBooked = async () => {
+      try {
+        const response = await axios.get(`http://localhost:5000/api/donor/appointments/${userObj._id}`);
+        const { notDonatedAppointments } = response.data;
+        const alreadyBooked = notDonatedAppointments.some(appointment => appointment.camp._id === campDetails._id);
+        setAlreadyBooked(alreadyBooked);
+        setLoading(false); // Set loading to false after fetching appointment status
+      } catch (error) {
+        console.error('Error checking if already booked:', error);
+      }
+    };
+
     if (campDetails) {
       fetchSlots();
+      checkAlreadyBooked(); // Check if already booked when campDetails changes
     }
   }, [campDetails]);
 
   const handleDateClick = (date) => {
     const formattedDate = date.toISOString().split('T')[0];
     setSelectedDate(formattedDate);
-    console.log(formattedDate);
     setShowDatesPopup(false);
   };
 
@@ -49,14 +62,12 @@ export const BookAppointment = ({ campDetails }) => {
       setSelectedSlot(slot);
       setIsModalOpen(true);
     } else {
-      console.log(`Slot ${slot.startTime} - ${slot.endTime} is fully booked`);
       setUnavailableSlotAlertVisible(true);
     }
   };
 
   const handleConfirmBooking = async () => {
     try {
-      console.log(selectedSlot._id);
       const response = await axios.post('http://localhost:5000/api/donor/book-appointment', {
         campId: campDetails._id,
         date: selectedDate,
@@ -80,14 +91,29 @@ export const BookAppointment = ({ campDetails }) => {
   const handleCloseAlert = () => {
     navigate('/receipt', { state: { campDetails, selectedSlot, donorDetails: userObj } });
   };
+
+  // Render loading message while fetching data
+  if (loading) {
+    return <p>Loading...</p>;
+  }
+
+  // Render UI based on appointment status
   return (
     <div className="container mx-auto p-4">
-      <button
-        onClick={() => setShowDatesPopup(true)} // Show dates popup on button click
-        className="flex justify-center bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-4 mx-auto"
-      >
-        Book Appointment
-      </button>
+      {!alreadyBooked && campDetails && (
+        <button
+          onClick={() => setShowDatesPopup(true)}
+          className="flex justify-center bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600 mb-4 mx-auto"
+        >
+          Book Appointment
+        </button>
+      )}
+
+      {alreadyBooked && (
+        <p className="text-center text-red-500 font-semibold">
+          You have already booked an appointment for this camp!
+        </p>
+      )}
 
       {showDatesPopup && ( // Show dates popup only if showDatesPopup is true
         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 z-50">

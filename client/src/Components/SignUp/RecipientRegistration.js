@@ -24,10 +24,10 @@ const RecipientRegistration = () => {
             .oneOf([Yup.ref("password")], "Passwords must match"), // use Yup.ref to refer to the password field value
         phoneNumber: Yup.string()
             .required("Phone number is required")
-            .max(10, "Phone number must be 10 digits long"),
+            .matches(/^\d{10}$/, "Phone number must be 10 digits"),
         aadhaarNumber: Yup.string()
             .required("Aadhaar Number is required")
-            .min(12, "Aadhaar Number must be 12 digits long"),
+            .matches(/^\d{12}$/, "Aadhaar must be 12 digits"),
         address: Yup.object().shape({
             street: Yup.string().required("Street is required"),
             city: Yup.string().required("City is required"),
