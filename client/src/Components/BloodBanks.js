@@ -8,13 +8,14 @@ import {
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom'
 import { Button, Input, Typography, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react';
-
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 function BloodBanks() {
   const [telanganaBloodBanks, setTelanganaBloodBanks] = useState([]);
   const [searchDistrict, setSearchDistrict] = useState('');
   const [sortBy, setSortBy] = useState('distance'); // Default sorting by distance
   //const [query, setQuery] = useState('');
+  const [loading, setLoading] = useState(true);
   const userLocation = {
     latitude: 17.454242,
     longitude: 78.393940
@@ -28,6 +29,7 @@ function BloodBanks() {
           throw new Error('Network response was not ok');
         }
         const data = await response.json();
+        setLoading(false)
         const telanganaData = data.records.filter(record => record.state === "Telangana");
 
         let filteredBloodBanks = telanganaData.filter(record => {
@@ -96,10 +98,19 @@ function BloodBanks() {
     setSortBy(sortBy);
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" /> {/* Display spinner icon */}
+      </div>
+    );
+  }
+
+
   return (
     <div className="mx-auto">
       <div className='bg-gray-100'>
-        <h2 className="text-xl font-bold mb-4 pt-2 text-gray-700 text-center">Blood Banks in Telangana</h2>
+        <h2 className="text-2xl font-bold mb-4  text-red-700 text-center pt-5">Blood Banks in Telangana</h2>
         <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
           <div className='relative flex md:mt-0 mt-3 mb-3'>
             <div className="relative inline-block rounded-md">
