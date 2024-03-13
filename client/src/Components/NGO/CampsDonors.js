@@ -4,7 +4,7 @@ export const CampsDonors = ({ show, handleClose, donors }) => {
   if (!show) {
     return null;
   }
-
+  console.log(donors)
   const downloadCsv = () => {
     const csvContent =
       "data:text/csv;charset=utf-8," +
@@ -27,7 +27,10 @@ export const CampsDonors = ({ show, handleClose, donors }) => {
       <div className="bg-white p-4 rounded-lg max-w-md">
         <h2 className="text-xl font-semibold mb-2">Donors List</h2>
         {donors.length === 0 ? ( // Check if there are no donors
+        <div className="mt-4">
           <p className="text-gray-600">No donors registered</p>
+          <button className="bg-gray-500 text-white px-4 py-2 ml-2 rounded hover:bg-gray-600" onClick={handleClose}>Close</button>
+        </div>
         ) : (
           <div className="overflow-y-auto max-h-72">
             <table className="min-w-full divide-y divide-gray-200">
@@ -54,9 +57,6 @@ export const CampsDonors = ({ show, handleClose, donors }) => {
         </div>
           </div>
         )}
-        <div className="mt-4">
-          <button className="bg-gray-500 text-white px-4 py-2 ml-2 rounded hover:bg-gray-600" onClick={handleClose}>Close</button>
-        </div>
       </div>
     </div>
   );

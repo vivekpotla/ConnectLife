@@ -224,7 +224,6 @@ export const checkBloodQuantity = async (req, res) => {
       }
     };
 
-
     // Send the response
     res.status(200).json(response);
   } catch (error) {
