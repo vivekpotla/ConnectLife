@@ -38,30 +38,29 @@ export const CampDetails = () => {
 
   return (
     <>
+    <div className="flex justify-center p-2 mt-2">
+        <img className="w-12 h-12 rounded-full mr-4" src={campDetails.ngo.imageURL} alt="NGO Logo" />
+        <div>
+          <p className="font-semibold text-2xl mt-2">Organized by {campDetails.ngo.name}</p>
+          {/* You can add additional content here if needed */}
+        </div>
+      </div>
       <div className="flex flex-col lg:flex-row items-center m-4">
         <div className="lg:w-1/3 mb-4 lg:mb-0">
           <img src={campDetails.imageURL} alt="Camp" className="w-full rounded-lg" />
         </div>
         <div className="lg:w-2/3 lg:pl-8">
-          <div className='flex flex-wrap justify-between mr-10'>
-            <h1 className="text-4xl font-bold mb-4 text-gray-800">Camp Details</h1>
-          </div>
-          <div className="flex items-center p-2 ">
-        <img className="w-12 h-12 rounded-full mr-4" src={campDetails.ngo.imageURL} alt="NGO Logo" />
-        <div>
-          <p className="font-semibold">{campDetails.ngo.name}</p>
-          {/* You can add additional content here if needed */}
-        </div>
-      </div>
+          <p className="mb-5 text-gray-700"><span className="font-bold">Name:</span> {campDetails.name}</p>
           <p className="mb-5 text-gray-700"><span className="font-bold">Location:</span> {campDetails.location}</p>
           <p className="mb-5 text-gray-700"><span className="font-bold">Description:</span> {campDetails.description}</p>
-          <p className="mb-5 text-gray-700"><span className="font-bold">Start Date:</span> {formatDate(campDetails.startDate)}</p>
+          <div className='flex '>
+          <p className="mb-5 mr-5 text-gray-700"><span className="font-bold">Start Date:</span> {formatDate(campDetails.startDate)}</p>
           <p className="mb-5 text-gray-700"><span className="font-bold">End Date:</span> {formatDate(campDetails.endDate)}</p>
+          </div>
           <p className="mb-5 text-gray-700"><span className="font-bold">Timings:</span> {formatTime(campDetails.startTime)} to {formatTime(campDetails.endTime)}</p>
-          <div>
-            <div className="text-gray-700">Email: {campDetails.ngo.email}</div>
-            <div className="text-gray-700">NGO cell: +91 {campDetails.ngo.phoneNumber}</div>
-            {/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
+          <div className='flex'>
+          <p className="text-gray-700 mr-5"><span className="font-bold">Email:</span> {campDetails.ngo.email}</p>
+            <p className="text-gray-700"><span className="font-bold">NGO Cell:</span> +91{campDetails.ngo.phoneNumber}</p>
           </div>
         </div>
       </div>
