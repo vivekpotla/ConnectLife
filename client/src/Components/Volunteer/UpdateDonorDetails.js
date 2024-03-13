@@ -90,7 +90,9 @@ export const UpdateDonorDetails = () => {
 
   return (
     <div className='m-10'>
-      <h2 className="text-xl font-bold mb-4 text-center">Donors Details</h2>
+      <h2 className="text-4xl font-bold mb-4 text-center text-red-500">Donors Details</h2>
+
+      {donorDetails.length!==0  ? 
       <table className="w-full">
         <thead className='bg-gray-100'>
           <tr>
@@ -128,6 +130,11 @@ export const UpdateDonorDetails = () => {
           ))}
         </tbody>
       </table>
+      :
+            <div className='text-center p-5 m-5 text-xl font-semibold'>No Appointments in this slot</div>
+
+                }
+
       {showPopup && (
         <div className="fixed inset-0 flex items-center justify-center z-50">
           <div className="absolute inset-0 bg-gray-900 opacity-75" onClick={handlePopupClose}></div>
