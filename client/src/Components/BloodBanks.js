@@ -110,7 +110,7 @@ function BloodBanks() {
   return (
     <div className="mx-auto">
       <div className='bg-gray-100'>
-        <h2 className="text-xl font-bold mb-4 pt-2 text-gray-700 text-center">Blood Banks in Telangana</h2>
+        <h2 className="text-2xl font-bold mb-4  text-red-700 text-center pt-5">Blood Banks in Telangana</h2>
         <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
           <div className='relative flex md:mt-0 mt-3 mb-3'>
             <div className="relative inline-block rounded-md">
