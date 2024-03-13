@@ -292,8 +292,11 @@ const PostsLists = () => {
             </IconButton>
           </div>
           <Card className="w-full rounded-lg bg-gray-50">
-            <CardHeader floated={false} className="">
-              <img src={post.imageURL} alt="PostPicture" className='w-full' />
+            <CardHeader floated={false} onClick={() => {
+              setSelectedPost(post._id);
+              setOpen(true);
+            }}>
+              <img src={post.imageURL} alt="PostPicture" className='w-full cursor-pointer' />
             </CardHeader>
             <CardBody className="pt-2 pb-4 relative">
               <div className="flex justify-between">
@@ -314,6 +317,10 @@ const PostsLists = () => {
                     size="sm"
                     variant="text"
                     className="rounded-full active:animate-ping"
+                    onClick={() => {
+                      setSelectedPost(post._id);
+                      setOpen(true);
+                    }}
                   >
                     <ChatBubbleOvalLeftEllipsisIcon color='gray' className='h-6 w-6' />
                   </IconButton>

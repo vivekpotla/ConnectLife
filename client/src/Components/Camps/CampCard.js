@@ -16,14 +16,14 @@ export default function CampCard({ camps }) {
           {/* {React.createElement(BuildingStorefrontIcon, { className: "h-[18px] w-[18px]" })}{" "} */}
           <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{camps.name}</h5>
         </div>
-        <div className='text-gray-600'>{camps.description}</div>
+        <div className='text-gray-600 line-clamp-3'>{camps.description}</div>
 
         {/* NGO Information to be imporvised +++++++++++++++++++++++++++++++++++ */}
         <div>Organized by {camps.ngo.name}</div>
         <img src={camps.ngo.imageURL} />
         <div>mail: {camps.ngo.email}</div>
         <div>NGO cell: +91 {camps.ngo.phoneNumber}</div>
- {/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
+        {/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
         <div className="flex items-start gap-2 py-3">
           <div>
             <MapPinIcon className="w-5 text-blue-gray-500 mt-0.5 fill-red-300" />
@@ -35,10 +35,10 @@ export default function CampCard({ camps }) {
         <p className="text-l text-gray-700 dark:text-white pb-5">Timings : {camps.startTime.slice(0, 5)} AM to {camps.endTime.slice(0, 5)} PM</p>
         <p className="text-sm text-gray-600 dark:text-white pb-3">{camps.donorsJoined} Donors have Joined us already!</p>
         <Link to="/campdetails" state={{ camps }} >
-        <Button size="md" variant="gradient" color='red' className="select-none rounded-lg block w-1/2">
+          <Button size="md" variant="gradient" color='red' className="select-none rounded-lg block w-1/2">
             View Camp Details
-        </Button>
-          </Link>
+          </Button>
+        </Link>
       </div>
     </div>
   );

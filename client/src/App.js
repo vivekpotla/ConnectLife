@@ -53,7 +53,6 @@ function App() {
       <Route path='/ngo' element={<NgoHomePage />} />
       <Route path='/myposts' element={<MyPosts />} />
       <Route path='/mycamps' element={<PreviousCamps />} />
-     
     </>
   )
 
