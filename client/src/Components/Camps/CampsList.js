@@ -7,28 +7,31 @@ import {
   AdjustmentsHorizontalIcon
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom'
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Input, Typography, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react';
-
+import Footer from '../Footer';import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export const CampsList = () => {
   const [query, setQuery] = useState('');
 
   const [selectedFilter, setSelectedFilter] = useState("Latest");
   const [searchedCamps, setSearchedCamps] = useState([]);
-
+  const [loading, setLoading] = useState(true);
   const [campsData, setCampsData] = useState([]);
 
   useEffect(() => {
     const getCampsData = async () => {
-      await axios.get('http://localhost:5000/api/ngo/view-all-camps').then((res) => {
-        setCampsData(res.data);
-      }).catch((error) => {
-        console.error(error);
-      });
-    }
+        try {
+            const response = await axios.get('http://localhost:5000/api/ngo/view-all-camps');
+            setCampsData(response.data);
+            setLoading(false); // Set loading to false after getting data
+        } catch (error) {
+            console.error(error);
+        }
+    };
 
     getCampsData();
-  }, [])
+}, []);
 
   useEffect(() => {
 
@@ -84,6 +87,14 @@ export const CampsList = () => {
     }
 
   }, [selectedFilter,query]);
+    
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" /> {/* Display spinner icon */}
+      </div>
+    );
+  }
 
   return (
     <div className='bg-gray-100 p-1'>
@@ -135,6 +146,7 @@ export const CampsList = () => {
           ))}
         </div>
       </div>
+      
     </div>
   );
 }

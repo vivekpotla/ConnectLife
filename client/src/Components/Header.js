@@ -37,6 +37,7 @@ import { logout } from "../Redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import PagesImg from "../Components/Images/PagesImg.png"
 import NgoPagesImg from "../Components/Images/NgoPagesImg.png"
+import { useSelector } from 'react-redux';
 
 const profileMenuItems = [
     {
@@ -220,9 +221,7 @@ function NavListMenu({ userObj }) {
                 {renderItems}
             </ul>
         </React.Fragment>
-    );
-}
-
+    );}
 const navListItems = [
     {
         label: "Home",

@@ -5,7 +5,7 @@ import * as Yup from 'yup';
 import axios from 'axios';
 import { Input, Button, Typography, Spinner, Textarea } from '@material-tailwind/react';
 import { useNavigate } from 'react-router';
-
+import Footer from '../Footer';
 const RegisterCamp = ({ marker, locationAddress, ngoId, setLocationAddress }) => {
     const validationSchema = Yup.object().shape({
         description: Yup.string().required('Description is required'),
@@ -384,6 +384,7 @@ const RegisterCamp = ({ marker, locationAddress, ngoId, setLocationAddress }) =>
                 </form>
                 {message && <Typography color="red" className='mt-2 text-sm'>{message}</Typography>}
             </div>
+           
         </div>
     );
 };

@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 
 export const JoinCamp = ({ campDetails }) => {
   const userObj = JSON.parse(localStorage.getItem("user"));
   const [showAlert, setShowAlert] = useState(false);
   const [isJoined, setIsJoined] = useState(false);
-
+  const navigate = useNavigate();
   useEffect(() => {
     // Check if the volunteer has already joined the camp whenever campDetails changes
     if (userObj && userObj.userType === 'volunteer') {
@@ -60,9 +61,10 @@ export const JoinCamp = ({ campDetails }) => {
   };
   
   const handleCloseAlert = () => {
+    
     setShowAlert(false); // Close the alert
+    navigate('/volunteer/mycamps');
   };
-
   return (
     <div>
       {showAlert && (

@@ -5,7 +5,7 @@ import RegisterCamp from './RegisterCamp';
 import MapComponent from '../MapComponent';
 import Create_Camp from '../Images/Create_Camp.png';
 import { XMarkIcon } from '@heroicons/react/24/solid';
-
+import Footer from '../Footer';
 export const CreateCamps = () => {
   const [camp, setCamp] = useState(false);
   const navigate = useNavigate();
@@ -60,6 +60,7 @@ export const CreateCamps = () => {
           </div>
         </DialogBody>
       </Dialog>
+      
     </div>
   )
 }

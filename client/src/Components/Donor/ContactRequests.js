@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
+import Footer from '../Footer';
 export default function ContactRequests() {
   const [requests, setRequests] = useState([]);
   const userObj = JSON.parse(localStorage.getItem("user"));
@@ -169,6 +170,7 @@ export default function ContactRequests() {
       <div id="alertContainer" className="fixed top-4 right-4 z-50">
         {/* Alerts will be appended here */}
       </div>
+      
     </div>
   );
 }

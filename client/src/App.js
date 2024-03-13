@@ -30,7 +30,7 @@ import { CreateCamps } from './Components/Camps/CreateCamps.js';
 import LocationUpdater from './Components/LocationUpdater.js';
 import ViewRequests from './Components/Recipient/ViewRequests.js';
 import Help from './Components/Profile/Help.js';
-
+import Footer from './Components/Footer.js';
 function App() {
 
   const [userObj, setUserObj] = useState(null);
@@ -64,15 +64,12 @@ function App() {
       <Route path='/receipt' element={<GenerateSlotReciept />} />
       <Route path='/contactrequests' element={<ContactRequests />} />
       <Route path='/donorfaqs' element={<DonorFaqs />} />
-      <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
-      <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
     </>
   )
   const VolunteerRoutes = (
     <>
       <Route path='/volunteer/mycamps' element={<MyCamps />} />
       <Route path="/volunteer/donordetails" element={<UpdateDonorDetails />} />
-      <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
     </>
   )
   const RecipientRoutes = (
@@ -81,8 +78,6 @@ function App() {
       <Route path='/searchdonors' element={<SearchDonors />} />
       <Route path='/viewrequests' element={<ViewRequests />} />
       <Route path='/bloodbanks' element={<BloodBanks/>}/>
-      <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
-      <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
     </>
   )
 
@@ -100,6 +95,8 @@ function App() {
             <Route path='/help' element={<Help />} />
             <Route path='/bloodbanks' element={<BloodBanks/>}/>
             <Route path='/createcamps' element={<CreateCamps/>}/>
+            <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
+            <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
             {!isLoggedIn && AuthRoutes}
             {userObj?.userType === "ngo" && NgoRoutes}
             {userObj?.userType === "donor" && DonorRoutes}
@@ -111,6 +108,7 @@ function App() {
           <ChatBot />
         </div>
         {userObj && userObj.userType!=='ngo' && <LocationUpdater/>}
+        {/* <Footer/> */}
       </div>
      
    

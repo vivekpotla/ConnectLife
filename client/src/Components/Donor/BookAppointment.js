@@ -3,7 +3,7 @@ import axios from 'axios';
 import { PreviousDonationsForm } from './PreviousDonationsForm';
 import { GenerateSlotReciept } from './GenerateSlotReciept';
 import { useNavigate } from 'react-router';
-
+import Footer from '../Footer';
 const userObj = JSON.parse(localStorage.getItem('user'));
 
 export const BookAppointment = ({ campDetails }) => {
@@ -185,6 +185,7 @@ export const BookAppointment = ({ campDetails }) => {
           </div>
         </div>
       )}
+      
     </div>
   );
 };

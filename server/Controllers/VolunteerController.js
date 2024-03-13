@@ -234,12 +234,10 @@ export const myCamps = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
 export const markAppointmentAsDonated = async (req, res) => {
   try {
     // Extract the appointment ID from the request body or params
-    const { slotId, donorId, quantity, bloodGroup } = req.body; // Assuming appointmentId is provided in the request body
-
+    const { slotId, donorId, quantity, bloodGroup, status } = req.body; // Assuming appointmentId is provided in the request body
     // Find the appointment by ID
     const appointment = await Appointment.findOne({
       slot: slotId, donor: donorId
@@ -249,16 +247,24 @@ export const markAppointmentAsDonated = async (req, res) => {
       return res.status(404).json({ message: 'Appointment not found' });
     }
 
+    // If status is 'Rejected', update the donor status and return
+    if (status === 'Rejected') {
+      await Appointment.updateOne(
+        { slot: slotId, donor: donorId },
+        { $set: { donated: false, quantity } },
+      );
+
+      // Respond with success message
+      return res.json({ message: 'Donation rejected successfully' });
+    }
+
     // Mark the appointment as donated
     await Appointment.updateOne(
       { slot: slotId, donor: donorId },
       { $set: { donated: true, quantity, bloodGroup } },
-
     );
 
-
     const bloodGroupDB = mapBloodGroup(bloodGroup);
-    console.log(bloodGroupDB)
     // Update the blood quantity for the camp
     const bloodQuantity = await BloodQuantity.findOne({ camp: appointment.camp });
     if (!bloodQuantity) {
@@ -270,19 +276,17 @@ export const markAppointmentAsDonated = async (req, res) => {
       await newBloodQuantity.save();
     } else {
       // If blood quantity record exists, update the quantity for the corresponding blood group
-      bloodQuantity[bloodGroupDB] += quantity;
+      bloodQuantity[bloodGroupDB] += +quantity;
       await bloodQuantity.save();
     }
 
     // Respond with success message
     res.json({ message: 'Appointment marked as donated successfully' });
   } catch (error) {
-    console.error('Error marking appointment as donated:', error);
+    console.error('Error marking appointment:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
-
 
 //get slot + donor details for a camp
 export const getAllSlotsWithDonorsForCamp = async (req, res) => {
@@ -296,19 +300,31 @@ export const getAllSlotsWithDonorsForCamp = async (req, res) => {
     }
 
     // Find all slots for the camp
-    const slots = await Slot.find({ camp: campId }).populate('donors');
+    const slots = await Slot.find({ camp: campId });
 
     // Group slots by date
     const slotsByDate = {};
-    slots.forEach(slot => {
+    for (const slot of slots) {
       const date = slot.date.toISOString().split('T')[0]; // Get date in YYYY-MM-DD format
+
+      // Find appointments for this slot
+      const appointments = await Appointment.find({ slot: slot._id }).populate('donor');
+
       if (!slotsByDate[date]) {
         slotsByDate[date] = [];
       }
-      // Replace donor IDs with complete donor information
-      const slotWithDonors = { ...slot._doc, donors: slot.donors.map(donor => donor._doc) };
-      slotsByDate[date].push(slotWithDonors);
-    });
+
+      // Construct donor details
+      const donors = appointments.map(appointment => ({
+        _id: appointment.donor._id,
+        name: appointment.donor.name,
+        bloodGroup: appointment.bloodGroup,
+        status: appointment.donated ? 'Donated' : 'Pending', // Assuming status based on donated flag
+        unitsDonated: appointment.quantity,
+      }));
+
+      slotsByDate[date].push({ ...slot._doc, donors });
+    }
 
     res.status(200).json(slotsByDate);
   } catch (err) {
