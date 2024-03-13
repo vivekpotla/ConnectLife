@@ -4,6 +4,8 @@ import { v2 as cloudinary } from 'cloudinary';
 import dotenv from 'dotenv';
 import Recipient from "../Models/Recipient.js";
 import bcrypt from "bcryptjs";
+import nodemailer from 'nodemailer';
+
 dotenv.config();
 cloudinary.config({
   cloud_name: process.env.CLOUDNAME,
@@ -107,18 +109,51 @@ export const createRequest = async (req, res) => {
   try {
     const { recipientId, donorId } = req.body;
     const existingRequest = await RequestDetails.findOne({ recipient: recipientId, donor: donorId });
-    
+
     if (existingRequest) {
       // If a request already exists, respond with a message indicating that the request has already been made
       return res.status(200).json({ message: 'A request from this recipient to this donor already exists.' });
     }
 
-    
     const request = await RequestDetails.create({ recipient: recipientId, donor: donorId });
+
+    // Get donor email
+    const donor = await Donor.findById(donorId);
+    const donorEmail = donor.email;
+
+    // Send email to donor requesting blood
+    await sendEmailToDonor(donorEmail, 'Blood Request', 'You have a new blood request. Please login to your ConnectLife account to view the details.');
+
     return res.status(201).json(request);
   } catch (error) {
     console.error(error);
     return res.status(500).json({ message: 'Internal server error' });
+  }
+};
+
+// Function to send email to donor
+const sendEmailToDonor = async (to, subject, text) => {
+  try {
+    // Create reusable transporter object using the default SMTP transport
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "kamarapuvikas@gmail.com",
+        pass: "qylwofsjmvxewelm"
+      }
+    });
+
+    // send mail with defined transport object
+    await transporter.sendMail({
+      from: '"ConnectLife" your-email@gmail.com', // sender address
+      to, // recipient address
+      subject, // Subject line
+      text, // plain text body
+    });
+
+    console.log('Email sent to', to);
+  } catch (error) {
+    console.error('Error sending email:', error);
   }
 };
 
