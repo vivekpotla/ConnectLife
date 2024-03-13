@@ -135,13 +135,19 @@ const navListMenuItems = [
     {
         title: "Blood Donation Process",
         link: "/donationprocess",
-        description: "Embark on a life-saving journey: Understand the blood donation process at NGO camps.",
+        description: " Understand the blood donation process at NGO camps.",
         users: ["donor", "recipient", "volunteer", "auth"]
     },
     {
         title: "Blood Processing",
         link: "/bloodprocessing",
-        description: "Behind the Scenes: Exploring Blood Processing After Donation at NGO Camps",
+        description: " Exploring Blood Processing After Donation at NGO Camps",
+        users: ["donor", "recipient", "volunteer", "auth"]
+    },
+    {
+        title: "Blood Campatibility",
+        link: "/bloodcompatibility",
+        description: "Red blood cell types for safe transfusions.",
         users: ["donor", "recipient", "volunteer", "auth"]
     },
     {
