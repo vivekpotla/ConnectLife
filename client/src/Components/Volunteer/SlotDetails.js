@@ -40,6 +40,8 @@ const SlotDetails = ({ isOpen, onClose, slots }) => {
           </button>
           <div className="text-lg font-bold mb-2">Camp Slots</div>
           {/* Render date selection */}
+
+          <h1 className='my-2'>Select Date: </h1>
           <div className="flex justify-center">
             {Object.keys(slots).map(dateString => (
               <button
@@ -54,6 +56,7 @@ const SlotDetails = ({ isOpen, onClose, slots }) => {
             ))}
           </div>
           {/* Render slots for selected date */}
+          <h1 className='my-3'>Select Slot :</h1>
           <div className="grid grid-cols-3 gap-2 mt-4">
             {selectedDate && slots[selectedDate]?.map((slot, index) => (
               <div
