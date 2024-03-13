@@ -30,6 +30,7 @@ export const BookAppointment = ({ campDetails }) => {
           throw new Error('Failed to fetch slots');
         }
         setSlots(response.data);
+        setLoading(false); 
       } catch (error) {
         console.error('Error fetching slots:', error.message);
       }
@@ -37,6 +38,7 @@ export const BookAppointment = ({ campDetails }) => {
 
     const checkAlreadyBooked = async () => {
       try {
+        setLoading(true)
         const response = await axios.get(`http://localhost:5000/api/donor/appointments/${userObj._id}`);
         const { notDonatedAppointments } = response.data;
         const alreadyBooked = notDonatedAppointments.some(appointment => appointment.camp._id === campDetails._id);
@@ -57,6 +59,10 @@ export const BookAppointment = ({ campDetails }) => {
     const formattedDate = date.toISOString().split('T')[0];
     setSelectedDate(formattedDate);
     setShowDatesPopup(false);
+    setLoading(true)
+    setTimeout(() => {
+      setLoading(false)
+    }, 1000);
   };
 
   const handleSlotClick = (slot) => {
@@ -97,7 +103,7 @@ export const BookAppointment = ({ campDetails }) => {
   // Render loading message while fetching data
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex justify-center items-center m-5 p-5">
         <FontAwesomeIcon icon={faSpinner} spin size="3x" /> {/* Display spinner icon */}
       </div>
     );
