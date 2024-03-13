@@ -46,15 +46,19 @@ export const CampDetails = () => {
           <div className='flex flex-wrap justify-between mr-10'>
             <h1 className="text-4xl font-bold mb-4 text-gray-800">Camp Details</h1>
           </div>
+          <div className="flex items-center p-2 ">
+        <img className="w-12 h-12 rounded-full mr-4" src={campDetails.ngo.imageURL} alt="NGO Logo" />
+        <div>
+          <p className="font-semibold">{campDetails.ngo.name}</p>
+          {/* You can add additional content here if needed */}
+        </div>
+      </div>
           <p className="mb-5 text-gray-700"><span className="font-bold">Location:</span> {campDetails.location}</p>
           <p className="mb-5 text-gray-700"><span className="font-bold">Description:</span> {campDetails.description}</p>
           <p className="mb-5 text-gray-700"><span className="font-bold">Start Date:</span> {formatDate(campDetails.startDate)}</p>
           <p className="mb-5 text-gray-700"><span className="font-bold">End Date:</span> {formatDate(campDetails.endDate)}</p>
           <p className="mb-5 text-gray-700"><span className="font-bold">Timings:</span> {formatTime(campDetails.startTime)} to {formatTime(campDetails.endTime)}</p>
           <div>
-            {/* NGO Information to be improvised +++++++++++++++++++++++++++++++++++ */}
-            <div className="text-gray-700">Organized by {campDetails.ngo.name}</div>
-            <img src={campDetails.ngo.imageURL} className='object-cover h-20 w-20'/>
             <div className="text-gray-700">Email: {campDetails.ngo.email}</div>
             <div className="text-gray-700">NGO cell: +91 {campDetails.ngo.phoneNumber}</div>
             {/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}

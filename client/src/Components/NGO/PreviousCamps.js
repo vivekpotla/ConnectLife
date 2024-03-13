@@ -18,26 +18,31 @@ export const PreviousCamps = () => {
   const [selectedCampDonors, setSelectedCampDonors] = useState([]);
   const [selectedCampBloodUnits, setSelectedCampBloodUnits] = useState([]);
   const [notify, setNotify] = useState(false);
-
+  const user = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     const fetchCampsData = async () => {
       try {
         const response = await axios.get('http://localhost:5000/api/ngo/view-all-camps');
         const allCamps = response.data;
         setCampsData(allCamps);
+        console.log(allCamps)
+        const filteredCamps = allCamps.filter(camp => camp.ngo._id === user._id);
+        console.log(filteredCamps)
         const now = new Date();
-        const upcoming = allCamps.filter(camp => isAfter(new Date(camp.startDate), now));
-        const previous = allCamps.filter(camp => isBefore(new Date(camp.endDate), now));
-        setUpcomingCamps(upcoming);
-        setPreviousCamps(previous);
-        setLoading(false);
-      } catch (error) {
-        console.error('Error fetching camps data:', error);
-      }
-    };
+      const upcoming = filteredCamps.filter(camp => isAfter(new Date(camp.startDate), now));
+      const previous = filteredCamps.filter(camp => isBefore(new Date(camp.endDate), now));
+      
+      setCampsData(filteredCamps);
+      setUpcomingCamps(upcoming);
+      setPreviousCamps(previous);
+      setLoading(false);
+    } catch (error) {
+      console.error('Error fetching camps data:', error);
+    }
+  };
 
-    fetchCampsData();
-  }, []);
+  fetchCampsData();
+}, []);
 
   const handleViewDonors = async (campId) => {
     try {
@@ -84,9 +89,11 @@ export const PreviousCamps = () => {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-4 text-center">Blood Donation Camps</h1>
-
       <section>
         <h2 className="text-2xl font-semibold mb-4 text-center">Upcoming Camps</h2>
+        {upcomingCamps.length === 0 ? (
+        <p className="text-center text-gray-600">No upcoming camps found.</p>
+      ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {upcomingCamps.map((camp, index) => (
             <div key={index} className="bg-white rounded-lg shadow-md p-4 flex flex-col relative justify-between">
@@ -119,11 +126,16 @@ export const PreviousCamps = () => {
               </div>
             </div>
           ))}
+         
         </div>
+        )}
       </section>
 
       <section>
         <h2 className="text-2xl font-semibold mb-2 mt-4  text-center">Previous Camps</h2>
+        {previousCamps.length === 0 ? (
+        <p className="text-center text-gray-600">No previous camps found.</p>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {previousCamps.map((camp, index) => (
             <div key={index} className="bg-white rounded-lg shadow-md p-4 flex flex-col relative justify-between">
@@ -148,6 +160,7 @@ export const PreviousCamps = () => {
             </div>
           ))}
         </div>
+        )}
       </section>
       <CampsDonors show={showDonorsModal} handleClose={() => setShowDonorsModal(false)} donors={selectedCampDonors} />
       {showBloodUnitsModal && selectedCampBloodUnits && ( // Add a check for selectedCampBloodUnits
