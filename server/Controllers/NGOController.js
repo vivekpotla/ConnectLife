@@ -303,11 +303,8 @@ export const notifyVolunteersByCampId = async (req, res) => {
       return res.status(404).json({ message: 'Camp not found' });
     }
 
-    // Find all volunteers
-    const volunteers = await Volunteer.find();
-
     // Send notification to all volunteers
-    const result = await sendNotificationToVolunteers(volunteers, camp);
+    const result = await sendNotificationToVolunteers(camp);
 
     if (!result) {
       return res.status(404).json({ message: 'Error in sending notification' });
@@ -326,17 +323,13 @@ const client = twilio(accountSid, authToken);
 
 
 //notifying volunteers function
-const sendNotificationToVolunteers = async (volunteers, campDetails) => {
+const sendNotificationToVolunteers = async (campDetails) => {
   try {
-    // Iterate through each volunteer
-    for (const volunteer of volunteers) {
-      // Send a notification to the volunteer
-      await client.messages.create({
-        body: `Hello ${volunteer.name}, ConnectLife: There's a new camp at ${campDetails.location}. Date: ${campDetails.startDate} \n ${campDetails.description}`,
-        from: '+17865743487',
-        to: '+91' + volunteer.contactNumber
-      });
-    }
+    await client.messages.create({
+      body: `Hello Vikas Kamarapu, ConnectLife: There's a new camp at ${campDetails.location}. Date: ${campDetails.startDate} \n ${campDetails.description.slice(0, 30)}`,
+      from: '+19314520146',
+      to: '+917075500056'
+    });
     console.log('Notifications sent successfully');
     return true;
   } catch (error) {
