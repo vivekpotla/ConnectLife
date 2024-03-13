@@ -42,6 +42,11 @@ const ChatBot = () => {
         }
     }, [chat]);
 
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && quest.trim() !== '') {
+            handleSendQuestion();
+        }
+    };
 
     const handleSendQuestion = async () => {
         const newQuestion = quest.trim();
@@ -154,6 +159,7 @@ const ChatBot = () => {
                         }}
                         containerProps={{ className: "w-full" }}
                         autoFocus={true}
+                        onKeyDown={handleKeyPress}
                     />
                     <Button
                         size="sm"
