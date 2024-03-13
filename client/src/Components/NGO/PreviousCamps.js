@@ -148,6 +148,7 @@ export const PreviousCamps = () => {
         show={showBloodUnitsModal}
         handleClose={() => setShowBloodUnitsModal(false)}
         selectedCampBloodUnits={selectedCampBloodUnits}
+        donors={selectedCampDonors}
       />
     )}
     </div>

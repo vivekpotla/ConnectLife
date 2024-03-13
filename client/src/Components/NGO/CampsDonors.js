@@ -4,7 +4,6 @@ export const CampsDonors = ({ show, handleClose, donors }) => {
   if (!show) {
     return null;
   }
-  console.log(donors)
   const downloadCsv = () => {
     const csvContent =
       "data:text/csv;charset=utf-8," +
@@ -28,10 +27,10 @@ export const CampsDonors = ({ show, handleClose, donors }) => {
         <h2 className="text-xl font-semibold mb-2">Donors List</h2>
         {donors.length === 0 ? ( // Check if there are no donors
         <div className="mt-4">
-          <p className="text-gray-600">No donors registered</p>
-          <button className="bg-gray-500 text-white px-4 py-2 ml-2 rounded hover:bg-gray-600" onClick={handleClose}>Close</button>
+          <p className="text-gray-600 text-center mb-2">No donors registered</p>
+          <button className="bg-gray-500 text-white flex mx-auto px-4 py-2 rounded hover:bg-gray-600" onClick={handleClose}>Close</button>
         </div>
-        ) : (
+        ) :(
           <div className="overflow-y-auto max-h-72">
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
@@ -51,7 +50,7 @@ export const CampsDonors = ({ show, handleClose, donors }) => {
                 ))}
               </tbody>
             </table>
-            <div className="flex justify-end mt-4">
+            <div className="sticky flex justify-end mt-4">
           <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" onClick={downloadCsv}>Download CSV</button>
           <button className="bg-gray-500 text-white px-4 py-2 ml-2 rounded hover:bg-gray-600" onClick={handleClose}>Close</button>
         </div>
