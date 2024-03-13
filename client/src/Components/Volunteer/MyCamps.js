@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Button } from '@material-tailwind/react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { MapPinIcon } from '@heroicons/react/24/solid';
 import SlotDetails from './SlotDetails';
 import axios from 'axios';
@@ -8,6 +10,7 @@ export const MyCamps = () => {
   const [camps, setCamps] = useState([]);
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedCamp, setSelectedCamp] = useState(null);
+  const [loading, setLoading] = useState(true);
   const userObj = JSON.parse(localStorage.getItem("user"));
   const volunteerId = userObj._id;
 
@@ -26,6 +29,8 @@ export const MyCamps = () => {
         setCamps(campsWithSlots);
       } catch (error) {
         console.error('Error fetching volunteer camps:', error);
+      }finally {
+        setLoading(false);
       }
     };
 
@@ -57,7 +62,14 @@ export const MyCamps = () => {
     const date = new Date(dateString);
     return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
   };
-
+  
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" /> {/* Display spinner icon */}
+      </div>
+    );
+  }
   return (
     <div className="flex flex-wrap justify-center">
       {camps.map((camp, index) => (
