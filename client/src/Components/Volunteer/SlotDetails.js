@@ -7,6 +7,7 @@ const SlotDetails = ({ isOpen, onClose, slots }) => {
   const handleSlotClick = (slot) => {
     // Here you can fetch donor details based on the slot and navigate to another page
     // For now, I'll keep it static
+    console.log(slots)
     const donorDetails = slot.donors.map(donor => ({
       name: donor.name,
       bloodGroup: donor.bloodGroup,
@@ -16,6 +17,7 @@ const SlotDetails = ({ isOpen, onClose, slots }) => {
       donorId: donor._id
       // Add other donor details if needed
     }));
+    console.log(donorDetails)
     // Navigate to the donor details page
     navigate("/volunteer/donordetails", { state: { donorDetails } });
     // Close the modal after navigating

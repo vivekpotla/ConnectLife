@@ -37,6 +37,7 @@ import { logout } from "../Redux/slices/userSlice";
 import { useDispatch } from "react-redux";
 import PagesImg from "../Components/Images/PagesImg.png"
 import NgoPagesImg from "../Components/Images/NgoPagesImg.png"
+import { useSelector } from 'react-redux';
 
 const profileMenuItems = [
     {
@@ -135,19 +136,13 @@ const navListMenuItems = [
         title: "Blood Donation Process",
         link: "/donationprocess",
         description: "Embark on a life-saving journey: Understand the blood donation process at NGO camps.",
-        users: ["donor", "recipient"]
+        users: ["volunteer","donor", "recipient"]
     },
     {
         title: "Blood Processing",
         link: "/bloodprocessing",
         description: "Behind the Scenes: Exploring Blood Processing After Donation at NGO Camps",
         users: ["donor","recipient","volunteer"]
-    },
-    {
-        title: "Material Tailwind PRO",
-        link: "/bloodprocessing",
-        description: "A complete set of UI Elements for building faster websites in less time.",
-        users: ["volunteer", "donor", "recipient"]
     },
     {
         title: "My Posts",
@@ -225,9 +220,7 @@ function NavListMenu({ userObj }) {
                 {renderItems}
             </ul>
         </React.Fragment>
-    );
-}
-
+    );}
 const navListItems = [
     {
         label: "Home",

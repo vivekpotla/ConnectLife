@@ -23,7 +23,6 @@ export const MyCamps = () => {
           // Fetch slot details for each camp
           const slotResponse = await axios.post('http://localhost:5000/api/volunteer/get-slot-details', { campId: camp._id });
           const updatedCamp = { ...camp, slots: slotResponse.data };
-          console.log(updatedCamp)
           return updatedCamp;
         }));
         setCamps(campsWithSlots);
@@ -37,19 +36,8 @@ export const MyCamps = () => {
     // Call the fetchCamps function when the component mounts
     fetchCamps();
   }, []);
-  const generateSlots = (startTime, endTime) => {
-    const slots = [];
-    let currentTime = new Date(`2000-01-01T${startTime}`);
-    const endTimeObj = new Date(`2000-01-01T${endTime}`);
-    while (currentTime < endTimeObj) {
-      slots.push(currentTime.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }));
-      currentTime = new Date(currentTime.getTime() + 60 * 60 * 1000); // Increment by 1 hour
-    }
-    return slots;
-  };
 
   const handleEditClick = (camp) => {
-    console.log(camp)
     setSelectedCamp(camp);
     setModalOpen(true);
   };
