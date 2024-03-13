@@ -326,7 +326,7 @@ const client = twilio(accountSid, authToken);
 const sendNotificationToVolunteers = async (campDetails) => {
   try {
     await client.messages.create({
-      body: `Hello Vikas Kamarapu, ConnectLife: There's a new camp at ${campDetails.location}. Date: ${campDetails.startDate} \n ${campDetails.description.slice(0, 30)}`,
+      body: `Hello Vikas Kamarapu, ConnectLife: There's a new camp at ${campDetails.location}. Date: ${campDetails.startDate} \n ${campDetails.description.slice(0, 50)}`,
       from: '+19314520146',
       to: '+917075500056'
     });

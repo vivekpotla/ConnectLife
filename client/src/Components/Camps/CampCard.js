@@ -19,8 +19,10 @@ export default function CampCard({ camps }) {
         <div className='text-gray-600 line-clamp-3'>{camps.description}</div>
 
         {/* NGO Information to be imporvised +++++++++++++++++++++++++++++++++++ */}
-        <div>Organized by {camps.ngo.name}</div>
-        <img src={camps.ngo.imageURL} />
+        <div className='flex justify-center gap-2 items-center py-3'>
+          <div>Organized by {camps.ngo.name}</div>
+          <img src={camps.ngo.imageURL} className='max-h-10 max-w-10 rounded-full' />
+        </div>
         <div>mail: {camps.ngo.email}</div>
         <div>NGO cell: +91 {camps.ngo.phoneNumber}</div>
         {/* +++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ */}
@@ -40,7 +42,7 @@ export default function CampCard({ camps }) {
           </Button>
         </Link>
       </div>
-      
+
     </div>
   );
 }
