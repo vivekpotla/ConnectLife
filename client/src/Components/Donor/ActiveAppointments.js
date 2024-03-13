@@ -10,7 +10,25 @@ export default function ActiveAppointments() {
   const [showFullLocation, setShowFullLocation] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState([]);
-
+  const [selectedOption, setSelectedOption] = useState('Active');
+  const handleDropdownChange = (event) => {
+    const selectedValue = event.target.value;
+    console.log(selectedValue)
+    switch (selectedValue) {
+      case 'Active':
+        setSelectedOption("Active");
+        break;
+      case 'Previous':
+        setSelectedOption("Previous");
+        break;
+      case 'Rejected':
+        setSelectedOption("Rejected");
+        break;
+      default:
+        setSelectedOption("Active");
+        break;
+    }
+  };
   const toggleLocation = () => {
     setShowFullLocation(!showFullLocation);
   };
@@ -57,9 +75,21 @@ export default function ActiveAppointments() {
     );
   }
 
+ 
+ 
+
+
   return (
     <div className='ml-16 mr-16'>
-      <h1 className="text-2xl font-bold mb-10 mt-5  text-center ">Active Appointments</h1>
+
+<select value={selectedOption} onChange={handleDropdownChange} className="p-2 mt-3 bg-dark border ">
+        <option value="Active">Active Appointments</option>
+        <option value="Previous">Previous Appointments</option>
+        <option value="Rejected">Rejected Appointments</option>
+      </select>
+      { selectedOption==="Active" && 
+      <>
+      <h1 className="text-2xl font-bold mb-10 mt-5   ">Active Appointments</h1>
       <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
         {/* Active Appointments */}
         {activeAppointments.length > 0 ? (
@@ -102,8 +132,11 @@ export default function ActiveAppointments() {
           </div>
         )}
       </div>
-      
-      <h1 className="text-2xl font-bold m-10 text-center">Previous Appointments</h1>
+      </>
+      }
+      { selectedOption==="Previous" && 
+      <>
+      <h1 className="text-2xl font-bold mb-10 mt-5   ">Previous Appointments</h1>
       <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
         {/* Previous Appointments */}
         {previousAppointments.length > 0 ? (
@@ -146,8 +179,11 @@ export default function ActiveAppointments() {
           </div>
         )}
       </div>
-      
-      <h1 className="text-2xl font-bold m-10 text-center">Rejected Appointments</h1>
+      </>}
+
+      { selectedOption==="Rejected" && 
+      <>
+      <h1 className="text-2xl font-bold mb-10 mt-5   ">Rejected Appointments</h1>
       <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
         {/* Rejected Appointments */}
         {rejectedAppointments.length > 0 ? (
@@ -190,7 +226,7 @@ export default function ActiveAppointments() {
           </div>
         )}
       </div>
-      
+      </>}
     </div>
   );
 }
