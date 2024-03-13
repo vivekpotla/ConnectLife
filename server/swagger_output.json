@@ -1225,6 +1225,9 @@
                 },
                 "bloodGroup": {
                   "example": "any"
+                },
+                "status": {
+                  "example": "any"
                 }
               }
             }
