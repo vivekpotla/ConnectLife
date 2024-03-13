@@ -3,14 +3,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faTimesCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 import Footer from '../Footer';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 export default function ContactRequests() {
   const [requests, setRequests] = useState([]);
+  const [loading, setLoading] = useState(true);
   const userObj = JSON.parse(localStorage.getItem("user"));
   useEffect(() => {
     const getRecipientRequests = async () => {
       try {
         const response = await axios.post('http://localhost:5000/api/donor/view-recipient-requests', { donorId: userObj._id });
         const requestDetails=response.data;
+        setLoading(false)
         if(requestDetails!==undefined)
           setRequests(requestDetails);
       } catch (error) {
@@ -127,10 +130,17 @@ export default function ContactRequests() {
     }, 3000);
   };
 
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" /> {/* Display spinner icon */}
+      </div>
+    );
+  }
   return (
     <div className="flex justify-center">
       <div className="w-full">
-        <h1 className="text-2xl font-bold m-4 text-center">Contact Requests</h1>
+        <h1 className="text-4xl font-bold m-4 text-center p-5 text-red-500">Contact Requests</h1>
         <div className="overflow-x-auto">
 
           {requests.length!=0 ? 
@@ -163,7 +173,7 @@ export default function ContactRequests() {
           </table>
 
           :
-          <div className='text-center text-l font-semibold'>No pending requests</div>
+          <div className='text-center text-xl mt-5 font-semibold'>~ No pending requests ~</div>
           }
         </div>
       </div>
