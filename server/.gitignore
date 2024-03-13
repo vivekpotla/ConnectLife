@@ -6,7 +6,7 @@
 /swagger_output.json
 # testing
 /coverage
-
+.env
 # production
 /build
 
