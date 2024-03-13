@@ -2,6 +2,7 @@ import React from 'react'
 import PostsLists from '../Posts/PostsList'
 import HomeCarousel from './HomeCarousel'
 import Lottie from 'lottie-react';
+import Footer from '../Footer';
 // import Bot from '../../Icons/Animation - 1709051490247.json';
 // import Blood from '../../Icons/Animation - 17090548134631.json';
 import Donor from '../../Icons/Animation - 1709054933954.json';
@@ -18,6 +19,7 @@ const HomePage = () => {
                 </div>
                 <PostsLists />
             </div>
+            
         </div>
     )
 }

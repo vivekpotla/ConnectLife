@@ -30,7 +30,7 @@ import { CreateCamps } from './Components/Camps/CreateCamps.js';
 import LocationUpdater from './Components/LocationUpdater.js';
 import ViewRequests from './Components/Recipient/ViewRequests.js';
 import Help from './Components/Profile/Help.js';
-
+import Footer from './Components/Footer.js';
 function App() {
 
   const [userObj, setUserObj] = useState(null);
@@ -45,6 +45,8 @@ function App() {
     <>
       <Route path='/SignUp/:userType' element={<Registration />} />
       <Route path='/login/:userType' element={<Login />} />
+      <Route path='/bloodprocessing' element={<BloodProcessing />} />
+      <Route path='/donationprocess' element={<BloodDonationProcess />} />
     </>
   )
 
@@ -106,6 +108,7 @@ function App() {
           <ChatBot />
         </div>
         {userObj && userObj.userType!=='ngo' && <LocationUpdater/>}
+        {/* <Footer/> */}
       </div>
      
    

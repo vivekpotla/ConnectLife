@@ -146,7 +146,7 @@ export const CampsList = () => {
           ))}
         </div>
       </div>
-      <Footer/>
+      
     </div>
   );
 }

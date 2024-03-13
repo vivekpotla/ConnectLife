@@ -112,7 +112,7 @@ export const createBloodDonationCamp = async (req, res) => {
 
     let path = req?.files?.image?.path
     let imageURL = null
-    
+
     if (path) {
       const timestamp = Date.now(); // Get current timestamp
       const public_id = `camps/${ngoId}_${timestamp}`;
@@ -253,7 +253,7 @@ export const getDonorsInCamp = async (req, res) => {
           bloodGroup: appointment.donor.bloodGroup,
           quantity: appointment.quantity
         };
-    
+
         if (appointment.donated) {
           donors.donated.push(donorDetails);
         } else {
@@ -320,8 +320,8 @@ export const notifyVolunteersByCampId = async (req, res) => {
   }
 };
 
-const accountSid = 'ACca1a2e49b90bb4dc87abfd05ea48f41e';
-const authToken = 'eea0c25195c839f8c143b6539fddcde7';
+const accountSid = process.env.ACCOUNT_SID;
+const authToken = process.env.AUTH_TOKEN;
 const client = twilio(accountSid, authToken);
 
 
@@ -332,7 +332,7 @@ const sendNotificationToVolunteers = async (volunteers, campDetails) => {
     for (const volunteer of volunteers) {
       // Send a notification to the volunteer
       await client.messages.create({
-        body: `Hello ${volunteer.name}, ConnectLife: There's a new camp at ${campDetails.location}. Date: ${campDetails.startDate}`,
+        body: `Hello ${volunteer.name}, ConnectLife: There's a new camp at ${campDetails.location}. Date: ${campDetails.startDate} \n ${campDetails.description}`,
         from: '+17865743487',
         to: '+91' + volunteer.contactNumber
       });

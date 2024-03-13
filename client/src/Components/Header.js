@@ -136,13 +136,13 @@ const navListMenuItems = [
         title: "Blood Donation Process",
         link: "/donationprocess",
         description: "Embark on a life-saving journey: Understand the blood donation process at NGO camps.",
-        users: ["volunteer","donor", "recipient"]
+        users: ["donor", "recipient", "volunteer", "auth"]
     },
     {
         title: "Blood Processing",
         link: "/bloodprocessing",
         description: "Behind the Scenes: Exploring Blood Processing After Donation at NGO Camps",
-        users: ["donor","recipient","volunteer"]
+        users: ["donor", "recipient", "volunteer", "auth"]
     },
     {
         title: "My Posts",
@@ -161,14 +161,14 @@ const navListMenuItems = [
 function NavListMenu({ userObj }) {
     const [isMenuOpen, setIsMenuOpen] = React.useState(false);
     const renderItems = navListMenuItems.map(({ title, description, link, users }) => {
-        if (users.includes(userObj?.userType) || users.includes("all")) {
+        if (users.includes(userObj?.userType) || users.includes("all") || (users.includes("auth") && userObj?.userType !== "ngo")) {
             return (
                 <Link to={link} key={title}>
                     <MenuItem>
                         <Typography variant="h6" color="red" className="mb-1">
                             {title}
                         </Typography>
-                        <Typography variant="small" color="gray" className="font-normal">
+                        <Typography variant="small" color="gray" className="font-normal text-sm text-wrap">
                             {description}
                         </Typography>
                     </MenuItem>
@@ -195,17 +195,18 @@ function NavListMenu({ userObj }) {
                         </MenuItem>
                     </Typography>
                 </MenuHandler>
-                <MenuList className="hidden w-auto grid-cols-7 gap-3 overflow-visible lg:grid">
+                <MenuList className="hidden max-w-96 grid-cols-7 gap-3 lg:grid">
                     <Card
                         shadow={false}
                         variant="gradient"
                         className="col-span-3 grid h-full w-full place-items-center rounded-md"
                     >
-                    {isUserNGO ? (
+                        {/* {isUserNGO ? (
                         <img src={NgoPagesImg} alt="PagesImg" className="h-full w-full" />
                     ) : (
-                    <img src={PagesImg} alt="PagesImg" className="h-auto w-auto" />
-                    )}
+                    <img src={PagesImg} alt="PagesImg" className="h-full w-full" />
+                    )} */}
+                        <img src={isUserNGO ? NgoPagesImg : PagesImg} alt="PagesImg" className="h-20 w-20" />
                     </Card>
                     <ul className="col-span-4 flex w-auto justify-around flex-col gap-1">
                         {renderItems}
@@ -256,25 +257,25 @@ const navListItems = [
         label: "FAQs",
         icon: CodeBracketSquareIcon,
         link: "/donorfaqs",
-        users: [ "donor", "all"]
+        users: ["donor", "all"]
     },
     {
         label: "FAQs",
         icon: CodeBracketSquareIcon,
         link: "/recipientfaqs",
-        users: [  "recipient", "all"]
+        users: ["recipient", "all"]
     },
     {
         label: "Search Donors",
         icon: MagnifyingGlassIcon,
         link: "/searchdonors",
-        users: [  "recipient"]
+        users: ["recipient"]
     },
     {
         label: "View Requests",
         icon: EyeIcon,
         link: "/viewrequests",
-        users: [  "recipient",]
+        users: ["recipient",]
     },
     {
         label: "My Camps",

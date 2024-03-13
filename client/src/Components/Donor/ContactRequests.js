@@ -170,7 +170,7 @@ export default function ContactRequests() {
       <div id="alertContainer" className="fixed top-4 right-4 z-50">
         {/* Alerts will be appended here */}
       </div>
-      <Footer/>
+      
     </div>
   );
 }

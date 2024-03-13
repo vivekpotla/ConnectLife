@@ -384,7 +384,7 @@ const RegisterCamp = ({ marker, locationAddress, ngoId, setLocationAddress }) =>
                 </form>
                 {message && <Typography color="red" className='mt-2 text-sm'>{message}</Typography>}
             </div>
-            <Footer/>
+           
         </div>
     );
 };
