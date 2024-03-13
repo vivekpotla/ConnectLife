@@ -54,13 +54,13 @@ export const PreviousCamps = () => {
       const response = await axios.post("http://localhost:5000/api/ngo/get-blood-quantity", { campId });
       const { data } = response;
       const { campName, campAddress, bloodQuantity } = data;
-  
+
       // Transform the blood quantity object into an array of objects
       const bloodUnitsArray = Object.entries(bloodQuantity).map(([bloodType, quantity]) => ({
         bloodType,
         quantity
       }));
-  
+
       setSelectedCampBloodUnits({
         campName,
         campAddress,
@@ -84,7 +84,7 @@ export const PreviousCamps = () => {
   return (
     <div className="container mx-auto py-8">
       <h1 className="text-3xl font-bold mb-4 text-center">Blood Donation Camps</h1>
-      
+
       <section>
         <h2 className="text-2xl font-semibold mb-4 text-center">Upcoming Camps</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -95,21 +95,28 @@ export const PreviousCamps = () => {
               <p className="text-gray-600 mb-2">Date: {format(new Date(camp.startDate), 'MM/dd/yyyy')}</p>
               <p className="text-gray-600 mb-2 line-clamp-3">Location: {camp.location}</p>
               <div className='absolute right-3'>
-                  <Tooltip content="Send Mail to Volunteers">
-                    <IconButton disabled={notify} variant='text' onClick={async () => {
-                      setNotify(true);
-                      await axios.post("http://localhost:5000/api/ngo/notify-volunteers-email", { campId: camp._id }).then((res) => {
-                        setTimeout(() => {
-                          setNotify(false);
-                        }, 120000);
-                      }).catch((error) => {
-                        console.log(error);
-                      });
-                    }}>
-                      <BellAlertIcon className='w-6 h-6' fill='red' />
-                    </IconButton>
-                  </Tooltip>
-                </div>
+                <Tooltip content="Send Mail to Volunteers">
+                  <IconButton disabled={notify} variant='text' onClick={async () => {
+                    setNotify(true);
+                    await axios.post("http://localhost:5000/api/ngo/notify-volunteers-email", { campId: camp._id }).then((res) => {
+                      setTimeout(() => {
+                        setNotify(false);
+                      }, 120000);
+                    }).catch((error) => {
+                      console.log(error);
+                    });
+                    await axios.post("http://localhost:5000/api/ngo/notify-volunteers", { campId: camp._id }).then((res) => {
+                      setTimeout(() => {
+                        setNotify(false);
+                      }, 120000);
+                    }).catch((error) => {
+                      console.log(error);
+                    });
+                  }}>
+                    <BellAlertIcon className='w-6 h-6' fill='red' />
+                  </IconButton>
+                </Tooltip>
+              </div>
             </div>
           ))}
         </div>
@@ -148,6 +155,7 @@ export const PreviousCamps = () => {
         show={showBloodUnitsModal}
         handleClose={() => setShowBloodUnitsModal(false)}
         selectedCampBloodUnits={selectedCampBloodUnits}
+        donors={selectedCampDonors}
       />
     )}
     </div>
