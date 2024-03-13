@@ -98,7 +98,7 @@ export const CampsList = () => {
 
   return (
     <div className='bg-gray-100 p-1'>
-      <Typography variant='h5' className='font-semibold md:ml-10 ml-4 text-gray-700 text-center' >Blood Donation Camps</Typography>
+      <Typography variant='h5' className='mt-4 font-semibold md:ml-10 ml-4 text-gray-900 text-center' >Blood Donation Camps</Typography>
       <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
         <div className='relative flex justify-end place-self-end md:mt-0 mt-3'>
           <ListMenu selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />
@@ -129,7 +129,7 @@ export const CampsList = () => {
         </div>
       </div>
       {searchedCamps.length !== 0 && <div>
-        <Typography variant='h6' className='md:ml-10 ml-3 mt-2 text-yellow-600 text-center'>Showing Search Results:</Typography>
+        <Typography variant='h6' className='md:ml-10 ml-3 mt-2 text-red-600 text-center'>Showing Search Results:</Typography>
         <div className="flex flex-wrap justify-center">
           {searchedCamps.map((camp, index) => (
             <CampCard key={index} camps={camp} />
@@ -138,7 +138,7 @@ export const CampsList = () => {
       </div>}
       <div>
         {searchedCamps.length !== 0 &&
-          <Typography variant='h6' className='md:ml-10 ml-3 mt-2 text-yellow-600 text-center'>Latest Camps:</Typography>
+          <Typography variant='h6' className='md:ml-10 ml-3 mt-2 text-red-600 text-center'>Latest Camps:</Typography>
         }
         <div className="flex flex-wrap justify-center">
           {campsData.map((camp, index) => (

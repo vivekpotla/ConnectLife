@@ -82,7 +82,7 @@ export default function ActiveAppointments() {
   return (
     <div className='ml-16 mr-16 pt-3'>
 
-<select value={selectedOption} onChange={handleDropdownChange} className="text-xl p-3 mt-4 bg-indigo-200 border rounded">
+<select value={selectedOption} onChange={handleDropdownChange} className="text-lg  p-2 mt-4 bg-gray-200 border rounded">
         <option value="Active">Active Appointments</option>
         <option value="Previous">Previous Appointments</option>
         <option value="Rejected">Rejected Appointments</option>
