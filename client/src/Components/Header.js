@@ -146,7 +146,7 @@ const navListMenuItems = [
     },
     {
         title: "Blood Campatibility",
-        link: "/bloodcompatibility",
+        link: "/bloodgroupcompatibility",
         description: "Red blood cell types for safe transfusions.",
         users: ["donor", "recipient", "volunteer", "auth"]
     },

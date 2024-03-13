@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import axios from 'axios';
 
 export default function EditProfile() {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, formState: { errors } } = useForm();
   const user = JSON.parse(localStorage.getItem("user"));
   const [image, setImage] = useState(user.image); // State to store image URL
   const [isEdited, setIsEdited] = useState(false);
@@ -96,94 +96,94 @@ export default function EditProfile() {
               <label className="block text-gray-700 font-bold mb-2">Name:</label>
               <input
                 type="text"
-                {...register('name')}
-                className="border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 "
-                required
+                {...register('name', { required: true })}
+                className={`border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 ${errors.name ? 'border-red-500' : ''}`}
                 defaultValue={user.name}
               />
+              {errors.name && <p className="text-red-500 text-xs mt-1">Name is required</p>}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">Aadhar Number:</label>
               <input
                 type="text"
-                {...register('aadhar')}
-                className="border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500"
-                required
+                {...register('aadhar', { required: true, pattern: /^[0-9]{12}$/ })}
+                className={`border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 ${errors.aadhar ? 'border-red-500' : ''}`}
                 defaultValue={user.aadhaarNumber}
               />
+              {errors.aadhar && <p className="text-red-500 text-xs mt-1">Enter a valid Aadhar number (12 digits)</p>}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">Email:</label>
               <input
                 type="text"
-                {...register('email')}
-                className="border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500"
-                required
+                {...register('email', { required: true, pattern: /^\S+@\S+$/i })}
+                className={`border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 ${errors.email ? 'border-red-500' : ''}`}
                 defaultValue={user.email}
               />
+              {errors.email && <p className="text-red-500 text-xs mt-1">Enter a valid email address</p>}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">Phone Number:</label>
               <input
                 type="text"
-                {...register('phoneNumber')}
-                className="border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500"
-                required
+                {...register('phoneNumber', { required: true, pattern: /^[0-9]{10}$/ })}
+                className={`border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 ${errors.phoneNumber ? 'border-red-500' : ''}`}
                 defaultValue={user.phoneNumber}
               />
+              {errors.phoneNumber && <p className="text-red-500 text-xs mt-1">Enter a valid phone number (10 digits)</p>}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">Blood Group:</label>
               <input
                 type="text"
-                {...register('bloodGroup')}
-                className="border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500"
-                required
+                {...register('bloodGroup', { required: true })}
+                className={`border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 ${errors.bloodGroup ? 'border-red-500' : ''}`}
                 defaultValue={user.bloodGroup}
               />
+              {errors.bloodGroup && <p className="text-red-500 text-xs mt-1">Blood group is required</p>}
             </div>
             <div className="mb-4">
               <label className="block text-gray-700 font-bold mb-2">Address:</label>
               <input
                 type="text"
-                {...register('address.street')}
-                className="border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 mb-2"
-                required
+                {...register('address.street', { required: true })}
+                className={`border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 mb-2 ${errors.address?.street ? 'border-red-500' : ''}`}
                 defaultValue={user.address.street}
                 placeholder="Street"
               />
+              {errors.address?.street && <p className="text-red-500 text-xs mt-1">Street is required</p>}
               <input
                 type="text"
-                {...register('address.city')}
-                className="border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 mb-2"
-                required
+                {...register('address.city', { required: true })}
+                className={`border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 mb-2 ${errors.address?.city ? 'border-red-500' : ''}`}
                 defaultValue={user.address.city}
                 placeholder="City"
               />
+              {errors.address?.city && <p className="text-red-500 text-xs mt-1">City is required</p>}
               <input
                 type="text"
-                {...register('address.state')}
-                className="border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 mb-2"
-                required
+                {...register('address.state', { required: true })}
+                className={`border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 mb-2 ${errors.address?.state ? 'border-red-500' : ''}`}
                 defaultValue={user.address.state}
                 placeholder="State"
               />
+              {errors.address?.state && <p className="text-red-500 text-xs mt-1">State is required</p>}
               <input
                 type="text"
-                {...register('address.postalCode')}
-                className="border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 mb-2"
-                required
+                {...register('address.postalCode', { required: true })}
+                className={`border rounded-md px-4 py-2 w-full text-gray-700 focus:outline-none focus:border-blue-500 mb-2 ${errors.address?.postalCode ? 'border-red-500' : ''}`}
                 defaultValue={user.address.postalCode}
                 placeholder="Zipcode"
               />
+              {errors.address?.postalCode && <p className="text-red-500 text-xs mt-1">Postal code is required</p>}
               <input
                 type="text"
-                {...register('address.country')}
-                className="border rounded-md px-4 py-2 w-full  text-gray-700 focus:outline-none focus:border-blue-500"
-                required
+                {...register('address.country', { required: true })}
+                className={`border rounded-md px-4 py-2 w-full  text-gray-700 focus:outline-none focus:border-blue-500 ${errors.address?.country ? 'border-red-500' : ''}`}
                 defaultValue={user.address.country}
                 placeholder="Country"
               />
+              {errors.address?.country && <p className="text-red-500 text-xs mt-1">Country is required</p>}
             </div>
             <div className='flex justify-end'>
               <button
