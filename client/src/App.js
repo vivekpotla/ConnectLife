@@ -31,6 +31,7 @@ import LocationUpdater from './Components/LocationUpdater.js';
 import ViewRequests from './Components/Recipient/ViewRequests.js';
 import Help from './Components/Profile/Help.js';
 import Footer from './Components/Footer.js';
+import BloodGroupCompatibility from './Components/InformationPages/BloodGroupCompatibility .js';
 function App() {
 
   const [userObj, setUserObj] = useState(null);
@@ -97,6 +98,7 @@ function App() {
             <Route path='/createcamps' element={<CreateCamps/>}/>
             <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
             <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
+            <Route path='/bloodgroupcompatibility' element={<BloodGroupCompatibility/>}/>
             {!isLoggedIn && AuthRoutes}
             {userObj?.userType === "ngo" && NgoRoutes}
             {userObj?.userType === "donor" && DonorRoutes}
