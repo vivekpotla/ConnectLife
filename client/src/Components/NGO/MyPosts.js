@@ -96,7 +96,9 @@ function MyPosts() {
     setDeletePostId(null); // Clear delete confirmation state
   };
   return (
-    <div className='bg-gray-100 h-auto p-4'>
+    <div className=' p-4'>
+
+      <div className='text-black-500 text-4xl ms-5 mt-3 mb-5'>My Posts </div>
       {/* Post deleted popup */}
       {isDeleted && (
         <div className="fixed z-10 inset-0 overflow-y-auto">
@@ -158,6 +160,8 @@ function MyPosts() {
           </div>
         </div>
       )}
+
+      { postsData.length!==0 ?
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4 place-items-center">
         {postsData.map(post => (
           <Card className="mt-6 md:max-w-96 max-w-72">
@@ -197,6 +201,8 @@ function MyPosts() {
           </div>
         )}
       </div>
+      :
+      <div className='text-center text-red-400 mt-7 text-2xl font-bold'> No posts yet!</div>}
     </div>
   );
 };
