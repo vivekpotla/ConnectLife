@@ -4,7 +4,6 @@ import { useNavigate } from 'react-router-dom';
 const SlotDetails = ({ isOpen, onClose, slots }) => {
   const navigate = useNavigate();
   const [selectedDate, setSelectedDate] = useState(null);
-  console.log(slots)
   const handleSlotClick = (slot) => {
     // Here you can fetch donor details based on the slot and navigate to another page
     // For now, I'll keep it static
@@ -13,6 +12,8 @@ const SlotDetails = ({ isOpen, onClose, slots }) => {
       bloodGroup: donor.bloodGroup,
       status: donor.status,
       unitsDonated: donor.unitsDonated,
+      slotId: slot._id,
+      donorId: donor._id
       // Add other donor details if needed
     }));
     // Navigate to the donor details page

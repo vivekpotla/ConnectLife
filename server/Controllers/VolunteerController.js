@@ -63,8 +63,9 @@ export const registerVolunteer = async (req, res) => {
 export const loginVolunteer = async (req, res) => {
   try {
     const { phoneNumber, password } = req.body;
-
-    const volunteer = await Volunteer.findOne({ phoneNumber });
+    console.log(phoneNumber,password)
+    const volunteer = await Volunteer.findOne({ contactNumber: phoneNumber  });
+    console.log(volunteer)
     if (!volunteer) {
       return res.status(404).json({ message: 'Volunteer not found' });
     }

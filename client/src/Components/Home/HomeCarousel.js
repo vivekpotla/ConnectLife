@@ -1,9 +1,14 @@
 import { Carousel } from '@material-tailwind/react'
 import React from 'react'
+import Carousel1 from '../Images/Carousel1.png'
+import Carousel2 from '../Images/Carousel2.png'
+import Carousel3 from '../Images/Carousel3.png'
+import Carousel5 from '../Images/Carousel5.png'
+import Carousel7 from '../Images/Carousel7.png'
 
 const HomeCarousel = () => {
     return (
-        <div className='lg:mx-2 h-[85vh]'>
+        <div className='lg:mx-2 h-[55vh]'>
             <Carousel
                 className="rounded-xl"
                 autoplay={true}
@@ -24,37 +29,27 @@ const HomeCarousel = () => {
                 )}
             >
                 <img
-                    src="https://images.pexels.com/photos/17704170/pexels-photo-17704170/free-photo-of-a-red-and-orange-background-with-bubbles.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    src={Carousel1}
                     alt="image1"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://t3.ftcdn.net/jpg/06/06/44/38/240_F_606443804_jYagxn3GcTCUAY02Zac0Tb9Dj30vd6UF.jpg"
+                    src={Carousel2}
                     alt="image2"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://t3.ftcdn.net/jpg/06/02/58/12/240_F_602581280_pAXoal2kLdulVv72ib7zVHhh2QlKEPUr.jpg"
+                    src={Carousel3}
                     alt="image3"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    src={Carousel5}
                     alt="image3"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://images.pexels.com/photos/13009643/pexels-photo-13009643.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                    alt="image3"
-                    className="h-full w-full object-cover"
-                />
-                <img
-                    src="https://images.pexels.com/photos/6823603/pexels-photo-6823603.jpeg"
-                    alt="image3"
-                    className="h-full w-full object-cover"
-                />
-                <img
-                    src="https://images.pexels.com/photos/7659573/pexels-photo-7659573.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    src={Carousel7}
                     alt="image3"
                     className="h-full w-full object-cover"
                 />

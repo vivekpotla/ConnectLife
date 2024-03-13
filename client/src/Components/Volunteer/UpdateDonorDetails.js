@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useLocation } from 'react-router';
 import { CheckCircleIcon, XCircleIcon } from '@heroicons/react/24/solid'; // Import tick and wrong icons
+import axios from 'axios';
 
 export const UpdateDonorDetails = () => {
   const location = useLocation();
@@ -20,18 +21,34 @@ export const UpdateDonorDetails = () => {
     setUpdatedDonorIndex(null); // Reset the updated donor index
   };
 
-  const handleDonateConfirm = () => {
+  const handleDonateConfirm = async () => {
     if (donationUnits <= 0) {
-        alert('Please enter a value greater than 0 for donation units.');
-        return;
-      }
-    
+      alert('Please enter a value greater than 0 for donation units.');
+      return;
+    }
     setShowPopup(false);
-    // Update the status to "Donated" for the selected donor
-    const updatedDonorDetails = [...donorDetails];
-    updatedDonorDetails[updatedDonorIndex].status = 'Donated';
-    setDonorDetails(updatedDonorDetails);
-    // You may need to perform further actions here, like updating the database
+    try {
+      const donor = donorDetails[updatedDonorIndex];
+      const requestData = {
+        slotId: donor.slotId,
+        donorId: donor.donorId,
+        quantity: donationUnits,
+        bloodGroup: donor.bloodGroup,
+        status: donor.status // Include donor status in the request
+      };
+
+      // Make a request to mark the appointment as donated or rejected based on the donor status
+      const response = await axios.post(`http://localhost:5000/api/volunteer/mark-donated`, requestData);
+      
+      if (response.status === 200) {
+        const updatedDonorDetails = [...donorDetails];
+        updatedDonorDetails[updatedDonorIndex].status = 'Donated';
+        setDonorDetails(updatedDonorDetails);
+      }
+    } catch (error) {
+      console.error('Error donating:', error);
+      alert('An error occurred while donating. Please try again later.');
+    }
   };
 
   const handleReject = (index) => {
@@ -39,13 +56,33 @@ export const UpdateDonorDetails = () => {
     setUpdatedDonorIndex(index); // Set the index of the donor being updated
   };
 
-  const handleRejectConfirm = () => {
-    // If the user confirms rejection, update the status
-    const updatedDonorDetails = [...donorDetails];
-    updatedDonorDetails[updatedDonorIndex].status = 'Rejected';
-    setDonorDetails(updatedDonorDetails);
-    setRejectConfirmation(false); // Close the rejection confirmation popup
-    // You may need to perform further actions here, like updating the database
+  const handleRejectConfirm = async () => {
+    try {
+      // Update the donor status to "Rejected"
+      const updatedDonorDetails = [...donorDetails];
+      updatedDonorDetails[updatedDonorIndex].status = 'Rejected';
+      setDonorDetails(updatedDonorDetails);
+
+      // Make a request to mark the appointment as rejected
+      const donor = donorDetails[updatedDonorIndex];
+      const requestData = {
+        slotId: donor.slotId,
+        donorId: donor.donorId,
+        bloodGroup: donor.bloodGroup,
+        status: 'Rejected' // Include status as 'Rejected' in the request
+      };
+
+      const response = await axios.post(`http://localhost:5000/api/volunteer/mark-donated`, requestData);
+
+      if (response.status === 200) {
+        console.log('Donation rejected successfully');
+      }
+    } catch (error) {
+      console.error('Error rejecting donation:', error);
+      alert('An error occurred while rejecting donation. Please try again later.');
+    } finally {
+      setRejectConfirmation(false); // Close the rejection confirmation popup
+    }
   };
 
   return (
@@ -72,16 +109,16 @@ export const UpdateDonorDetails = () => {
                   </>
                 )}
                 {donor.status === 'Donated' && (
-                    <div className='flex mx-auto justify-center'>
-                        <span>Donated</span>
-                        <CheckCircleIcon className="h-6 w-6 text-green-500 " />
-                    </div>
+                  <div className='flex mx-auto justify-center'>
+                    <span>Donated</span>
+                    <CheckCircleIcon className="h-6 w-6 text-green-500 " />
+                  </div>
                 )}
                 {donor.status === 'Rejected' && (
                   <div className='flex mx-auto justify-center'>
-                  <p>Rejected</p>
-                  <XCircleIcon className="h-6 w-6 text-red-500 " />
-              </div>
+                    <p>Rejected</p>
+                    <XCircleIcon className="h-6 w-6 text-red-500 " />
+                  </div>
                 )}
               </td>
             </tr>
@@ -96,8 +133,8 @@ export const UpdateDonorDetails = () => {
             <label htmlFor="units" className="block mb-2">Enter number of units donated:</label>
             <input type="number" id="units" className="block w-full border border-gray-300 rounded-md py-2 px-3 mb-4" value={donationUnits} onChange={(e) => setDonationUnits(e.target.value)} />
             <div className="mt-4 flex justify-end">
-            <button onClick={() => setShowPopup(false)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2">Cancel</button>
-            <button onClick={handleDonateConfirm} className="bg-green-500 text-white px-4 py-2 rounded-md">Confirm</button>
+              <button onClick={() => setShowPopup(false)} className="bg-gray-300 text-gray-800 px-4 py-2 rounded-md mr-2">Cancel</button>
+              <button onClick={handleDonateConfirm} className="bg-green-500 text-white px-4 py-2 rounded-md">Confirm</button>
             </div>
           </div>
         </div>
@@ -116,3 +153,5 @@ export const UpdateDonorDetails = () => {
     </div>
   );
 };
+
+export default UpdateDonorDetails;
