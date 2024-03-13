@@ -24,7 +24,7 @@ const HomeCarousel = () => {
                 )}
             >
                 <img
-                    src="https://t3.ftcdn.net/jpg/06/49/51/66/240_F_649516614_IoDWpGxsjFcaGxB42aCTFUJH3APc8P1r.jpg"
+                    src="https://images.pexels.com/photos/17704170/pexels-photo-17704170/free-photo-of-a-red-and-orange-background-with-bubbles.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                     alt="image1"
                     className="h-full w-full object-cover"
                 />
@@ -39,22 +39,22 @@ const HomeCarousel = () => {
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://t3.ftcdn.net/jpg/06/02/58/12/240_F_602581280_pAXoal2kLdulVv72ib7zVHhh2QlKEPUr.jpg"
+                    src="https://images.pexels.com/photos/6646918/pexels-photo-6646918.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                     alt="image3"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://images.pexels.com/photos/38136/pexels-photo-38136.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    src="https://images.pexels.com/photos/13009643/pexels-photo-13009643.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                     alt="image3"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://images.pexels.com/photos/1612351/pexels-photo-1612351.jpeg"
+                    src="https://images.pexels.com/photos/6823603/pexels-photo-6823603.jpeg"
                     alt="image3"
                     className="h-full w-full object-cover"
                 />
                 <img
-                    src="https://images.pexels.com/photos/1263986/pexels-photo-1263986.jpeg"
+                    src="https://images.pexels.com/photos/7659573/pexels-photo-7659573.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
                     alt="image3"
                     className="h-full w-full object-cover"
                 />
