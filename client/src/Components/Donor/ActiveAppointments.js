@@ -114,12 +114,12 @@ export default function ActiveAppointments() {
                       <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime} IST
                     </div>
                   </div>
-                  <div className="ml-6 flex-3">
-                    <div>
-                      <strong className="font-semibold">Status:</strong> Active
+                  <div className="flex  flex-3 gap-2 mb-5">
+                    <div className="my-auto font-semibold">
+                      Status: Active 
                     </div>
-                    <div className="mt-2 ">
-                      <FontAwesomeIcon icon={faClock } className="text-yellow-500 mx-auto" size="2x" />
+                    <div className=" my-auto py-auto">
+                    <FontAwesomeIcon icon={faClock } className="text-yellow-500 mx-auto" size="2x" />
                     </div>
                   </div>
                 </div>
@@ -208,12 +208,12 @@ export default function ActiveAppointments() {
                       <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime} IST
                     </div>
                   </div>
-                  <div className="ml-6 flex-3">
-                    <div>
-                      <strong className="font-semibold">Status:</strong> Rejected
+                  <div className="flex  flex-3 gap-2 mb-5">
+                    <div className="my-auto font-semibold">
+                      Status: Rejected 
                     </div>
-                    <div className="mt-2 ">
-                      <FontAwesomeIcon icon={faXmarkCircle } className="text-red-500 mx-auto" size="2x" />
+                    <div className=" my-auto py-auto">
+                    <FontAwesomeIcon icon={faXmarkCircle } className="text-red-500 mx-auto" size="2x" />
                     </div>
                   </div>
                 </div>

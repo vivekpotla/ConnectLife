@@ -107,7 +107,7 @@ const ChatBot = () => {
                 className="p-4 bg-gray-50"
                 size={600}
             >
-                <div className="mb-6 flex items-center justify-between">
+                <div className="mb-6 flex items-center justify-between rounded">
                     <Typography variant="h5" color="blue-gray">
                         ConnectLife Helper
                     </Typography>
@@ -121,19 +121,19 @@ const ChatBot = () => {
                 </div>
 
                 <div className="mb-4 px-1 font-normal h-[80%] overflow-auto text-sm" ref={listRef}>
-                    <div className='bg-blue-gray-100 place-self-start px-2 py-1.5 max-w-[16vw] rounded-xl rounded-tl-sm'>
+                    <div className='bg-red-100 place-self-start px-2 py-1.5 max-w-[16vw] rounded-xl rounded-tl-sm'>
                         Hello, How can I help you?
                     </div>
                     {chat.map((val, index) => (
                         <div key={index} className='flex flex-col gap-2 py-4 border-b'>
-                            <div className='bg-green-100 place-self-end px-2 py-1.5 ml-5 rounded-xl rounded-tr-sm'>
+                            <div className='bg-blue-100 place-self-end px-2 py-1.5 ml-5 rounded-xl rounded-tr-sm'>
                                 <div className='font-semibold text-gray-700 text-xs'>You :</div>
                                 <div className='pl-1'>
                                     {val.question}
                                 </div>
                             </div>
-                            <div className='bg-blue-gray-100 place-self-start px-2 py-1.5 mr-5 rounded-xl rounded-tl-sm'>
-                                <div className='font-semibold text-gray-700 text-xs'>Bot :</div>
+                            <div className='bg-red-100 place-self-start px-2 py-1.5 mr-5 rounded-xl rounded-tl-sm'>
+                                <div className='font-semibold text-grey-700 text-xs'>Bot :</div>
                                 {val.answer ?
                                     <div className='pl-1'>
                                         {val.answer}

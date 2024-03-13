@@ -43,7 +43,7 @@ export default function CampCard({ camps }) {
             View Camp Details
           </Button>
       </div>
-      
+
     </div>
     </Link>
   );

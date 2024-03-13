@@ -98,7 +98,7 @@ export const CampsList = () => {
 
   return (
     <div className='bg-gray-100 p-1'>
-      <Typography variant='h5' className='mt-4 font-semibold md:ml-10 ml-4 text-gray-900 text-center' >Blood Donation Camps</Typography>
+      <Typography variant='h5' className='font-semibold md:ml-10 ml-4 text-red-700 text-center text-2xl mt-3' >Blood Donation Camps</Typography>
       <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
         <div className='relative flex justify-end place-self-end md:mt-0 mt-3'>
           <ListMenu selectedFilter={selectedFilter} setSelectedFilter={setSelectedFilter} />

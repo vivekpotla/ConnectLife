@@ -32,7 +32,7 @@ export const DonorFaqs = () => {
   return (
     <div className="p-6">
 
-      <div className="text-2xl text-semibold text-center mb-5">Frequently Asked Questions - FAQs</div>
+      <div className="text-2xl text-semibold text-center mb-5 text-red-500">Frequently Asked Questions - FAQs</div>
       <div className="flex mb-4">
         <div className="flex-shrink-0 mr-4">
           <img src={DonorFaqsGif} alt="DonorFaqsGif" style={{ height: '200px', width: 'auto' }} />
