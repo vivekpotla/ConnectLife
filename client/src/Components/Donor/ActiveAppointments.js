@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faClock , faSpinner, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-
+import Footer from "../Footer";
 export default function ActiveAppointments() {
   const [activeAppointments, setActiveAppointments] = useState([]);
   const [previousAppointments, setPreviousAppointments] = useState([]);
@@ -190,6 +190,7 @@ export default function ActiveAppointments() {
           </div>
         )}
       </div>
+      <Footer/>
     </div>
   );
 }

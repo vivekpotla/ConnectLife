@@ -8,7 +8,7 @@ import {
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom'
 import { Button, Input, Typography, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react';
-
+import Footer from '../Footer';
 
 export const CampsList = () => {
   const [query, setQuery] = useState('');
@@ -135,6 +135,7 @@ export const CampsList = () => {
           ))}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }
