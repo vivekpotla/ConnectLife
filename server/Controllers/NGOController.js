@@ -450,7 +450,7 @@ export const getPreviousCamps = async (req, res) => {
     // Find previous camps organized by the NGO
     const previousCamps = await Camp.find({ ngo: ngoId });
 
-    res.json(previousCamps);
+    res.status(201).json(previousCamps);
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: 'Internal server error' });

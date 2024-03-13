@@ -3,7 +3,7 @@ import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 import * as Yup from 'yup';
 import axios from 'axios';
-import { Input, Button, Typography, Spinner } from '@material-tailwind/react';
+import { Input, Button, Typography, Spinner, Textarea } from '@material-tailwind/react';
 import { useNavigate } from 'react-router';
 
 const RegisterCamp = ({ marker, locationAddress, ngoId, setLocationAddress }) => {
@@ -35,6 +35,14 @@ const RegisterCamp = ({ marker, locationAddress, ngoId, setLocationAddress }) =>
         console.log(fileObject);
     }
 
+    const notifyVolunteers = async (campId) => {
+        await axios.post("http://localhost:5000/api/ngo/notify-volunteers-email", { campId }).then((res) => {
+            console.log(res.message);
+        }).catch((error) => {
+            console.log(error);
+        });
+    }
+
     const onSubmit = async (data) => {
         try {
             setLoading(true);
@@ -57,7 +65,8 @@ const RegisterCamp = ({ marker, locationAddress, ngoId, setLocationAddress }) =>
             };
             await axios.post("http://localhost:5000/api/ngo/create-camp", formData, axiosConfig).then((res) => {
                 // Assuming res.data.payload contains the user data
-                navigate("/camps");
+                notifyVolunteers(res?.data?._id);
+                navigate("/mycamps");
             }).catch((error) => {
                 setMessage(error.message);
             });
@@ -105,10 +114,9 @@ const RegisterCamp = ({ marker, locationAddress, ngoId, setLocationAddress }) =>
                             {errors.name.message}
                         </Typography>
                     )}
-                    <Input
+                    <Textarea
                         type="text"
                         label="Description"
-                        placeholder="Description"
                         {...register('description')}
                     />
                     {errors?.description && (
