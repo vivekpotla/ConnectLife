@@ -4,6 +4,8 @@ import { PreviousDonationsForm } from './PreviousDonationsForm';
 import { GenerateSlotReciept } from './GenerateSlotReciept';
 import { useNavigate } from 'react-router';
 import Footer from '../Footer';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 const userObj = JSON.parse(localStorage.getItem('user'));
 
 export const BookAppointment = ({ campDetails }) => {
@@ -94,7 +96,11 @@ export const BookAppointment = ({ campDetails }) => {
 
   // Render loading message while fetching data
   if (loading) {
-    return <p>Loading...</p>;
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" /> {/* Display spinner icon */}
+      </div>
+    );
   }
 
   // Render UI based on appointment status
@@ -116,10 +122,10 @@ export const BookAppointment = ({ campDetails }) => {
       )}
 
       {showDatesPopup && ( // Show dates popup only if showDatesPopup is true
-        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 z-50">
+        <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50 z-50 ">
           <div className="bg-white rounded-lg p-6 max-w-md">
           <h1 className='text-xl font-semibold mb-2 text-center'>Select Date</h1>
-          <div className={`grid grid-cols-${Object.keys(slots).length > 2 ? 3 : Object.keys(slots).length}`}>
+          <div className={`grid grid-cols-${Object.keys(slots).length > 2 ? 3 : Object.keys(slots).length} `}>
               {Object.keys(slots).map((dateString, index) => {
                 const date = new Date(dateString);
                 const options = { weekday: 'short', month: 'short', day: 'numeric' };
@@ -128,7 +134,7 @@ export const BookAppointment = ({ campDetails }) => {
                   <div
                   key={index}
                   onClick={() => handleDateClick(date)}
-                  className={`pt-6 pb-6 p-2 border border-gray-300  cursor-pointer hover:bg-blue-100`}
+                  className={`pt-6 pb-6 p-2 m-2 border border-gray-300  cursor-pointer hover:bg-red-100 bg-red-200`}
                 >
                     <p className="text-center">{formattedDate}</p>
                   </div>
@@ -139,8 +145,10 @@ export const BookAppointment = ({ campDetails }) => {
         </div>
       )}
 
-      {selectedDate && (
-        <div className="mt-4">
+      {selectedDate && ( 
+
+        <>
+        <div className="my-4 ">
           <h2 className="text-lg font-bold mb-2">Slots for {selectedDate}</h2>
           <div className="grid grid-cols-7 gap-2">
             {slots[selectedDate]?.map((slot, index) => (
@@ -158,8 +166,24 @@ export const BookAppointment = ({ campDetails }) => {
             ))}
           </div>
         </div>
+        <div className='flex gap-3 mt-5 '>
+        <span>*</span><div className={`p-1 border border-gray-300 rounded cursor-pointer bg-green-400 border-2 border-green-700  `} style={{ width: '110px' }} >
+              <p>Available </p>
+        </div> 
+        <div className={`p-1 border border-gray-300 rounded cursor-pointer bg-red-400 border-2 border-red-700  `} style={{ width: '110px' }} >
+              <p>Not Available </p>
+        </div>  
+        </div>
+        </>
       )}
 
+{/* ${
+                  slot.slotsLeft !== 0
+                    ? 'bg-green-400 border-2 border-green-700 hover:bg-green-300 hover:ring-green-500 transition delay-100'
+                    : 'bg-red-400 border-2 border-red-700 hover:bg-red-300 hover:ring-red-500 transition delay-100'
+                } */}
+
+          
       <PreviousDonationsForm isOpen={isModalOpen} onClose={handleCloseModal} onConfirm={handleConfirmBooking} />
 
       {bookingSuccess && (

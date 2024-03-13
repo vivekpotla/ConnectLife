@@ -2,13 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { AdjustmentsHorizontalIcon } from '@heroicons/react/24/solid';
 import { faSortDown } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import {
   MagnifyingGlassIcon,
   ChevronDownIcon,
 } from '@heroicons/react/24/solid';
 import { Link } from 'react-router-dom'
 import { Button, Input, Typography, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+
 
 function BloodBanks() {
   const [telanganaBloodBanks, setTelanganaBloodBanks] = useState([]);
