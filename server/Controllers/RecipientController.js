@@ -77,7 +77,7 @@ export const loginRecipient = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-
+Donor.collection.createIndex({point:"2dsphere"});
 //find the nearest donors in 10km range
 export const findNearestDonors = async (req, res) => {
   try {
