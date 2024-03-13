@@ -190,7 +190,7 @@ export default function ActiveAppointments() {
           </div>
         )}
       </div>
-      <Footer/>
+      
     </div>
   );
 }

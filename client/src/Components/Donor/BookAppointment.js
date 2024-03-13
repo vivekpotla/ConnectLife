@@ -185,7 +185,7 @@ export const BookAppointment = ({ campDetails }) => {
           </div>
         </div>
       )}
-      <Footer/>
+      
     </div>
   );
 };

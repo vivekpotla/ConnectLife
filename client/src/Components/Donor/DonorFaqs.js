@@ -74,7 +74,7 @@ export const DonorFaqs = () => {
           ))}
         </div>
       </div>
-      <Footer/>
+      
     </div>
   );
 };

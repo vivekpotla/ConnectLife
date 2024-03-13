@@ -60,7 +60,7 @@ export const CreateCamps = () => {
           </div>
         </DialogBody>
       </Dialog>
-      <Footer/>
+      
     </div>
   )
 }

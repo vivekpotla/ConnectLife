@@ -3,7 +3,7 @@ import Footer from '../Footer'
 export default function DonorHomePage() {
   return (
     <div>DonorHomePage
-    <Footer/>
+   
     </div>
   )
 }
