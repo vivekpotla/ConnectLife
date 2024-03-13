@@ -80,16 +80,16 @@ export default function ActiveAppointments() {
 
 
   return (
-    <div className='ml-16 mr-16'>
+    <div className='ml-16 mr-16 pt-3'>
 
-<select value={selectedOption} onChange={handleDropdownChange} className="p-2 mt-3 bg-dark border ">
+<select value={selectedOption} onChange={handleDropdownChange} className="text-xl p-3 mt-4 bg-indigo-200 border rounded">
         <option value="Active">Active Appointments</option>
         <option value="Previous">Previous Appointments</option>
         <option value="Rejected">Rejected Appointments</option>
       </select>
       { selectedOption==="Active" && 
       <>
-      <h1 className="text-2xl font-bold mb-10 mt-5   ">Active Appointments</h1>
+      <h1 className="text-3xl font-bold mb-10 mt-5  text-center">Active Appointments</h1>
       <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
         {/* Active Appointments */}
         {activeAppointments.length > 0 ? (
@@ -136,7 +136,7 @@ export default function ActiveAppointments() {
       }
       { selectedOption==="Previous" && 
       <>
-      <h1 className="text-2xl font-bold mb-10 mt-5   ">Previous Appointments</h1>
+      <h1 className="text-3xl font-bold mb-10 mt-5  text-center ">Previous Appointments</h1>
       <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
         {/* Previous Appointments */}
         {previousAppointments.length > 0 ? (
@@ -183,7 +183,7 @@ export default function ActiveAppointments() {
 
       { selectedOption==="Rejected" && 
       <>
-      <h1 className="text-2xl font-bold mb-10 mt-5   ">Rejected Appointments</h1>
+      <h1 className="text-3xl font-bold mb-10 mt-5  text-center ">Rejected Appointments</h1>
       <div className="md:flex-row flex-col flex flex-wrap md:mx-auto mt-3 justify-start">
         {/* Rejected Appointments */}
         {rejectedAppointments.length > 0 ? (
