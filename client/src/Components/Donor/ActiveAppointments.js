@@ -111,7 +111,7 @@ export default function ActiveAppointments() {
                       <strong className="font-semibold">Date:</strong> {formatDate(appointment.date)}
                     </div>
                     <div className="mb-2">
-                      <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime}
+                      <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime} IST
                     </div>
                   </div>
                   <div className="ml-6 flex-3">
@@ -158,7 +158,7 @@ export default function ActiveAppointments() {
                       <strong className="font-semibold">Date:</strong> {formatDate(appointment.date)}
                     </div>
                     <div className="mb-2">
-                      <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime}
+                      <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime} IST
                     </div>
                   </div>
                   <div className="flex  flex-3 gap-2 mb-5">
@@ -205,7 +205,7 @@ export default function ActiveAppointments() {
                       <strong className="font-semibold">Date:</strong> {formatDate(appointment.date)}
                     </div>
                     <div className="mb-2">
-                      <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime}
+                      <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime} IST
                     </div>
                   </div>
                   <div className="ml-6 flex-3">
