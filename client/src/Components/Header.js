@@ -254,7 +254,7 @@ const navListItems = [
         users: ["ngo"]
     },
     {
-        label: "Donations",
+        label: "My Donations",
         icon: DonateBloodIcon,
         link: "/activeappointments",
         users: ["donor"]
