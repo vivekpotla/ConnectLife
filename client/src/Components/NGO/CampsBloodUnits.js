@@ -1,18 +1,23 @@
 import React from 'react';
 
-export const CampsBloodUnits = ({ show, handleClose, selectedCampBloodUnits }) => {
-  // Check if selectedCampBloodUnits is not available yet
-  if (!selectedCampBloodUnits) {
-    return null; // Return null to prevent rendering the component
+export const CampsBloodUnits = ({ show, handleClose, selectedCampBloodUnits, donors }) => {
+  // Check if selectedCampBloodUnits is not available yet or if it has no blood units
+  if (!selectedCampBloodUnits || !selectedCampBloodUnits.bloodUnits || selectedCampBloodUnits.bloodUnits.length === 0) {
+    return null; // Return null to prevent rendering the component until data is loaded
   }
 
-  // Once selectedCampBloodUnits is available, continue with rendering the component
+  // Replace blood quantity of 999 with 0
+  const bloodUnitsWithZero = selectedCampBloodUnits.bloodUnits.map(bloodUnit => ({
+    ...bloodUnit,
+    quantity: bloodUnit.quantity === 999 ? 0 : bloodUnit.quantity
+  }));
+
   const downloadCsv = () => {
     const csvContent =
       "data:text/csv;charset=utf-8," +
       ["Blood Group", "Total Units Donated"].join(",") +
       "\n" +
-      selectedCampBloodUnits.bloodUnits.map(bloodUnit => `${bloodUnit.bloodType},${bloodUnit.quantity}`).join("\n");
+      bloodUnitsWithZero.map(bloodUnit => `${bloodUnit.bloodType},${bloodUnit.quantity}`).join("\n");
     const encodedUri = encodeURI(csvContent);
     const link = document.createElement("a");
     link.setAttribute("href", encodedUri);
@@ -25,7 +30,7 @@ export const CampsBloodUnits = ({ show, handleClose, selectedCampBloodUnits }) =
     <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-4 rounded-lg max-w-md">
         <h2 className="text-xl font-semibold mb-2">Blood Units</h2>
-        <div className="overflow-y-auto max-h-72">
+        <div className="max-h-72 overflow-y-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
               <tr>
@@ -34,7 +39,7 @@ export const CampsBloodUnits = ({ show, handleClose, selectedCampBloodUnits }) =
               </tr>
             </thead>
             <tbody className="bg-white divide-y divide-gray-200">
-              {selectedCampBloodUnits.bloodUnits.map((bloodUnit, index) => (
+              {bloodUnitsWithZero.map((bloodUnit, index) => (
                 <tr key={index}>
                   <td className="px-6 py-4 whitespace-nowrap text-center">{bloodUnit.bloodType}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-center">{bloodUnit.quantity}</td>
@@ -42,11 +47,19 @@ export const CampsBloodUnits = ({ show, handleClose, selectedCampBloodUnits }) =
               ))}
             </tbody>
           </table>
-          <div className="flex justify-end mt-4">
+        </div>
+        {donors.length === 0 && (
+          <div className="mt-4">
+            <p className="text-gray-600 text-center mb-2">No donors registered</p>
+            <button className="bg-gray-500 text-white flex mx-auto px-4 py-2 rounded hover:bg-gray-600" onClick={handleClose}>Close</button>
+          </div>
+        )}
+        {donors.length !== 0 && (
+          <div className="sticky bottom-4 flex justify-end mt-4">
             <button className="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600" onClick={downloadCsv}>Download CSV</button>
             <button className="bg-gray-500 text-white px-4 py-2 ml-2 rounded hover:bg-gray-600" onClick={handleClose}>Close</button>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );

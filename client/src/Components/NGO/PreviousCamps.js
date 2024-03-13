@@ -151,12 +151,13 @@ export const PreviousCamps = () => {
       </section>
       <CampsDonors show={showDonorsModal} handleClose={() => setShowDonorsModal(false)} donors={selectedCampDonors} />
       {showBloodUnitsModal && selectedCampBloodUnits && ( // Add a check for selectedCampBloodUnits
-        <CampsBloodUnits
-          show={showBloodUnitsModal}
-          handleClose={() => setShowBloodUnitsModal(false)}
-          selectedCampBloodUnits={selectedCampBloodUnits}
-        />
-      )}
+      <CampsBloodUnits
+        show={showBloodUnitsModal}
+        handleClose={() => setShowBloodUnitsModal(false)}
+        selectedCampBloodUnits={selectedCampBloodUnits}
+        donors={selectedCampDonors}
+      />
+    )}
     </div>
   );
 };
