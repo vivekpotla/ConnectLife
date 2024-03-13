@@ -9,7 +9,7 @@ import {
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Input, Typography, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react';
-import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import Footer from '../Footer';import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 export const CampsList = () => {
   const [query, setQuery] = useState('');
@@ -146,6 +146,7 @@ export const CampsList = () => {
           ))}
         </div>
       </div>
+      <Footer/>
     </div>
   );
 }

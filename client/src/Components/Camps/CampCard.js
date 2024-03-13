@@ -2,7 +2,7 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import { Button } from '@material-tailwind/react'
 import { MapPinIcon } from '@heroicons/react/24/solid'
-
+import Footer from '../Footer';
 export default function CampCard({ camps }) {
   const startDate = new Date(camps.startDate);
   const endDate = new Date(camps.endDate);
@@ -40,6 +40,7 @@ export default function CampCard({ camps }) {
           </Button>
         </Link>
       </div>
+      
     </div>
   );
 }

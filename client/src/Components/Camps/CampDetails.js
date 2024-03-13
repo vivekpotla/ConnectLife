@@ -26,6 +26,13 @@ export const CampDetails = () => {
     const period = parseInt(hours) >= 12 ? 'PM' : 'AM';
     return `${formattedHours}:${minutes} ${period}`;
   };
+  function navigateToLocation(longitude, latitude) {
+    // Construct the Google Maps URL with the coordinates
+    var url = "https://www.google.com/maps/dir/?api=1&destination=" + latitude + "," + longitude;
+
+    // Open the URL in a new tab
+    window.open(url, '_blank');
+}
 
   const [marker, setMarker] = useState({ latitude: campDetails.latitude, longitude: campDetails.longitude });
 
@@ -55,11 +62,9 @@ export const CampDetails = () => {
         </div>
       </div>
       {userObj && userObj.userType === 'volunteer' && <JoinCamp campDetails={campDetails} />}
-      {userObj && userObj.userType === 'donor' && <BookAppointment campDetails={campDetails} />}
-      <div className='mb-8'>
-        {/* Create a button which redirects to google maps to get directions to that location */}
-        <p className='text-center text-gray-700'>Navigate in maps : {campDetails.geolocation.coordinates[0]},{campDetails.geolocation.coordinates[1]} </p>
-        {/* window.open("https://maps.google.com?q="+your_lat+","+your_lng ); */}
+      {userObj && userObj.userType === 'donor' && <BookAppointment campDetails={campDetails} />}      
+       
+      <div className=''>
         <MapComponent
           setMarker={setMarker}
           setLocationAddress={(address) => (address)} // Placeholder for setLocationAddress function
@@ -68,6 +73,9 @@ export const CampDetails = () => {
           address={campDetails.location}
         />
       </div>
+      <div className='flex justify-center'>
+       <button className='mb-8  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded btn text-center' onClick={()=>navigateToLocation(campDetails.geolocation.coordinates[0],campDetails.geolocation.coordinates[1])}>Navigate in maps</button>
+       </div>
 
       {/* Footer */}
       <footer className="bg-gray-200 text-center py-4">

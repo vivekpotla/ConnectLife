@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faClock , faSpinner, faXmarkCircle } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
-
+import Footer from "../Footer";
 export default function ActiveAppointments() {
   const [activeAppointments, setActiveAppointments] = useState([]);
   const [previousAppointments, setPreviousAppointments] = useState([]);
@@ -128,11 +128,11 @@ export default function ActiveAppointments() {
                       <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime}
                     </div>
                   </div>
-                  <div className="ml-6 flex-3">
-                    <div>
-                      <strong className="font-semibold">Status:</strong> Previous
+                  <div className="flex  flex-3 gap-2 mb-5">
+                    <div className="my-auto font-semibold">
+                      Status: Donated 
                     </div>
-                    <div className="mt-2 ">
+                    <div className=" my-auto py-auto">
                       <FontAwesomeIcon icon={faCheckCircle} className="text-green-500" size="2x" />
                     </div>
                   </div>
@@ -190,6 +190,7 @@ export default function ActiveAppointments() {
           </div>
         )}
       </div>
+      <Footer/>
     </div>
   );
 }
