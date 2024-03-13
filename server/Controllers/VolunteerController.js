@@ -276,7 +276,7 @@ export const markAppointmentAsDonated = async (req, res) => {
       await newBloodQuantity.save();
     } else {
       // If blood quantity record exists, update the quantity for the corresponding blood group
-      bloodQuantity[bloodGroupDB] += quantity;
+      bloodQuantity[bloodGroupDB] += +quantity;
       await bloodQuantity.save();
     }
 
