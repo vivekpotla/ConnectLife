@@ -22,7 +22,7 @@ export default function CampCard({ camps }) {
       <div className="px-5 pb-5">
         <div className="flex items-center">
           {/* {React.createElement(BuildingStorefrontIcon, { className: "h-[18px] w-[18px]" })}{" "} */}
-          <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{camps.name}</h5>
+          <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white line-clamp-1">{camps.name}</h5>
         </div>
         <div className='text-gray-600 line-clamp-1'>{camps.description}</div>
 

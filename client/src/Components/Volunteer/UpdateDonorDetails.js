@@ -107,7 +107,7 @@ export const UpdateDonorDetails = () => {
               <td className="border py-2">{donor.name}</td>
               <td className="border py-2">{donor.bloodGroup}</td>
               <td className="border py-2">
-                {donor.status === 'Pending'&& donor.unitsDonated!=999 && (
+                {donor.status === 'Pending'&& donor.unitsDonated!==999 && (
                   <>
                     <button onClick={() => handleDonate(index)} className="mb-1 mt-1 px-2 py-1 bg-green-500 text-white rounded-md">Donated</button>
                     <button onClick={() => handleReject(index)} className="px-2 py-1 bg-red-500 text-white rounded-md ml-2">Rejected</button>
