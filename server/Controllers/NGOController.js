@@ -206,6 +206,8 @@ export const checkBloodQuantity = async (req, res) => {
     if (!camp) {
       return res.status(404).json({ message: 'Camp details not found for the specified camp' });
     }
+    const totalQuantity = Object.values(bloodQuantity).reduce((acc, curr) => acc + curr, 0);
+
 
     // Prepare the response object
     const response = {
@@ -221,7 +223,8 @@ export const checkBloodQuantity = async (req, res) => {
         AB_negative: bloodQuantity.AB_negative,
         O_positive: bloodQuantity.O_positive,
         O_negative: bloodQuantity.O_negative
-      }
+      },
+      totalQuantity: totalQuantity 
     };
 
     // Send the response
