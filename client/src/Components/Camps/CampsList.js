@@ -10,6 +10,7 @@ import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { Button, Input, Typography, Menu, MenuHandler, MenuItem, MenuList } from '@material-tailwind/react';
 import Footer from '../Footer';import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { isAfter } from 'date-fns';
 
 export const CampsList = () => {
   const [query, setQuery] = useState('');
@@ -23,7 +24,9 @@ export const CampsList = () => {
     const getCampsData = async () => {
         try {
             const response = await axios.get('http://localhost:5000/api/ngo/view-all-camps');
-            setCampsData(response.data);
+            const now = new Date();
+            const upcoming = response.data.filter(camp => isAfter(new Date(camp.startDate), now));
+            setCampsData(upcoming);
             setLoading(false); // Set loading to false after getting data
         } catch (error) {
             console.error(error);
