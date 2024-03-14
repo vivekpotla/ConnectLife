@@ -12,6 +12,9 @@ export const CampsBloodUnits = ({ show, handleClose, selectedCampBloodUnits, don
     quantity: bloodUnit.quantity === 999 ? 0 : bloodUnit.quantity
   }));
 
+  // Calculate total sum of blood quantities
+  const totalBloodQuantity = bloodUnitsWithZero.reduce((acc, bloodUnit) => acc + bloodUnit.quantity, 0);
+
   const downloadCsv = () => {
     const csvContent =
       "data:text/csv;charset=utf-8," +
@@ -29,7 +32,7 @@ export const CampsBloodUnits = ({ show, handleClose, selectedCampBloodUnits, don
   return (
     <div className="fixed top-0 left-0 w-full h-full bg-gray-800 bg-opacity-50 flex items-center justify-center">
       <div className="bg-white p-4 rounded-lg max-w-md">
-        <h2 className="text-xl font-semibold mb-2">Blood Units</h2>
+        <h2 className="text-xl mb-2">Total Blood Units: {totalBloodQuantity} Units</h2>
         <div className="max-h-72 overflow-y-auto">
           <table className="min-w-full divide-y divide-gray-200">
             <thead className="bg-gray-50">
