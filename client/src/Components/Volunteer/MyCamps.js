@@ -74,7 +74,7 @@ export const MyCamps = () => {
                 <span className='ml-6 pl-1 pr-1 rounded-xl text-white bg-green-500'>Active</span>
               )}
             </div>
-            <div className='text-gray-600'>{camp.description}</div>
+            <div className='text-gray-600 line-clamp-3'>{camp.description}</div>
             <div className="flex items-start gap-2 py-3">
               <div>
                 <MapPinIcon className="w-5 text-blue-gray-500 mt-0.5 fill-red-300" />
