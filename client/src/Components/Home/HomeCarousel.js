@@ -5,12 +5,16 @@ import Carousel2 from '../Images/Carousel2.png'
 import Carousel3 from '../Images/Carousel3.png'
 import Carousel5 from '../Images/Carousel5.png'
 import Carousel7 from '../Images/Carousel7.png'
-
+import Card from './CarouselCard'
 const HomeCarousel = () => {
     return (
-        <div className='lg:mx-2 h-[55vh]'>
+        <div className='flex'>
+        <div className='h-[55vh]'>
+            <Card />
+        </div>
+        <div className='w-[155vh] h-[55vh]'>
             <Carousel
-                className="rounded-xl"
+                
                 autoplay={true}
                 loop={true}
                 fade
@@ -53,7 +57,8 @@ const HomeCarousel = () => {
                     alt="image3"
                     className="h-full w-full object-cover"
                 />
-            </Carousel>
+            </Carousel>   
+        </div>
         </div>
     );
 }
