@@ -163,7 +163,7 @@ const PostsLists = () => {
                 <div className='lg:max-w-[500px] max-w-[700px]'>
                   <div className='p-2'>
                     <img
-                      className="w-full mb-3 rounded-lg object-cover object-center shadow-xl shadow-blue-gray-900/50"
+                      className="w-full mb-3 rounded-lg object-cover object-center "
                       src={post.imageURL}
                       alt="natureImage"
                     />
@@ -172,17 +172,6 @@ const PostsLists = () => {
                     <Typography variant="h5" color="blue-gray" className="mb-2 font-bold">
                       {post.title}
                     </Typography>
-                    <div className='flex justify-end items-start gap-2 pr-2'>
-                      <IconButton
-                        onClick={handleLike}
-                        size="sm"
-                        variant="text"
-                        className="rounded-full"
-                      >
-                        {like ? <FilledHeart className='h-6 w-6 fill-red-600' /> :
-                          <HeartIcon color='gray' className='h-6 w-6' />}
-                      </IconButton>
-                    </div>
                   </div>
                   <div className="text-sm lg:px-5 px-4 mb-3 text-justify font-thin text-blue-gray-500">
                     {post.description}
@@ -268,79 +257,78 @@ const PostsLists = () => {
   }
 
   return (
-    <div className="lg:p-4 py-4 px-2 flex gap-6 flex-col items-center">
-      {postsData.map((post) => (
-        <div key={post._id} className='bg-blue-gray-50 px-2 pt-2.5 pb-3 rounded-2xl max-w-md'>
-          <div className="flex items-center gap-4 pb-2 pl-4 relative">
-            <Avatar
-              src={post?.authorNGO?.imageURL}
-              alt="avatar"
-              className="border h-10 w-10 border-green-500 shadow-xl shadow-green-900/20 ring-4 ring-green-500/30"
-            />
-            <div>
-              <Typography variant="h6">{post?.authorNGO?.name}{" "}</Typography>
-              <Typography variant="small" color="gray" className="font-normal text-xs pl-0.5">
-                NGO
-              </Typography>
-            </div>
-            <IconButton
-              size="sm"
-              variant="text"
-              className="!absolute top-1.5 right-4 rounded-full"
-            >
-              <EllipsisVerticalIcon className='h-5 w-5 fill-gray-800' />
-            </IconButton>
+    <div className="lg:p-4 py-4 px-2 m-6 flex gap-6 flex-col items-center">
+    {postsData.map((post) => (
+      <div key={post._id} className='bg-blue-gray-50 px-2 pt-2.5 pb-3 max-w-md'>
+        <div className="flex items-center gap-4 pb-2 pl-4 relative">
+          <Avatar
+            src={post?.authorNGO?.imageURL}
+            alt="avatar"
+            className="border h-10 w-10 border-green-500 shadow-xl shadow-green-900/20 ring-4 ring-green-500/30"
+          />
+          <div>
+            <Typography variant="h6">{post?.authorNGO?.name}{" "}</Typography>
+            <Typography variant="small" color="gray" className="font-normal text-xs pl-0.5">
+              NGO
+            </Typography>
           </div>
-          <Card className="w-full rounded-lg bg-gray-50">
-            <CardHeader floated={false} onClick={() => {
-              setSelectedPost(post._id);
-              setOpen(true);
-            }}>
-              <img src={post.imageURL} alt="PostPicture" className='w-full cursor-pointer' />
-            </CardHeader>
-            <CardBody className="pt-2 pb-4 relative">
-              <div className="flex justify-between">
-                <Typography variant="h5" color="blue-gray" className="mb-2 font-bold">
-                  {post.title}
-                </Typography>
-                <div className='flex justify-end items-start gap-2 pr-2'>
-                  <IconButton
-                    onClick={() => setLike(!like)}
-                    size="sm"
-                    variant="text"
-                    className="rounded-full active:animate-ping"
-                  >
-                    {like ? <FilledHeart className='h-6 w-6 fill-red-600' /> :
-                      <HeartIcon color='gray' className='h-6 w-6' />}
-                  </IconButton>
-                  <IconButton
-                    size="sm"
-                    variant="text"
-                    className="rounded-full active:animate-ping"
-                    onClick={() => {
-                      setSelectedPost(post._id);
-                      setOpen(true);
-                    }}
-                  >
-                    <ChatBubbleOvalLeftEllipsisIcon color='gray' className='h-6 w-6' />
-                  </IconButton>
-                </div>
-              </div>
-              <Tooltip content="View More">
-                <div onClick={() => {
-                  setSelectedPost(post._id);
-                  setOpen(true);
-                }} className="text-sm font-thin text-justify text-blue-gray-500 line-clamp-3 cursor-pointer hover:animate-pulse">
-                  {post.description}
-                </div>
-              </Tooltip>
-            </CardBody>
-          </Card>
+          <IconButton
+            size="sm"
+            variant="text"
+            className="!absolute top-1.5 right-4 rounded-full"
+          >
+            <EllipsisVerticalIcon className='h-5 w-5 fill-gray-800' />
+          </IconButton>
         </div>
-      ))}
-      {<DialogComponent />}
-    </div>
-  );
+        <Card className="w-full bg-gray-50 p-4">
+          <CardHeader floated={false} onClick={() => {
+            setSelectedPost(post._id);
+            setOpen(true);
+          }}>
+            <img src={post.imageURL} alt="PostPicture" className='w-full h-auto cursor-pointer' />
+          </CardHeader>
+          <CardBody className="pt-2 pb-4 relative">
+            <div className="flex justify-between">
+              <Typography variant="h5" color="blue-gray" className="mb-2 font-bold">
+                {post.title}
+              </Typography>
+              <div className='flex justify-end items-start gap-2 pr-2'>
+                <IconButton
+                  onClick={() => setLike(!like)}
+                  size="sm"
+                  variant="text"
+                  className="rounded-full active:animate-ping"
+                >
+                </IconButton>
+                <IconButton
+                  size="sm"
+                  variant="text"
+                  className="rounded-full active:animate-ping"
+                  onClick={() => {
+                    setSelectedPost(post._id);
+                    setOpen(true);
+                  }}
+                >
+                  <ChatBubbleOvalLeftEllipsisIcon color='gray' className='h-6 w-6' />
+                </IconButton>
+              </div>
+            </div>
+            <Tooltip content="View More">
+              <div onClick={() => {
+                setSelectedPost(post._id);
+                setOpen(true);
+              }} className="text-sm font-thin text-justify text-blue-gray-500 cursor-pointer hover:animate-pulse">
+                {post.description}
+              </div>
+            </Tooltip>
+          </CardBody>
+        </Card>
+      </div>
+    ))}
+    {<DialogComponent />}
+  </div>
+);
 }
+
 
 export default PostsLists;
