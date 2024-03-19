@@ -10,7 +10,7 @@ const CarouselCard = () => {
         const userType = localStorage.getItem('userType');
 
         // Navigate based on the user's authentication and userType
-        if (isLoggedIn && userType === 'donor') {
+        if (userType === 'donor') {
             navigate('/camps'); // Navigate to '/camps' if logged in as donor
         } else {
             navigate('/login/Donor'); // Navigate to '/login' if not logged in or userType is not donor
