@@ -227,7 +227,8 @@ function NavListMenu({ userObj }) {
                 {renderItems}
             </ul>
         </React.Fragment>
-    );}
+    );
+}
 const navListItems = [
     {
         label: "Home",
@@ -347,14 +348,14 @@ export function Header() {
     return (
         <Navbar className="p-2 lg:pl-6 min-w-full">
             <div className="relative mx-auto flex items-center justify-between text-blue-gray-900">
-                <Typography
+                <div
                     className="mr-2 ml-2 cursor-pointer font-medium"
                 >
                     <div className="flex flex-row gap-2 place-items-center">
                         <ConnectlifeIcon />
                         <div className="lg:text-3xl text-2xl font-bold text-gray-700">ConnectLife</div>
                     </div>
-                </Typography>
+                </div>
                 <div className="flex gap-2">
                     <div className="hidden lg:block">
                         <NavList userObj={userObj} />

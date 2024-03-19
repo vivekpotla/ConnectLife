@@ -17,8 +17,7 @@ const HomeCarousel = () => {
                 
                 autoplay={true}
                 loop={true}
-                fade
-                autoplayDelay={4000} 
+                autoplayDelay={4000}
                 navigation={({ setActiveIndex, activeIndex, length }) => (
                     <div className="absolute bottom-4 left-2/4 z-50 flex -translate-x-2/4 gap-2">
                         {new Array(length).fill("").map((_, i) => (

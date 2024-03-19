@@ -20,7 +20,7 @@ cloudinary.config({
 //donor signup
 export const registerDonor = async (req, res) => {
   try {
-    const { name, email, password, phoneNumber, aadhaarNumber, bloodGroup, address } = req.body;
+    const { name, email, password, phoneNumber, aadhaarNumber, bloodGroup, gender, address } = req.body;
     console.log(req.body);
     // Check if phoneNumber is already registered
     const existingDonor = await Donor.findOne({ phoneNumber });
@@ -48,7 +48,7 @@ export const registerDonor = async (req, res) => {
     }
     const hashedPassword = bcrypt.hashSync(password);
     // Create new donor
-    const newDonor = await Donor.create({ name, email, password: hashedPassword, phoneNumber, bloodGroup, address, aadhaarNumber, ...(imageURL && { imageURL }) });
+    const newDonor = await Donor.create({ name, email, password: hashedPassword, phoneNumber, bloodGroup, gender, address, aadhaarNumber, ...(imageURL && { imageURL }) });
 
     res.status(200).json({ message: 'Donor registered successfully', payload: newDonor });
   } catch (err) {
@@ -126,7 +126,7 @@ export const getDonorAppointments = async (req, res) => {
 export const bookAppointment = async (req, res) => {
   try {
     const { campId, date, slot, donorId } = req.body;
-    
+
     // Find the donor by ID
     const donor = await Donor.findById(donorId);
     if (!donor) {
@@ -173,7 +173,7 @@ export const searchBloodDonationCamps = async (req, res) => {
         { name: { $regex: new RegExp(query, 'i') } }, // Search by name
         { location: { $regex: new RegExp(query, 'i') } } // Search by location
       ]
-    });
+    }).populate('ngo', 'name email imageURL phoneNumber address');
     res.json(camps);
   } catch (err) {
     console.error(err);
@@ -200,7 +200,7 @@ export const findNearestCamps = async (req, res) => {
           $maxDistance: 50000 // 10 kilometers in meters
         }
       }
-    });
+    }).populate('ngo', 'name email imageURL phoneNumber address');
     res.status(200).json(nearestCamps);
   } catch (err) {
     console.error(err);
@@ -343,7 +343,7 @@ export const addCommentToPost = async (req, res) => {
 export const viewRequests = async (req, res) => {
   try {
     const donorId = req.body.donorId;
-    const requests = await RequestDetails.find({ donor: donorId ,status:"pending"}).populate('recipient', 'name phoneNumber bloodGroup').exec();
+    const requests = await RequestDetails.find({ donor: donorId, status: "pending" }).populate('recipient', 'name phoneNumber bloodGroup').exec();
     res.status(200).json(requests);
     console.log(requests)
   } catch (error) {
@@ -416,10 +416,10 @@ export const updateDonorProfile = async (req, res) => {
     res.status(500).json({ message: 'Internal server error' });
   }
 };
-export const updateLiveLocation=async(req,res)=>{
+export const updateLiveLocation = async (req, res) => {
   try {
-    const { userType,userId, latitude, longitude } = req.body;
-    
+    const { userType, userId, latitude, longitude } = req.body;
+
     let modelToUpdate;
 
     // Determine the model based on the user type
@@ -451,4 +451,5 @@ export const updateLiveLocation=async(req,res)=>{
     console.error('Error updating locations:', error);
     res.status(500).json({ message: 'Internal server error' });
   }
-;}
+  ;
+}
