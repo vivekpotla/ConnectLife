@@ -39,6 +39,9 @@
                 "bloodGroup": {
                   "example": "any"
                 },
+                "gender": {
+                  "example": "any"
+                },
                 "address": {
                   "example": "any"
                 }

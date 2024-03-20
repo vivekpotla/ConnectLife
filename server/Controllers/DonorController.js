@@ -125,7 +125,7 @@ export const getDonorAppointments = async (req, res) => {
 //book appointment slot
 export const bookAppointment = async (req, res) => {
   try {
-    const { campId, date, slot, donorId } = req.body;
+    const { campId, date, slot, donorId, medicalConditions } = req.body;
 
     // Find the donor by ID
     const donor = await Donor.findById(donorId);
@@ -145,7 +145,8 @@ export const bookAppointment = async (req, res) => {
       camp: campId,
       date: new Date(date),
       slot: slotId.toString(),
-      bloodGroup: donor.bloodGroup
+      bloodGroup: donor.bloodGroup,
+      medicalConditions
     });
 
     // Decrement slotsLeft for the booked slot

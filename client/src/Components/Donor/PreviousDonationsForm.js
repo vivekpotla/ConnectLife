@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
-import { Dialog, Button, DialogHeader, IconButton } from '@material-tailwind/react';
+import { Dialog, Button, DialogHeader, Textarea } from '@material-tailwind/react';
 import Lottie from 'lottie-react';
 import { MaleQuestions, FemaleQuestions } from './Eligibility.js';
 import { ArrowLeftCircleIcon } from '@heroicons/react/24/solid'
 
-export const PreviousDonationsForm = ({ isModalOpen, setIsModalOpen, onConfirm }) => {
+export const PreviousDonationsForm = ({ isModalOpen, setIsModalOpen, onConfirm, onReject }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isNextClicked, setIsNextClicked] = useState(false);
   const [canDonate, setCanDonate] = useState("inProcess");
   const [rejectionReason, setRejectionReason] = useState("");
+  const [medicalConditions, setMedicalConditions] = useState("");
 
   const QuestionArray = JSON.parse(localStorage.getItem("user"))?.gender === "Male" ? MaleQuestions : FemaleQuestions;
 
@@ -60,14 +61,17 @@ export const PreviousDonationsForm = ({ isModalOpen, setIsModalOpen, onConfirm }
   //   }
   // };
 
+
+  const dialogHandler = () => {
+    setCanDonate("inProcess");
+    setCurrentIndex(0);
+    setIsModalOpen(!isModalOpen);
+  }
+
   return (
     <Dialog
       open={isModalOpen}
-      handler={() => {
-        setCanDonate("inProcess");
-        setCurrentIndex(0);
-        setIsModalOpen(!isModalOpen);
-      }}
+      handler={dialogHandler}
       className='px-12 pb-7'
       size='sm'
     >
@@ -119,20 +123,57 @@ export const PreviousDonationsForm = ({ isModalOpen, setIsModalOpen, onConfirm }
       </>}
 
       {canDonate === "No" &&
-        <div className='p-4 text-center'>
-          <div className='text-xl'>You are not Eligible to Donate Blood</div>
-          <div>{rejectionReason.split(":")[0]}</div>
-          <div>{rejectionReason.split(":")[1]}</div>
+        <div className='pt-7 text-center'>
+          <div className='text-xl text-orange-900 rounded-lg font-semibold mb-6 p-2 border-2 bg-red-50'>You are not Eligible to Donate Blood</div>
+          <div className='text-gray-700 font-semibold underline mb-2'>{rejectionReason.split(":")[0]}</div>
+          <div className='text-gray-600 text-sm'>{rejectionReason.split(":")[1]}</div>
+          <div className='pt-6 grid place-content-end'>
+            <Button
+              // variant='outlined'
+              className='normal-case'
+              color='red'
+              onClick={onReject}
+            >
+              I, Agree
+            </Button>
+          </div>
         </div>
       }
 
-      {canDonate === "Yes" &&
-        <div>
-          <div>book slot</div>
-          <div>any other medical conditions</div>
-          <div>conform slot</div>
+      {canDonate === "Yes" && (
+        <div className="px-8 pt-8">
+          <h2 className="text-xl font-semibold mb-4">Book Slot</h2>
+          <Textarea
+            value={medicalConditions}
+            onChange={(e) => setMedicalConditions(e.target.value)}
+            color="lightBlue"
+            placeholder="Any other medical conditions to Share"
+            label='Health Conditions'
+            className="mb-4 active"
+          />
+          <div className="flex justify-end">
+            <Button
+              onClick={dialogHandler}
+              color="gray"
+              variant='outlined'
+              ripple
+              className="mr-4"
+            >
+              Cancel
+            </Button>
+            <Button
+              onClick={() => {
+                onConfirm(medicalConditions);
+                setIsModalOpen(false);
+              }}
+              color="green"
+              ripple
+            >
+              Confirm
+            </Button>
+          </div>
         </div>
-      }
+      )}
 
     </Dialog>
   );

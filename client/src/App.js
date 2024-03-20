@@ -17,7 +17,7 @@ import HomePage from './Components/Home/HomePage.js';
 import Login from './Components/SignUp/Login.js';
 import { useSelector } from 'react-redux';
 import ChatBot from './Components/ChatBot/ChatBot.js';
-import { DonorFaqs} from './Components/Donor/DonorFaqs.js';
+import { DonorFaqs } from './Components/Donor/DonorFaqs.js';
 import ContactRequests from './Components/Donor/ContactRequests.js';
 import { PreviousCamps } from './Components/NGO/PreviousCamps.js';
 import { MyCamps } from './Components/Volunteer/MyCamps.js';
@@ -78,42 +78,42 @@ function App() {
       <Route path='/recipientfaqs' element={<RecipientFaqs />} />
       <Route path='/searchdonors' element={<SearchDonors />} />
       <Route path='/viewrequests' element={<ViewRequests />} />
-      <Route path='/bloodbanks' element={<BloodBanks/>}/>
+      <Route path='/bloodbanks' element={<BloodBanks />} />
     </>
   )
 
   return (
-  
-      <div className="h-dvh overflow-hidden">
-        <Header />
-        <div className='h-dvh overflow-scroll pb-10'>
-          <Routes>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/camps' element={<CampsList />} />
-            <Route path='/campdetails' element={<CampDetails />} />
-            <Route path='/activeappointments' element={<ActiveAppoinments />} />
-            <Route path='/editprofile' element={<EditProfile />} />
-            <Route path='/help' element={<Help />} />
-            <Route path='/bloodbanks' element={<BloodBanks/>}/>
-            <Route path='/createcamps' element={<CreateCamps/>}/>
-            <Route path='/bloodprocessing' element={<BloodProcessing/>}/>
-            <Route path='/donationprocess' element={<BloodDonationProcess/>}/>
-            <Route path='/bloodgroupcompatibility' element={<BloodGroupCompatibility/>}/>
-            {!isLoggedIn && AuthRoutes}
-            {userObj?.userType === "ngo" && NgoRoutes}
-            {userObj?.userType === "donor" && DonorRoutes}
-            {userObj?.userType === "volunteer" && VolunteerRoutes}
-            {userObj?.userType === "recipient" && RecipientRoutes}
-          </Routes>
-        </div>
-        <div className="fixed bottom-0 right-[-10px]">
-          <ChatBot />
-        </div>
-        {userObj && userObj.userType!=='ngo' && <LocationUpdater/>}
-        {/* <Footer/> */}
+
+    <div className="h-dvh overflow-hidden">
+      <Header />
+      <div className='h-dvh overflow-scroll pb-10'>
+        <Routes>
+          <Route path='/' element={<HomePage />} />
+          <Route path='/camps' element={<CampsList />} />
+          <Route path='/campdetails' element={<CampDetails />} />
+          <Route path='/activeappointments' element={<ActiveAppoinments />} />
+          <Route path='/editprofile' element={<EditProfile />} />
+          <Route path='/help' element={<Help />} />
+          <Route path='/bloodbanks' element={<BloodBanks />} />
+          <Route path='/createcamps' element={<CreateCamps />} />
+          <Route path='/bloodprocessing' element={<BloodProcessing />} />
+          <Route path='/donationprocess' element={<BloodDonationProcess />} />
+          <Route path='/bloodgroupcompatibility' element={<BloodGroupCompatibility />} />
+          {!isLoggedIn && AuthRoutes}
+          {userObj?.userType === "ngo" && NgoRoutes}
+          {userObj?.userType === "donor" && DonorRoutes}
+          {userObj?.userType === "volunteer" && VolunteerRoutes}
+          {userObj?.userType === "recipient" && RecipientRoutes}
+        </Routes>
       </div>
-     
-   
+      <div className="fixed bottom-0 right-[-10px]">
+        <ChatBot />
+      </div>
+      {userObj && userObj.userType !== 'ngo' && <LocationUpdater />}
+      {/* <Footer /> */}
+    </div>
+
+
   );
 }
 
