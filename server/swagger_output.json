@@ -170,6 +170,9 @@
                 },
                 "donorId": {
                   "example": "any"
+                },
+                "medicalConditions": {
+                  "example": "any"
                 }
               }
             }

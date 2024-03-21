@@ -299,6 +299,7 @@ const PostsLists = () => {
                     variant="text"
                     className="rounded-full active:animate-ping"
                   >
+                    <div></div>
                   </IconButton>
                   <IconButton
                     size="sm"

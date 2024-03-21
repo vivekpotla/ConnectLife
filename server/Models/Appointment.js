@@ -18,7 +18,9 @@ const appointmentSchema = new Schema({
   },
   medicalConditions: {
     type: Array,
-    required: true
+  },
+  rejectReason: {
+    type: Array
   },
   date: {
     type: Date,
