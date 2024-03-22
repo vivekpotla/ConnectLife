@@ -16,21 +16,13 @@ export const MyCamps = () => {
 
   useEffect(() => {
     const fetchCamps = async () => {
-      try {
-        // Fetch volunteer's camps data from backend
-        const response = await axios.get(`http://localhost:5000/api/volunteer/mycamps/${volunteerId}`);
-        const campsWithSlots = await Promise.all(response.data.map(async (camp) => {
-          // Fetch slot details for each camp
-          const slotResponse = await axios.post('http://localhost:5000/api/volunteer/get-slot-details', { campId: camp._id });
-          const updatedCamp = { ...camp, slots: slotResponse.data };
-          return updatedCamp;
-        }));
-        setCamps(campsWithSlots);
-      } catch (error) {
-        console.error('Error fetching volunteer camps:', error);
-      }finally {
+      await axios.get(`http://localhost:5000/api/volunteer/mycamps/${volunteerId}`).then((response) => {
+        // console.log(response.data);
+        setCamps(response.data);
         setLoading(false);
-      }
+      }).catch((error) => {
+        console.log("error fetching camps", error);
+      })
     };
 
     // Call the fetchCamps function when the component mounts
@@ -50,7 +42,7 @@ export const MyCamps = () => {
     const date = new Date(dateString);
     return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
   };
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -91,7 +83,7 @@ export const MyCamps = () => {
         </div>
       ))}
       {selectedCamp && (
-        <SlotDetails isOpen={modalOpen} onClose={handleCloseModal} slots={selectedCamp.slots} />
+        <SlotDetails isOpen={modalOpen} onClose={handleCloseModal} campId={selectedCamp._id} />
       )}
     </div>
   );

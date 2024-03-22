@@ -75,19 +75,28 @@ export const BookAppointment = ({ campDetails }) => {
     }
   };
 
-  const handleConfirmBooking = async () => {
+  const handleConfirmBooking = async (medicalConditions) => {
     try {
+      setLoading(true);
       const response = await axios.post('http://localhost:5000/api/donor/book-appointment', {
         campId: campDetails._id,
         date: selectedDate,
         slot: selectedSlot,
         donorId: userObj._id,
+        medicalConditions: medicalConditions.split("\n")
       });
+      setLoading(false);
       setBookingSuccess(true);
     } catch (error) {
       console.error('Error booking appointment:', error);
     }
   };
+
+  const handleRejectBooking = () => {
+    setSelectedDate(null);
+    setIsModalOpen(false);
+    setShowDatesPopup(false);
+  }
 
   const handleCloseUnavailableSlotAlert = () => {
     setUnavailableSlotAlertVisible(false);
@@ -190,7 +199,7 @@ export const BookAppointment = ({ campDetails }) => {
                 } */}
 
 
-      <PreviousDonationsForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} onConfirm={handleConfirmBooking} />
+      <PreviousDonationsForm isModalOpen={isModalOpen} setIsModalOpen={setIsModalOpen} onConfirm={handleConfirmBooking} onReject={handleRejectBooking} />
 
       {bookingSuccess && (
         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
