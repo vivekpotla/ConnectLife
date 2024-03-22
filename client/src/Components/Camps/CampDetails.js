@@ -7,7 +7,6 @@ import { JoinCamp } from '../Volunteer/JoinCamp';
 export const CampDetails = () => {
   const locationLoc = useLocation();
   const [campDetails, setCampDetails] = useState(locationLoc.state.camps);
-
   useEffect(() => {
     // Update campDetails whenever locationLoc.state.camps changes
     setCampDetails(locationLoc.state.camps);

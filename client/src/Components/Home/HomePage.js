@@ -22,7 +22,7 @@ const HomePage = () => {
                         <img src={homeIcon1} alt="Icon 1" className="w-16 h-16 p-2 rounded-full border border-gray-400" />
                         <p className="text-gray-600 text-center">Blood Donation process</p>
                     </Link>
-                    <Link to="/can-i-donate" className="mr-8 flex flex-col items-center">
+                    <Link to="/donorfaqs" className="mr-8 flex flex-col items-center">
                         <img src={homeIcon3} alt="Icon 3" className="w-16 h-16 p-2 rounded-full border border-gray-400 " />
                         <p className="text-gray-600 text-center">Can I donate?</p>
                     </Link>

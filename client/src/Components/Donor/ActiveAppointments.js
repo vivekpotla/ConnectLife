@@ -45,7 +45,6 @@ export default function ActiveAppointments() {
         const previous = donatedAppointments;
         const active = notDonatedAppointments.filter(appointment => appointment.quantity !== 999);
         const rejected = notDonatedAppointments.filter(appointment => appointment.quantity === 999);
-
         setActiveAppointments(active || []);
         setPreviousAppointments(previous || []);
         setRejectedAppointments(rejected || []);
