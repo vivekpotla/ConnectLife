@@ -107,7 +107,7 @@ function App() {
           {userObj?.userType === "recipient" && RecipientRoutes}
         </Routes>
       </div>
-      <div className="fixed bottom-0 right-[-10px]">
+      <div className="fixed bottom-[-60px] right-[-20px]">
         <ChatBot />
       </div>
       {userObj && userObj.userType !== 'ngo' && <LocationUpdater />}

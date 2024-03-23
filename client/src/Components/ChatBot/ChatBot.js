@@ -77,8 +77,8 @@ const ChatBot = () => {
         <div>
             <SpeedDial>
                 <SpeedDialHandler className={closeSpeedDial ? "hidden" : ""}>
-                    <button className='h-4'>
-                        <Lottie animationData={Bot} onClick={openDrawerRight} loop={true} className="block lg:h-[150px] lg:w-[150px] h-[80px] w-[80px] rounded-full" />
+                    <button className='h-4 pb-0 mb-0'>
+                        <Lottie animationData={Bot} onClick={openDrawerRight} loop={true} className="block lg:h-[250px] lg:w-[250px] h-[80px] w-[80px] rounded-full" />
                         {/* <EnvelopeOpenIcon className="hidden h-7 w-7 group-hover:block" /> */}
                         {/* <EnvelopeIcon className="block h-7 w-7 group-hover:hidden" /> */}
                     </button>
@@ -104,12 +104,12 @@ const ChatBot = () => {
                 placement="right"
                 open={openRight}
                 onClose={closeDrawerRight}
-                className="p-4 bg-gray-50"
+                className="p-4 bg-gray-50 shadow-2xl"
                 size={600}
             >
                 <div className="mb-6 flex items-center justify-between rounded">
                     <Typography variant="h5" color="blue-gray">
-                        ConnectLife Helper
+                        ConnectLife Assistant
                     </Typography>
                     <IconButton
                         variant="text"
@@ -126,14 +126,14 @@ const ChatBot = () => {
                     </div>
                     {chat.map((val, index) => (
                         <div key={index} className='flex flex-col gap-2 py-4 border-b'>
-                            <div className='bg-blue-100 place-self-end px-2 py-1.5 ml-5 rounded-xl rounded-tr-sm'>
+                            <div className='bg-blue-100 place-self-end px-2 py-2 ml-5 rounded-xl rounded-tr-sm'>
                                 <div className='font-semibold text-gray-700 text-xs'>You :</div>
                                 <div className='pl-1'>
                                     {val.question}
                                 </div>
                             </div>
-                            <div className='bg-red-100 place-self-start px-2 py-1.5 mr-5 rounded-xl rounded-tl-sm'>
-                                <div className='font-semibold text-grey-700 text-xs'>Bot :</div>
+                            <div className='bg-red-100 place-self-start px-2 py-2 mr-5 rounded-xl rounded-tl-sm'>
+                                <div className='font-semibold text-grey-700 text-xs '>Bot :</div>
                                 {val.answer ?
                                     <div className='pl-1'>
                                         {val.answer}
