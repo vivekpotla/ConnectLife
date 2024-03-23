@@ -29,7 +29,7 @@ export const PreviousCamps = () => {
         const filteredCamps = allCamps.filter(camp => camp.ngo._id === user._id);
         console.log(filteredCamps)
         const now = new Date();
-      const upcoming = filteredCamps.filter(camp => isBefore(new Date(camp.startDate), now));
+      const upcoming = filteredCamps.filter(camp => isAfter(new Date(camp.endDate), now));
       const previous = filteredCamps.filter(camp => isBefore(new Date(camp.endDate), now));
       
       setCampsData(filteredCamps);
