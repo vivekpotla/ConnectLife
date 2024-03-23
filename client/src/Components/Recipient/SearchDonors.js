@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import axios from 'axios';
 let donorsData=[]
 const SearchDonors = () => {
@@ -8,15 +10,16 @@ const SearchDonors = () => {
   const [recipientData,setRecipientData]=useState({})
   const [userLatitude,setUserLatitude]= useState(0)
   const [userLongitude,setUserLongitude]= useState(0)
+  
   const [errorMsg, setErrorMsg] =useState("")
+  const [loading, setLoading] = useState(true);
   const [requestedDonorName, setRequestedDonorName] = useState('');
-
-
   //getting browser location
   if(navigator.geolocation)
   {
     navigator.geolocation.getCurrentPosition(async (position) => {
       const { latitude, longitude } = position.coords;
+      console.log(latitude,longitude)
       setUserLatitude(latitude)
       setUserLongitude(longitude)
     });
@@ -33,52 +36,51 @@ const SearchDonors = () => {
   };
 
   useEffect(() => {
-    // Get recipent details from local storage
+    // Get recipient details from local storage
     const recipient = getRecipentDetailsFromLocalStorage();
     setRecipientData({
       recipientLatitude: userLatitude,
       recipientLongitude: userLongitude,
       recipientBloodGroup: recipient.bloodGroup,
-      _id :recipient._id
+      _id: recipient._id
     });
+  
     const getDonorsData = async () => {
-        try {
-          const donorList = await axios.post(`http://localhost:5000/api/recipient/get-nearest-donors`, {
-            recipientLatitude: userLatitude,
-            recipientLongitude: userLongitude,
-            bloodType: recipient.bloodGroup
-          });
-          console.log(donorList.data); 
-          setNearestDonors(donorList.data);
-        } catch (error) {
-          console.error(error);
-      }
-    }
-    getDonorsData();
-    // Calculate distances and prioritize by blood group
-    const donorsWithDistances = donorsData.map(donor => {
-      const distance = getDistance(recipientData.recipientLatitude, recipientData.recipientLongitude, donor.latitude, donor.longitude);
-      return { ...donor, distance };
-    },[]);
-
-    // Sort donors by blood group and then by distance
-    const sortedDonors = donorsWithDistances.sort((a, b) => {
-      if (a.bloodGroup === recipientData.recipientBloodGroup) {
-        if (b.bloodGroup === recipientData.recipientBloodGroup) {
+      try {
+        const donorList = await axios.post(`http://localhost:5000/api/recipient/get-nearest-donors`, {
+          recipientLatitude: userLatitude,
+          recipientLongitude: userLongitude,
+          bloodType: recipient.bloodGroup
+        });
+        const donorsWithDistances = donorList.data.map(donor => {
+          const distance = getDistance(userLatitude, userLongitude, donor.latitude, donor.longitude);
+          return { ...donor, distance };
+        });
+  
+        // Sort donors by blood group and then by distance
+        const sortedDonors = donorsWithDistances.sort((a, b) => {
+          if (a.bloodGroup === recipient.bloodGroup) {
+            if (b.bloodGroup === recipient.bloodGroup) {
+              return a.distance - b.distance;
+            }
+            return -1;
+          }
+          if (b.bloodGroup === recipient.bloodGroup) {
+            return 1;
+          }
+          // Add more conditions for other blood groups as needed
           return a.distance - b.distance;
-        }
-        return -1;
+        });
+  
+        setNearestDonors(sortedDonors);
+        setLoading(false);
+      } catch (error) {
+        console.error(error);
       }
-      if (b.bloodGroup === recipientData.recipientBloodGroup) {
-        return 1;
-      }
-      // Add more conditions for other blood groups as needed
-      return a.distance - b.distance;
-    });
-
-    setNearestDonors(sortedDonors);
-  }, [recipientData.recipientLatitude, recipientData.recipientLongitude, recipientData.recipientBloodGroup]);
-
+    };
+  
+    getDonorsData();
+  }, [userLatitude, userLongitude]);
   const handleSearch = (e) => {
     setSearchQuery(e.target.value);
   };
@@ -111,6 +113,14 @@ const SearchDonors = () => {
     donor.bloodGroup.toLowerCase().includes(searchQuery.toLowerCase())
   );
   const alertDonorName=requestedDonor;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" /> {/* Display spinner icon */}
+      </div>
+    );
+  }
 
   return (
     <div className="m-10">

@@ -4,6 +4,7 @@ import { Button } from '@material-tailwind/react'
 import { MapPinIcon } from '@heroicons/react/24/solid'
 import Footer from '../Footer';
 export default function CampCard({ camps }) {
+  console.log(camps)
   const startDate = new Date(camps.startDate);
   const endDate = new Date(camps.endDate);
   return (

@@ -19,13 +19,13 @@ export const CampsList = () => {
   const [searchedCamps, setSearchedCamps] = useState([]);
   const [loading, setLoading] = useState(true);
   const [campsData, setCampsData] = useState([]);
+  const now = new Date();
 
   useEffect(() => {
     const getCampsData = async () => {
         try {
             const response = await axios.get('http://localhost:5000/api/ngo/view-all-camps');
-            const now = new Date();
-            const upcoming = response.data.filter(camp => isAfter(new Date(camp.startDate), now));
+            const upcoming = response.data.filter(camp => isAfter(new Date(camp.endDate), now));
             setCampsData(upcoming);
             setLoading(false); // Set loading to false after getting data
         } catch (error) {
@@ -40,7 +40,8 @@ export const CampsList = () => {
 
     const getSearchedCampsData = async (val) => {
       await axios.get(`http://localhost:5000/api/donor/search-camps/${val}`).then((res) => {
-        setSearchedCamps(res.data);
+        const upcoming = res.data.filter(camp => isAfter(new Date(camp.endDate), now));
+        setSearchedCamps(upcoming);
       }).catch((error) => {
         console.log(error);
       });
@@ -58,7 +59,8 @@ export const CampsList = () => {
             latitude,
             longitude
           }).then((res) => {
-            setSearchedCamps(res.data);
+            const upcoming = res.data.filter(camp => isAfter(new Date(camp.endDate), now));
+            setSearchedCamps(upcoming);
           }).catch((error) => {
             console.log(error);
           });
@@ -100,7 +102,7 @@ export const CampsList = () => {
   }
 
   return (
-    <div className='bg-gray-100 p-1'>
+    <div className='bg-gray-100 p-1 h-auto pb-4'>
       <Typography variant='h5' className='font-semibold md:ml-10 ml-4 text-red-700 text-center text-2xl mt-3' >Blood Donation Camps</Typography>
       <div className="md:flex-row flex-col flex md:mr-5 mr-2 mt-3 justify-center">
         <div className='relative flex justify-end place-self-end md:mt-0 mt-3'>
@@ -147,6 +149,15 @@ export const CampsList = () => {
           {campsData.map((camp, index) => (
             <CampCard key={index} camps={camp} />
           ))}
+          {
+            campsData.length === 0 && (
+              <div className="flex justify-center mt-8">
+            <Typography  className="font-semibold text-2xl text-gray-500">
+              No camps available right now! Please come back later.
+            </Typography>
+          </div>
+        )
+      }
         </div>
       </div>
       

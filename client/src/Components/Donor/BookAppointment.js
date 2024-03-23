@@ -143,21 +143,23 @@ export const BookAppointment = ({ campDetails }) => {
         <DialogHeader className=''>
           <h1 className='text-xl mx-auto font-semibold mb-2 text-center'>Select Date</h1>
         </DialogHeader>
-        <div className={`max-w-md mx-auto grid grid-cols-${Object.keys(slots).length > 2 ? 3 : Object.keys(slots).length} `}>
-          {Object.keys(slots).map((dateString, index) => {
-            const date = new Date(dateString);
-            const options = { weekday: 'short', month: 'short', day: 'numeric' };
-            const formattedDate = date.toLocaleDateString('en-US', options);
-            return (
-              <div
-                key={index}
-                onClick={() => handleDateClick(date)}
-                className={`pt-6 pb-6 p-2 m-2 border rounded-md text-gray-900 border-gray-300  cursor-pointer hover:bg-red-100 bg-red-200`}
-              >
-                <p className="text-center">{formattedDate}</p>
-              </div>
-            );
-          })}
+          <div className={`max-w-md mx-auto grid grid-cols-${Object.keys(slots).length > 2 ? 3 : Object.keys(slots).length}`}>
+          {Object.keys(slots)
+            .filter(dateString => new Date(dateString) >= new Date(new Date().setHours(0, 0, 0, 0))) // Filter out dates before today
+            .map((dateString, index) => {
+              const date = new Date(dateString);
+              const options = { weekday: 'short', month: 'short', day: 'numeric' };
+              const formattedDate = date.toLocaleDateString('en-US', options);
+              return (
+                <div
+                  key={index}
+                  onClick={() => handleDateClick(date)}
+                  className={`pt-6 pb-6 p-2 m-2 border rounded-md text-gray-900 border-gray-300  cursor-pointer hover:bg-red-100 bg-red-200`}
+                >
+                  <p className="text-center">{formattedDate}</p>
+                </div>
+              );
+            })}
         </div>
       </Dialog>
 

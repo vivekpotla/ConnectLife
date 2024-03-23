@@ -60,10 +60,12 @@ export const MyCamps = () => {
           <div className="px-5 pb-5">
             <div className="flex items-center">
               <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{camp.name}</h5>
-              {new Date(camp.date) > new Date() ? (
-                <span className='ml-6 pl-1 pr-1 rounded-xl text-white bg-gray-500'>Not Started</span>
+            </div>
+            <div>
+            {new Date(camp.startDate) > new Date() ? (
+                <span className='pl-1 pr-1 rounded-xl text-white text-center text-sm bg-gray-500'>Not Started</span>
               ) : (
-                <span className='ml-6 pl-1 pr-1 rounded-xl text-white bg-green-500'>Active</span>
+                <span className='pl-1 pr-1 rounded-xl text-white text-center text-sm bg-green-500'>Active</span>
               )}
             </div>
             <div className='text-gray-600 line-clamp-3'>{camp.description}</div>

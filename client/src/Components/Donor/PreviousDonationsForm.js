@@ -12,7 +12,7 @@ export const PreviousDonationsForm = ({ isModalOpen, setIsModalOpen, onConfirm, 
   const [medicalConditions, setMedicalConditions] = useState("");
 
   const QuestionArray = JSON.parse(localStorage.getItem("user"))?.gender === "Male" ? MaleQuestions : FemaleQuestions;
-
+  console.log(localStorage.getItem("user"))
   const handleNext = () => {
     if (currentIndex !== QuestionArray.length - 1) {
       setIsNextClicked(true);
@@ -142,12 +142,12 @@ export const PreviousDonationsForm = ({ isModalOpen, setIsModalOpen, onConfirm, 
 
       {canDonate === "Yes" && (
         <div className="px-8 pt-8">
-          <h2 className="text-xl font-semibold mb-4">Book Slot</h2>
+          <h2 className="text-xl font-semibold">Book Slot</h2>
+          <p className='mb-4 text-gray-500 text-sm'>Any other medical conditions to Share</p>
           <Textarea
             value={medicalConditions}
             onChange={(e) => setMedicalConditions(e.target.value)}
             color="lightBlue"
-            placeholder="Any other medical conditions to Share"
             label='Health Conditions'
             className="mb-4 active"
           />

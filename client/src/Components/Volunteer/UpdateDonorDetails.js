@@ -62,12 +62,12 @@ export const UpdateDonorDetails = () => {
   const handleRejectConfirm = async () => {
     try {
       // Update the donor status to "Pending" with quantity 999
+      setRejectReason(rejectReason)
       const updatedDonorDetails = [...donorDetails];
       console.log(updatedDonorDetails)
       updatedDonorDetails[updatedDonorIndex].status = 'Pending';
       updatedDonorDetails[updatedDonorIndex].unitsDonated = 999; // Set quantity to 999 for rejection
       setDonorDetails(updatedDonorDetails);
-
       // Make a request to mark the appointment as rejected
       const donor = donorDetails[updatedDonorIndex];
       const requestData = {
@@ -78,9 +78,7 @@ export const UpdateDonorDetails = () => {
         status: 'Rejected', // Status set to "Pending" for rejection
         rejectReason: rejectReason.split("\n")
       };
-
       const response = await axios.post(`http://localhost:5000/api/volunteer/mark-donated`, requestData);
-
       if (response.status === 200) {
         console.log('Donation rejected successfully');
       }
