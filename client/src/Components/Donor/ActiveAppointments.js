@@ -206,6 +206,9 @@ export default function ActiveAppointments() {
                     <div className="mb-2">
                       <strong className="font-semibold">Time:</strong> {appointment.slot.startTime} - {appointment.slot.endTime} IST
                     </div>
+                    <div className="mb-2">
+                      <strong className="font-semibold">Reason for rejection:</strong> Low haemoglobin level 
+                    </div>
                   </div>
                   <div className="flex  flex-3 gap-2 mb-5">
                     <div className="my-auto font-semibold">
