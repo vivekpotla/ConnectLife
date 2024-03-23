@@ -7,10 +7,10 @@ const donorSchema = new Schema({
     type: String,
     required: true
   },
-  imageURL:{
+  imageURL: {
     type: String,
     required: false,
-    default:"https://i.pinimg.com/736x/64/81/22/6481225432795d8cdf48f0f85800cf66.jpg"
+    default: "https://i.pinimg.com/736x/64/81/22/6481225432795d8cdf48f0f85800cf66.jpg"
   },
   aadhaarNumber: {
     type: String,
@@ -34,6 +34,11 @@ const donorSchema = new Schema({
   bloodGroup: {
     type: String,
     enum: ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'],
+    required: true
+  },
+  gender: {
+    type: String,
+    enum: ['Male', 'Female'],
     required: true
   },
   address: {
@@ -67,7 +72,7 @@ const donorSchema = new Schema({
     coordinates: {
       type: [Number],
       required: true,
-      default:[0,0]
+      default: [0, 0]
     }
   },
   previousAppointments: [{

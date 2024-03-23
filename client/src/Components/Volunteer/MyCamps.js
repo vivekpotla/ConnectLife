@@ -16,21 +16,13 @@ export const MyCamps = () => {
 
   useEffect(() => {
     const fetchCamps = async () => {
-      try {
-        // Fetch volunteer's camps data from backend
-        const response = await axios.get(`http://localhost:5000/api/volunteer/mycamps/${volunteerId}`);
-        const campsWithSlots = await Promise.all(response.data.map(async (camp) => {
-          // Fetch slot details for each camp
-          const slotResponse = await axios.post('http://localhost:5000/api/volunteer/get-slot-details', { campId: camp._id });
-          const updatedCamp = { ...camp, slots: slotResponse.data };
-          return updatedCamp;
-        }));
-        setCamps(campsWithSlots);
-      } catch (error) {
-        console.error('Error fetching volunteer camps:', error);
-      }finally {
+      await axios.get(`http://localhost:5000/api/volunteer/mycamps/${volunteerId}`).then((response) => {
+        // console.log(response.data);
+        setCamps(response.data);
         setLoading(false);
-      }
+      }).catch((error) => {
+        console.log("error fetching camps", error);
+      })
     };
 
     // Call the fetchCamps function when the component mounts
@@ -50,7 +42,7 @@ export const MyCamps = () => {
     const date = new Date(dateString);
     return `${date.getDate()}-${date.getMonth() + 1}-${date.getFullYear()}`;
   };
-  
+
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -68,10 +60,12 @@ export const MyCamps = () => {
           <div className="px-5 pb-5">
             <div className="flex items-center">
               <h5 className="text-xl font-semibold tracking-tight text-gray-900 dark:text-white">{camp.name}</h5>
-              {new Date(camp.date) > new Date() ? (
-                <span className='ml-6 pl-1 pr-1 rounded-xl text-white bg-gray-500'>Not Started</span>
+            </div>
+            <div>
+            {new Date(camp.startDate) > new Date() ? (
+                <span className='pl-1 pr-1 rounded-xl text-white text-center text-sm bg-gray-500'>Not Started</span>
               ) : (
-                <span className='ml-6 pl-1 pr-1 rounded-xl text-white bg-green-500'>Active</span>
+                <span className='pl-1 pr-1 rounded-xl text-white text-center text-sm bg-green-500'>Active</span>
               )}
             </div>
             <div className='text-gray-600 line-clamp-3'>{camp.description}</div>
@@ -91,7 +85,7 @@ export const MyCamps = () => {
         </div>
       ))}
       {selectedCamp && (
-        <SlotDetails isOpen={modalOpen} onClose={handleCloseModal} slots={selectedCamp.slots} />
+        <SlotDetails isOpen={modalOpen} onClose={handleCloseModal} campId={selectedCamp._id} />
       )}
     </div>
   );

@@ -39,6 +39,9 @@
                 "bloodGroup": {
                   "example": "any"
                 },
+                "gender": {
+                  "example": "any"
+                },
                 "address": {
                   "example": "any"
                 }
@@ -166,6 +169,9 @@
                   "example": "any"
                 },
                 "donorId": {
+                  "example": "any"
+                },
+                "medicalConditions": {
                   "example": "any"
                 }
               }

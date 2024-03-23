@@ -3,7 +3,7 @@ import mapboxgl from 'mapbox-gl';
 import MapboxGeocoder from '@mapbox/mapbox-gl-geocoder';
 import '@mapbox/mapbox-gl-geocoder/dist/mapbox-gl-geocoder.css';
 
-const MapComponent = ({ setLocationAddress, setMarker,address }) => {
+const MapComponent = ({ setLocationAddress, setMarker, address }) => {
     const setLocationAddressRef = useRef(setLocationAddress);
     const setMarkerRef = useRef(setMarker);
     useEffect(() => {
@@ -19,7 +19,7 @@ const MapComponent = ({ setLocationAddress, setMarker,address }) => {
             container: 'map',
             style: 'mapbox://styles/mapbox/streets-v12',
             center: [78.3839, 17.537537],
-            zoom: 13,
+            zoom: 10,
             scrollZoom: false
         });
 
@@ -47,19 +47,17 @@ const MapComponent = ({ setLocationAddress, setMarker,address }) => {
         });
 
         map.addControl(geocoder);
-        if(address)
-        {
+        if (address) {
             const truncatedAddress = address.slice(0, 20);
             geocoder.query(truncatedAddress);
         }
-        else
-        {
-            const addressCollege="VNR Vignana Jyothi Institute of Engineering & Technology, VNR Vignana Jyothi Institute of Engineering & Technology Batchupally Nizampet (S.O.) Hyderabad- 500 090,Rangareddy Dt. Andhra P, Hyderabad, Telangana 500090, India";
+        else {
+            const addressCollege = "VNR Vignana Jyothi Institute of Engineering & Technology, VNR Vignana Jyothi Institute of Engineering & Technology Batchupally Nizampet (S.O.) Hyderabad- 500 090,Rangareddy Dt. Andhra P, Hyderabad, Telangana 500090, India";
             const truncatedAddress = addressCollege.slice(0, 20);
             geocoder.query(truncatedAddress)
         }
-       
-       
+
+
 
         return () => {
             map.remove();
@@ -67,7 +65,7 @@ const MapComponent = ({ setLocationAddress, setMarker,address }) => {
     }, []);
 
     return (
-        <div id="map" style={{ height: "72vh", borderRadius: "10px"  , width:"75%", marginBottom:"20px"}} className='w-50 mx-auto' />
+        <div id="map" style={{ height: "72vh", borderRadius: "10px", marginBottom: "20px" }} className='w-50 mx-auto' />
     );
 };
 

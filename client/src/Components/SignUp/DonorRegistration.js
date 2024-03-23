@@ -3,11 +3,12 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as Yup from "yup";
 import axios from "axios";
-import { Input, Button, Typography, Avatar, Select, Option, Spinner } from "@material-tailwind/react";
+import { Input, Button, Typography, Avatar, Select, Option, Spinner, Radio } from "@material-tailwind/react";
 import ProfilePic from '../Images/profile.jpg';
 import { useNavigate } from 'react-router';
 
 const bloodGroups = ['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-'];
+const genders = ['Male', 'Female'];
 
 const DonorRegistration = () => {
     // define the validation schema for the form
@@ -46,6 +47,7 @@ const DonorRegistration = () => {
     const [message, setMessage] = useState("");
     const [loading, setLoading] = useState(false);
     const [blood, setBlood] = useState("O+");
+    const [selectedGender, setSelectedGender] = useState('Male');
 
     const [showPassword, setShowPassword] = useState(false);
 
@@ -75,6 +77,7 @@ const DonorRegistration = () => {
             formData.append('phoneNumber', data.phoneNumber);
             formData.append('aadhaarNumber', data.aadhaarNumber);
             formData.append('bloodGroup', blood);
+            formData.append('gender', selectedGender);
             formData.append('address[street]', data.address.street);
             formData.append('address[city]', data.address.city);
             formData.append('address[state]', data.address.state);
@@ -359,6 +362,20 @@ const DonorRegistration = () => {
                         )}
                     </div>
                     <Select
+                        id="gender"
+                        name="gender"
+                        label="Gender"
+                        size="md"
+                        onChange={(e) => {
+                            setSelectedGender(e)
+                        }}
+                        value={selectedGender}
+                    >
+                        {genders?.map((gender, index) => (
+                            <Option className="mb-1" key={index} value={gender}>{gender}</Option>
+                        ))}
+                    </Select>
+                    <Select
                         id="bloodGroup"
                         name="bloodGroup"
                         label="Blood group"
@@ -369,7 +386,7 @@ const DonorRegistration = () => {
                         value={blood}
                     >
                         {bloodGroups?.map((group, index) => (
-                            <Option key={index} value={group}>{group}</Option>
+                            <Option className="mb-1" key={index} value={group}>{group}</Option>
                         ))}
                     </Select>
                     <div>

@@ -16,17 +16,23 @@ const appointmentSchema = new Schema({
     ref: 'Slot',
     required: true
   },
+  medicalConditions: {
+    type: Array,
+  },
+  rejectReason: {
+    type: Array
+  },
   date: {
     type: Date,
     required: true
   },
-  donated:{
-    type:Boolean,
-    default:false
+  donated: {
+    type: Boolean,
+    default: false
   },
-  quantity:{
-    type:Number,
-    default:0
+  quantity: {
+    type: Number,
+    default: 0
   },
   bloodGroup: {
     type: String,

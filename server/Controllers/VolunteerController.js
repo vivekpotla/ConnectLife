@@ -6,6 +6,7 @@ import Donor from '../Models/Donor.js';
 import BloodQuantity from '../Models/BloodQuantity.js';
 import { v2 as cloudinary } from 'cloudinary';
 import bcrypt from "bcryptjs";
+import mongoose from 'mongoose';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -206,34 +207,23 @@ export const myCamps = async (req, res) => {
   try {
     const { volunteerId } = req.params;
 
-    // Find the volunteer by ID
-    const volunteer = await Volunteer.findById(volunteerId);
+    // Find the volunteer by ID and populate the campsParticipated field
+    const volunteer = await Volunteer.findById(volunteerId).populate('campsParticipated');
     if (!volunteer) {
       return res.status(404).json({ message: 'Volunteer not found' });
     }
 
-    // Get the list of camps the volunteer has participated in
-    const volunteerCamps = volunteer.campsParticipated;
-    let camps = []
-    // Iterate over volunteerCamps array
-    for (const campId of volunteerCamps) {
-      try {
-        // Find camp details by ID
-        const camp = await Camp.findById(campId);
-        if (camp) {
-          // If camp found, push it to the camps array
-          camps.push(camp);
-        }
-      } catch (err) {
-        console.error(`Error fetching camp details for camp ID ${campId}:`, err);
-      }
-    }
+    // Extract the camp details from the populated campsParticipated field
+    const camps = volunteer.campsParticipated;
+
     res.status(200).json(camps);
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: 'Internal server error' });
   }
 };
+
+
 export const markAppointmentAsDonated = async (req, res) => {
   try {
     // Extract the appointment ID from the request body or params

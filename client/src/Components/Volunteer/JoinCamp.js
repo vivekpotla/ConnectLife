@@ -23,14 +23,14 @@ export const JoinCamp = ({ campDetails }) => {
         const response = await axios.post('http://localhost:5000/api/volunteer/join-camp', { volunteerId, campId });
         console.log("Join camp response:", response.data); // Log the response
         setIsJoined(true); // Set isJoined to true after successfully joining the camp
-        setShowAlert(true); 
+        setShowAlert(true);
       } catch (error) {
         console.error('Error joining camp:', error);
         alert("Failed to join the camp. Please try again later.", "bg-red-500", "text-white");
       }
     }
   }
-  
+
   const alert = (message, bgColor, textColor) => {
     const alertDiv = document.createElement('div');
     alertDiv.textContent = message;
@@ -40,7 +40,7 @@ export const JoinCamp = ({ campDetails }) => {
       alertDiv.remove();
     }, 3000);
   };
-  
+
   const renderJoinButton = () => {
     if (userObj && userObj.userType === 'volunteer') {
       if (isJoined) {
@@ -59,23 +59,23 @@ export const JoinCamp = ({ campDetails }) => {
     }
     return null;
   };
-  
+
   const handleCloseAlert = () => {
-    
+
     setShowAlert(false); // Close the alert
     navigate('/volunteer/mycamps');
   };
   return (
     <div>
       {showAlert && (
-         <div className="fixed top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
-           <div className="bg-white rounded-lg p-8 max-w-md">
-             <p className="text-xl mb-4">You've joined the camp Successfully </p>
-             <button onClick={handleCloseAlert} className="mx-auto flex mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
-               OK
-             </button>
-           </div>
-         </div>
+        <div className="fixed z-50 top-0 left-0 right-0 bottom-0 flex items-center justify-center bg-black bg-opacity-50">
+          <div className="bg-white rounded-lg p-8 max-w-md">
+            <p className="text-xl mb-4">You've joined the camp Successfully </p>
+            <button onClick={handleCloseAlert} className="mx-auto flex mt-4 bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">
+              OK
+            </button>
+          </div>
+        </div>
       )}
       {renderJoinButton()}
     </div>

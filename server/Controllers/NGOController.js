@@ -567,7 +567,7 @@ export const viewAllPosts = async (req, res) => {
 export const viewAllCamps = async (req, res) => {
   try {
     // Retrieve all camps from the database sorted by creation time
-    const camps = await Camp.find().sort({ createdAt: 'desc' }).populate('ngo', 'name email imageURL phoneNumber address');;
+    const camps = await Camp.find().sort({ createdAt: 'desc' }).populate('ngo', 'name email imageURL phoneNumber address');
     // Check if there are no camps found
     if (!camps || camps.length === 0) {
       return res.status(404).json({ message: 'No camps found' });

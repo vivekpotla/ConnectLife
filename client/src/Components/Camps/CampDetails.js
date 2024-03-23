@@ -7,7 +7,6 @@ import { JoinCamp } from '../Volunteer/JoinCamp';
 export const CampDetails = () => {
   const locationLoc = useLocation();
   const [campDetails, setCampDetails] = useState(locationLoc.state.camps);
-
   useEffect(() => {
     // Update campDetails whenever locationLoc.state.camps changes
     setCampDetails(locationLoc.state.camps);
@@ -32,13 +31,13 @@ export const CampDetails = () => {
 
     // Open the URL in a new tab
     window.open(url, '_blank');
-}
+  }
 
   const [marker, setMarker] = useState({ latitude: campDetails.latitude, longitude: campDetails.longitude });
 
   return (
     <>
-    <div className="flex justify-center p-2 mt-2">
+      <div className="flex justify-center p-2 mt-2">
         <img className="w-12 h-12 rounded-full mr-4" src={campDetails.ngo.imageURL} alt="NGO Logo" />
         <div>
           <p className="font-semibold text-2xl mt-2">Organized by {campDetails.ngo.name}</p>
@@ -54,20 +53,20 @@ export const CampDetails = () => {
           <p className="mb-5 text-gray-700"><span className="font-bold">Location:</span> {campDetails.location}</p>
           <p className="mb-5 text-gray-700"><span className="font-bold">Description:</span> {campDetails.description}</p>
           <div className='flex '>
-          <p className="mb-5 mr-5 text-gray-700"><span className="font-bold">Start Date:</span> {formatDate(campDetails.startDate)}</p>
-          <p className="mb-5 text-gray-700"><span className="font-bold">End Date:</span> {formatDate(campDetails.endDate)}</p>
+            <p className="mb-5 mr-5 text-gray-700"><span className="font-bold">Start Date:</span> {formatDate(campDetails.startDate)}</p>
+            <p className="mb-5 text-gray-700"><span className="font-bold">End Date:</span> {formatDate(campDetails.endDate)}</p>
           </div>
           <p className="mb-5 text-gray-700"><span className="font-bold">Timings:</span> {formatTime(campDetails.startTime)} to {formatTime(campDetails.endTime)}</p>
           <div className='flex'>
-          <p className="text-gray-700 mr-5"><span className="font-bold">Email:</span> {campDetails.ngo.email}</p>
+            <p className="text-gray-700 mr-5"><span className="font-bold">Email:</span> {campDetails.ngo.email}</p>
             <p className="text-gray-700"><span className="font-bold">NGO Cell:</span> +91{campDetails.ngo.phoneNumber}</p>
           </div>
         </div>
       </div>
       {userObj && userObj.userType === 'volunteer' && <JoinCamp campDetails={campDetails} />}
-      {userObj && userObj.userType === 'donor' && <BookAppointment campDetails={campDetails} />}      
-       
-      <div className=''>
+      {userObj && userObj.userType === 'donor' && <BookAppointment campDetails={campDetails} />}
+
+      <div className='md:w-[75%] md:mx-auto mx-2'>
         <MapComponent
           setMarker={setMarker}
           setLocationAddress={(address) => (address)} // Placeholder for setLocationAddress function
@@ -76,11 +75,12 @@ export const CampDetails = () => {
           address={campDetails.location}
         />
       </div>
-      <div className='flex justify-center'>
-       <button className='mb-8  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded btn text-center' onClick={()=>navigateToLocation(campDetails.geolocation.coordinates[0],campDetails.geolocation.coordinates[1])}>Navigate in maps</button>
-       </div>
 
-     
+      <div className='flex justify-center'>
+        <button className='mb-8  bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 border border-blue-700 rounded btn text-center' onClick={() => navigateToLocation(campDetails.geolocation.coordinates[0], campDetails.geolocation.coordinates[1])}>Navigate in maps</button>
+      </div>
+
+
     </>
   );
 }
