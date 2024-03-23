@@ -153,7 +153,7 @@ const ChatBot = () => {
                         placeholder="Type Anything"
                         value={quest}
                         onChange={(e) => setQuest(e.target.value)}
-                        className="!border pr-14 !border-gray-300 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-2 ring-transparent focus:ring-gray-900/10"
+                        className="!border pr-14 !border-gray-350 bg-white text-gray-900 shadow-lg shadow-gray-900/5 ring-2 ring-transparent focus:ring-gray-900/10"
                         labelProps={{
                             className: "hidden",
                         }}
@@ -165,7 +165,7 @@ const ChatBot = () => {
                         size="sm"
                         disabled={!quest}
                         onClick={handleSendQuestion}
-                        className="!absolute right-1 top-1 rounded bg-red-900 px-3 py-1.5"
+                        className="!absolute right-1 top-1 rounded bg-red-700 px-3 py-1.5"
                     >
                         <PaperAirplaneIcon className='h-5 w-5' />
                     </Button>
