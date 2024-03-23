@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 let donorsData=[]
 const SearchDonors = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -10,7 +12,7 @@ const SearchDonors = () => {
   const [userLongitude,setUserLongitude]= useState(0)
   const [errorMsg, setErrorMsg] =useState("")
   const [requestedDonorName, setRequestedDonorName] = useState('');
-
+  const [loading, setLoading] = useState(false);
 
   //getting browser location
   if(navigator.geolocation)
@@ -43,11 +45,13 @@ const SearchDonors = () => {
     });
     const getDonorsData = async () => {
         try {
+          setLoading(true)
           const donorList = await axios.post(`http://localhost:5000/api/recipient/get-nearest-donors`, {
             recipientLatitude: userLatitude,
             recipientLongitude: userLongitude,
             bloodType: recipient.bloodGroup
           });
+          setLoading(false)
           console.log(donorList.data); 
           setNearestDonors(donorList.data);
         } catch (error) {
@@ -111,6 +115,14 @@ const SearchDonors = () => {
     donor.bloodGroup.toLowerCase().includes(searchQuery.toLowerCase())
   );
   const alertDonorName=requestedDonor;
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <FontAwesomeIcon icon={faSpinner} spin size="3x" /> {/* Display spinner icon */}
+      </div>
+    );
+  }
 
   return (
     <div className="m-10">
