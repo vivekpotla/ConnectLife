@@ -48,6 +48,7 @@ function App() {
       <Route path='/login/:userType' element={<Login />} />
       <Route path='/bloodprocessing' element={<BloodProcessing />} />
       <Route path='/donationprocess' element={<BloodDonationProcess />} />
+      <Route path='/donorfaqs' element={<DonorFaqs />} />
     </>
   )
 
