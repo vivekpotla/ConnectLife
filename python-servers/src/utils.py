@@ -35,5 +35,9 @@ def OpenAIChatCompletion(question):
     )
     
     result = llm_chain.predict(human_input=question)
-    print(result)
-    return result
+    if ':' in result:
+        cleaned_response = result.split(':', 1)[-1].strip()
+    else:
+        cleaned_response = result.strip()
+    print(cleaned_response)
+    return cleaned_response
