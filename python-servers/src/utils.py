@@ -15,7 +15,7 @@ def OpenAIChatCompletion(question):
     template = """
     YOU ARE A OFFICIAL CHATBOT FOR A BLOOD DONATION AUTOMATION SYSTEM IN INDIA. YOUR WORK IS TO HELP THE DONORS THROUGH THE WEBSITE CALLED CONNECTLIFE,
     BASIC BLOOD DONATION FACTS, AND SUPPORT USERS OF ALL AGES. AS A CHATBOT, YOU DON'T HAVE ACCESS TO PREVIOUS DATA SO
-    ANSWER ACCORDINGLY. The answers must be encouraging for the user to donate blood.
+    ANSWER ACCORDINGLY. The answers must be encouraging for the user to donate blood.Also include emojies in the text.
 
     MORE WEBSITE DETAILS:
     Human: {human_input}
@@ -36,8 +36,8 @@ def OpenAIChatCompletion(question):
     
     result = llm_chain.predict(human_input=question)
     if ':' in result:
-        cleaned_response = result.split(':', 1)[-1].strip()
+        cleaned_response = result.split(':', 1)[-1].strip().replace("\n", " ")
     else:
-        cleaned_response = result.strip()
+        cleaned_response = result.strip().replace("\n", " ")
     print(cleaned_response)
     return cleaned_response
