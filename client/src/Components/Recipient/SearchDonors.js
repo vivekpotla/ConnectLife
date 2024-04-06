@@ -148,6 +148,8 @@ const SearchDonors = () => {
     <div className='mt-4'>
       {
         nearestDonors &&
+        <>
+        <h1 className='p-5 text-center text-2xl'>Nearest donors based on your live location 📍</h1>
         <table className="w-full">
         <thead className="font-bold bg-gray-100">
           <tr>
@@ -173,6 +175,7 @@ const SearchDonors = () => {
           ))}
         </tbody>
       </table>
+      </>
       }
 {requestedDonor && (
         <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded mt-5 p-3 text-center w-75" role="alert">
